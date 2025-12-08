@@ -423,12 +423,12 @@ Nach der Pause um 12 Uhr starten wir mit:
 
 **Stand: 2025-12-08**
 
-### ✅ Abgeschlossen (85%)
+### ✅ Abgeschlossen (90%)
 
 **CSS-Refactoring: 100%**
 - Alle Admin-Seiten refactored (dashboard, users, leads-bot, customers, settings)
 - Login-Seite refactored
-- 12 modulare CSS-Dateien erstellt
+- 13 modulare CSS-Dateien erstellt (inkl. customers.css)
 - Reduzierung: 6.347 → 2.904 Zeilen (-54,2%)
 
 **JavaScript-Refactoring: 40%**
@@ -441,12 +441,22 @@ Nach der Pause um 12 Uhr starten wir mit:
 - Tag v2.0-refactored erstellt
 - GitHub Backup vollständig
 
-### ⚠️ Ausstehend (15%)
+**Bug-Fixes & Verbesserungen: 100%**
+- ✅ Login.css korrigiert (Class-Namen angepasst an HTML)
+- ✅ "Angemeldet bleiben" Funktion implementiert (Firebase Persistence)
+- ✅ Auto-Redirect für eingeloggte User auf Login-Seite
+- ✅ Logout-Button auf allen Unterseiten repariert (Sidebar.js/Modal.js Imports ergänzt)
+- ✅ Button-Styling auf Customers-Seite wiederhergestellt (customers.css erstellt)
+- ✅ Kunden-Detailansicht komplett überarbeitet (2-Spalten Grid, Emoji-Icons, farbige Sections)
+
+### ⚠️ Ausstehend (10%)
 
 **Browser-Testing:**
 - Funktionalitätstests im Browser durchführen
 - Console auf Fehler prüfen
 - Mobile-Ansicht testen
+- Alle Buttons, Forms, Modals testen
+- Firebase Auth & Logout testen
 
 **Optional:**
 - Weitere JS-Extraktion für users.html & leads-bot.html (falls gewünscht)
