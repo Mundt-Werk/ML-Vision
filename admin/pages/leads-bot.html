@@ -511,10 +511,16 @@
 
     <!-- Firebase Authentication & Logout -->
     <script type="module">
+        import { Sidebar } from '../../assets/js/components/Sidebar.js';
+        import '../../assets/js/components/Modal.js';
         import { initDashboard } from '../../assets/js/dashboard.js';
 
-        // Initialize admin dashboard with role check and logout functionality
+        // Initialize components
         document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Sidebar
+            new Sidebar('sidebar');
+
+            // Initialize admin dashboard with role check and logout functionality
             await initDashboard('admin');
         });
     </script>

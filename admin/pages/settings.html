@@ -178,5 +178,21 @@
             alert('Benachrichtigungseinstellungen erfolgreich gespeichert!');
         }
     </script>
+
+    <!-- Initialize Components -->
+    <script type="module">
+        import { Sidebar } from '../../assets/js/components/Sidebar.js';
+        import '../../assets/js/components/Modal.js';
+        import { initDashboard } from '../../assets/js/dashboard.js';
+
+        // Initialize components
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Sidebar
+            new Sidebar('sidebar');
+
+            // Initialize admin dashboard with role check
+            await initDashboard('admin');
+        });
+    </script>
 </body>
 </html>
