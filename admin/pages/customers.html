@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="../../assets/css/components/forms.css">
     <link rel="stylesheet" href="../../assets/css/components/tables.css">
     <link rel="stylesheet" href="../../assets/css/layouts/admin-layout.css">
+    <link rel="stylesheet" href="../../assets/css/pages/customers.css">
     <link rel="stylesheet" href="../../assets/css/utilities/responsive.css">
 </head>
 <body>
@@ -852,7 +853,7 @@
             document.getElementById('customerDetailModal').classList.remove('active');
         };
 
-        // View customer details
+        // View customer details (Improved Grid Layout)
         window.viewCustomerDetails = function(customerId) {
             const customer = customers.find(c => c.id === customerId);
             if (!customer) return;
@@ -865,83 +866,91 @@
             const desiredSolutions = customer.desiredSolutions ? customer.desiredSolutions.join(', ') : '-';
 
             detailContent.innerHTML = `
-                <div class="form-section">
-                    <div class="form-section-title">Kunde & Kontakt</div>
-                    <p><strong>Kundennummer:</strong> ${customer.customerNumber}</p>
-                    <p><strong>Firmenname:</strong> ${customer.companyName}</p>
-                    <p><strong>Ansprechpartner:</strong> ${contactName}</p>
-                    <p><strong>Rolle:</strong> ${customer.contactRole || '-'}</p>
-                    <p><strong>E-Mail:</strong> ${customer.email}</p>
-                    <p><strong>Telefon:</strong> ${customer.phone}</p>
-                    <p><strong>Website:</strong> ${customer.website ? `<a href="${customer.website}" target="_blank">${customer.website}</a>` : '-'}</p>
-                    <p><strong>Branche:</strong> ${customer.industry || '-'}</p>
-                    <p><strong>Mitarbeiter:</strong> ${customer.employeeCount || '-'}</p>
+                <div class="customer-detail-grid">
+                    <!-- Column 1 -->
+                    <div>
+                        <div class="form-section">
+                            <div class="form-section-title">👤 Kunde & Kontakt</div>
+                            <p><strong>Kundennummer:</strong> ${customer.customerNumber}</p>
+                            <p><strong>Firmenname:</strong> ${customer.companyName}</p>
+                            <p><strong>Ansprechpartner:</strong> ${contactName}</p>
+                            <p><strong>Rolle:</strong> ${customer.contactRole || '-'}</p>
+                            <p><strong>E-Mail:</strong> ${customer.email}</p>
+                            <p><strong>Telefon:</strong> ${customer.phone}</p>
+                            <p><strong>Website:</strong> ${customer.website ? `<a href="${customer.website}" target="_blank">${customer.website}</a>` : '-'}</p>
+                            <p><strong>Branche:</strong> ${customer.industry || '-'}</p>
+                            <p><strong>Mitarbeiter:</strong> ${customer.employeeCount || '-'}</p>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">⚠️ Problem & Ziele</div>
+                            <p><strong>Hauptproblem:</strong> ${customer.mainProblem || '-'}</p>
+                            <p><strong>Dringlichkeit:</strong> ${customer.urgency || '-'} / 5</p>
+                            <p><strong>Bisherige Lösung:</strong> ${customer.currentSolution || '-'}</p>
+                            <p><strong>Zeitverlust:</strong> ${customer.timeLost ? customer.timeLost + ' Std./Woche' : '-'}</p>
+                            <p><strong>Monatliche Kosten:</strong> ${customer.monthlyCost ? customer.monthlyCost + ' €' : '-'}</p>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">📊 Prozesse heute</div>
+                            <p><strong>Anfragen über:</strong> ${incomingChannels}</p>
+                            <p><strong>Antwortzeit:</strong> ${customer.responseTime || '-'}</p>
+                            <p><strong>Bearbeitet von:</strong> ${customer.requestHandler || '-'}</p>
+                            <p><strong>Probleme:</strong> ${customer.processErrors || '-'}</p>
+                            <p><strong>Peak-Zeiten:</strong> ${customer.peakTimes || '-'}</p>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">🎯 Gewünschtes Zielbild</div>
+                            <p><strong>Idealer Prozess:</strong> ${customer.idealProcess || '-'}</p>
+                            <p><strong>Gewünschte Lösungen:</strong> ${desiredSolutions}</p>
+                            <p><strong>Erwartete Ergebnisse:</strong> ${customer.expectedResults || '-'}</p>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div>
+                        <div class="form-section">
+                            <div class="form-section-title">💻 Technische Infrastruktur</div>
+                            <p><strong>Domain:</strong> ${customer.domainProvider || '-'}</p>
+                            <p><strong>Website:</strong> ${customer.websiteSystem || '-'}</p>
+                            <p><strong>E-Mail:</strong> ${customer.emailSystem || '-'}</p>
+                            <p><strong>CRM:</strong> ${customer.crmSystem || '-'}</p>
+                            <p><strong>Projektmanagement:</strong> ${customer.projectTool || '-'}</p>
+                            <p><strong>Cloud-Speicher:</strong> ${customer.cloudStorage || '-'}</p>
+                            <p><strong>Telefon:</strong> ${customer.phoneSystem || '-'}</p>
+                            <p><strong>Nummerntyp:</strong> ${customer.phoneNumberType || '-'}</p>
+                            <p><strong>API-Zugänge:</strong> ${customer.apiAccess || '-'}</p>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">🔒 Datenschutz</div>
+                            <p><strong>Kundendaten:</strong> ${customer.customerDataStored || '-'}</p>
+                            <p><strong>Datenarten:</strong> ${customer.dataTypes || '-'}</p>
+                            <p><strong>AV-Vertrag:</strong> ${customer.avContract || '-'}</p>
+                            <p><strong>EU-Daten:</strong> ${customer.euDataRequired || '-'}</p>
+                            <p><strong>Kritische Branche:</strong> ${customer.criticalIndustry || '-'}</p>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">💰 Budget & Timeline</div>
+                            <p><strong>Budgetrahmen:</strong> ${customer.budgetRange || '-'}</p>
+                            <p><strong>Entscheider:</strong> ${customer.decisionMaker || '-'}</p>
+                            <p><strong>Projektstart:</strong> ${customer.projectStart || '-'}</p>
+                            <p><strong>Deadlines:</strong> ${customer.deadline || '-'}</p>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">📝 Interne Notizen</div>
+                            <p><strong>Kurzbeschreibung:</strong> ${customer.shortDescription || '-'}</p>
+                            <p><strong>Herausforderungen:</strong> ${customer.challenges || '-'}</p>
+                            <p><strong>Erkenntnisse:</strong> ${customer.insights || '-'}</p>
+                            <p><strong>Next Steps:</strong> ${customer.nextSteps || '-'}</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-section">
-                    <div class="form-section-title">Problem & Ziele</div>
-                    <p><strong>Hauptproblem:</strong> ${customer.mainProblem || '-'}</p>
-                    <p><strong>Dringlichkeit:</strong> ${customer.urgency || '-'} / 5</p>
-                    <p><strong>Bisherige Lösung:</strong> ${customer.currentSolution || '-'}</p>
-                    <p><strong>Zeitverlust:</strong> ${customer.timeLost ? customer.timeLost + ' Std./Woche' : '-'}</p>
-                    <p><strong>Monatliche Kosten:</strong> ${customer.monthlyCost ? customer.monthlyCost + ' €' : '-'}</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="form-section-title">Prozesse heute</div>
-                    <p><strong>Anfragen kommen rein über:</strong> ${incomingChannels}</p>
-                    <p><strong>Antwortzeit:</strong> ${customer.responseTime || '-'}</p>
-                    <p><strong>Bearbeitet von:</strong> ${customer.requestHandler || '-'}</p>
-                    <p><strong>Probleme im Prozess:</strong> ${customer.processErrors || '-'}</p>
-                    <p><strong>Peak-Zeiten:</strong> ${customer.peakTimes || '-'}</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="form-section-title">Gewünschtes Zielbild</div>
-                    <p><strong>Idealer Prozess:</strong> ${customer.idealProcess || '-'}</p>
-                    <p><strong>Gewünschte Lösungen:</strong> ${desiredSolutions}</p>
-                    <p><strong>Erwartete Ergebnisse:</strong> ${customer.expectedResults || '-'}</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="form-section-title">Technische Infrastruktur</div>
-                    <p><strong>Domain-Anbieter:</strong> ${customer.domainProvider || '-'}</p>
-                    <p><strong>Website-System:</strong> ${customer.websiteSystem || '-'}</p>
-                    <p><strong>E-Mail-System:</strong> ${customer.emailSystem || '-'}</p>
-                    <p><strong>CRM:</strong> ${customer.crmSystem || '-'}</p>
-                    <p><strong>Projektmanagement:</strong> ${customer.projectTool || '-'}</p>
-                    <p><strong>Cloud-Speicher:</strong> ${customer.cloudStorage || '-'}</p>
-                    <p><strong>Telefonanlage:</strong> ${customer.phoneSystem || '-'}</p>
-                    <p><strong>Nummerntyp:</strong> ${customer.phoneNumberType || '-'}</p>
-                    <p><strong>API-Zugänge:</strong> ${customer.apiAccess || '-'}</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="form-section-title">Datenschutz</div>
-                    <p><strong>Kundendaten gespeichert:</strong> ${customer.customerDataStored || '-'}</p>
-                    <p><strong>Welche Daten:</strong> ${customer.dataTypes || '-'}</p>
-                    <p><strong>AV-Vertrag:</strong> ${customer.avContract || '-'}</p>
-                    <p><strong>EU-Daten erforderlich:</strong> ${customer.euDataRequired || '-'}</p>
-                    <p><strong>Kritische Branche:</strong> ${customer.criticalIndustry || '-'}</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="form-section-title">Budget & Timeline</div>
-                    <p><strong>Budgetrahmen:</strong> ${customer.budgetRange || '-'}</p>
-                    <p><strong>Entscheider:</strong> ${customer.decisionMaker || '-'}</p>
-                    <p><strong>Projektstart:</strong> ${customer.projectStart || '-'}</p>
-                    <p><strong>Deadlines:</strong> ${customer.deadline || '-'}</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="form-section-title">Interne Notizen</div>
-                    <p><strong>Kurzbeschreibung:</strong> ${customer.shortDescription || '-'}</p>
-                    <p><strong>Herausforderungen:</strong> ${customer.challenges || '-'}</p>
-                    <p><strong>Erkenntnisse:</strong> ${customer.insights || '-'}</p>
-                    <p><strong>Next Steps:</strong> ${customer.nextSteps || '-'}</p>
-                </div>
-
-                <div style="margin-top: 30px; text-align: center;">
+                <div class="detail-actions">
                     <button class="btn-submit" onclick="editCustomer('${customer.id}'); closeDetailModal();">Bearbeiten</button>
                 </div>
             `;
