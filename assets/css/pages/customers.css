@@ -49,6 +49,7 @@
   border-bottom: 2px solid rgba(4, 169, 212, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-align: left;
 }
 
 .form-section p {
@@ -56,6 +57,7 @@
   color: var(--text-primary);
   font-size: var(--font-size-md);
   line-height: 1.6;
+  text-align: left;
 }
 
 .form-section p strong {
@@ -63,6 +65,7 @@
   font-weight: 600;
   display: inline-block;
   min-width: 160px;
+  text-align: left;
 }
 
 .form-section a {

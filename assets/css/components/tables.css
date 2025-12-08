@@ -4,6 +4,7 @@
  */
 
 .users-table,
+.customers-table,
 .data-table {
   width: 100%;
   border-collapse: collapse;
@@ -11,11 +12,13 @@
 }
 
 .users-table thead tr,
+.customers-table thead tr,
 .data-table thead tr {
   border-bottom: 2px solid var(--border-primary);
 }
 
 .users-table th,
+.customers-table th,
 .data-table th {
   text-align: left;
   padding: 15px;
@@ -27,6 +30,7 @@
 }
 
 .users-table td,
+.customers-table td,
 .data-table td {
   padding: 15px;
   border-bottom: 1px solid rgba(4, 169, 212, 0.1);
@@ -35,11 +39,13 @@
 }
 
 .users-table tbody tr,
+.customers-table tbody tr,
 .data-table tbody tr {
   transition: background var(--transition-base);
 }
 
 .users-table tbody tr:hover,
+.customers-table tbody tr:hover,
 .data-table tbody tr:hover {
   background: rgba(4, 169, 212, 0.05);
 }
