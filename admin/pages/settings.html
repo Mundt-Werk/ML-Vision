@@ -155,6 +155,39 @@
         </main>
     </div>
 
+    <!-- Alert Modal -->
+    <div class="modal" id="alertModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="alertTitle">Hinweis</h2>
+                <button class="modal-close" onclick="closeAlertModal()">&times;</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <p id="alertMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
+            </div>
+            <div class="form-actions" style="margin-top: 20px;">
+                <button class="btn-submit" onclick="closeAlertModal()" style="width: 100%;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="confirmTitle">Bestätigung</h2>
+                <button class="modal-close" onclick="closeConfirmModal(false)">&times;</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <p id="confirmMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
+            </div>
+            <div class="form-actions" style="margin-top: 20px;">
+                <button class="btn-cancel" onclick="closeConfirmModal(false)">Abbrechen</button>
+                <button class="btn-submit" onclick="closeConfirmModal(true)">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function saveGeneralSettings() {
             const companyName = document.getElementById('companyName').value;
