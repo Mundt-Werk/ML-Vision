@@ -1035,7 +1035,7 @@
                             updatedAt: new Date().toISOString()
                         };
                     }
-                    alert('Kunde erfolgreich aktualisiert!');
+                    showAlert('Kunde erfolgreich aktualisiert!', 'Erfolg');
                 } else {
                     // Create new customer
                     const newCustomer = {
@@ -1045,7 +1045,7 @@
                         createdAt: new Date().toISOString()
                     };
                     customers.unshift(newCustomer);
-                    alert(`Kunde erfolgreich angelegt!\nKundennummer: ${newCustomer.customerNumber}`);
+                    showAlert(`Kunde erfolgreich angelegt!\nKundennummer: ${newCustomer.customerNumber}`, 'Erfolg');
                 }
 
                 closeCustomerModal();
@@ -1056,16 +1056,19 @@
         });
 
         // Delete customer
-        window.deleteCustomer = function(customerId) {
+        window.deleteCustomer = async function(customerId) {
             const customer = customers.find(c => c.id === customerId);
             if (!customer) return;
 
-            if (!confirm(`Möchten Sie diesen Kunden wirklich löschen?\n\nFirma: ${customer.companyName}\nKundennummer: ${customer.customerNumber}\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`)) {
-                return;
-            }
+            const confirmed = await showConfirm(
+                `Möchten Sie diesen Kunden wirklich löschen?\n\nFirma: ${customer.companyName}\nKundennummer: ${customer.customerNumber}\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`,
+                'Kunde löschen'
+            );
+
+            if (!confirmed) return;
 
             customers = customers.filter(c => c.id !== customerId);
-            alert('Kunde erfolgreich gelöscht!');
+            showAlert('Kunde erfolgreich gelöscht!', 'Erfolg');
             loadCustomers();
         };
 
