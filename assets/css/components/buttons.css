@@ -3,7 +3,8 @@
  * Wiederverwendbare Button-Styles
  */
 
-.btn-submit {
+.btn-submit,
+.save-btn {
   flex: 1;
   padding: 12px;
   background: var(--gradient-primary);
@@ -16,7 +17,8 @@
   transition: all var(--transition-base);
 }
 
-.btn-submit:hover {
+.btn-submit:hover,
+.save-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-primary-lg);
 }
@@ -59,4 +61,60 @@
 .quick-action:hover {
   background: rgba(4, 169, 212, 0.2);
   border-color: var(--color-primary);
+}
+
+/* Leads Bot Buttons */
+.btn-start {
+  width: 100%;
+  padding: 15px;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-white);
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-start:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-primary-lg);
+}
+
+.btn-start:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-export {
+  padding: 10px 20px;
+  background: rgba(4, 169, 212, 0.1);
+  border: 1px solid var(--border-primary-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-size: var(--font-size-md);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-export:hover {
+  background: rgba(4, 169, 212, 0.2);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.btn-export:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
