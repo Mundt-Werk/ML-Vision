@@ -1,0 +1,121 @@
+/**
+ * Sidebar Navigation Component
+ * Wiederverwendbare Sidebar für alle Admin-Seiten
+ */
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--gradient-sidebar);
+  padding: var(--spacing-lg) 0;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-sidebar);
+  z-index: var(--z-sidebar);
+  border-right: 1px solid var(--border-primary);
+}
+
+.sidebar-logo {
+  padding: 0 var(--spacing-lg) var(--spacing-2xl) var(--spacing-lg);
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-logo img {
+  height: 60px;
+}
+
+.admin-badge-sidebar {
+  background: rgba(255, 59, 48, 0.2);
+  color: var(--color-danger-alt);
+  padding: 4px 12px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: var(--spacing-sm);
+  display: inline-block;
+  border: 1px solid rgba(255, 59, 48, 0.3);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: var(--spacing-lg) 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  margin: var(--spacing-xs) 0;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px var(--spacing-lg);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.sidebar-menu a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--color-primary);
+  transform: scaleY(0);
+  transition: transform var(--transition-base);
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+  color: var(--text-white);
+  background: var(--bg-hover);
+}
+
+.sidebar-menu a.active::before,
+.sidebar-menu a:hover::before {
+  transform: scaleY(1);
+}
+
+.sidebar-menu svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.sidebar-section-title {
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.sidebar-footer {
+  padding: var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-footer a {
+  display: block;
+  padding: var(--spacing-sm);
+  color: var(--color-danger);
+  text-decoration: none;
+  text-align: center;
+  border: 2px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+}
+
+.sidebar-footer a:hover {
+  background: var(--color-danger);
+  color: var(--text-white);
+}

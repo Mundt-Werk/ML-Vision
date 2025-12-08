@@ -1,0 +1,27 @@
+/**
+ * Typography Styles
+ */
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-white);
+  font-weight: bold;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+strong {
+  font-weight: bold;
+}
+
+small {
+  font-size: var(--font-size-base);
+}

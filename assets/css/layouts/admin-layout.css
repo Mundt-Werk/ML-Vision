@@ -1,0 +1,104 @@
+/**
+ * Admin Layout
+ * Haupt-Layout für alle Admin-Seiten
+ */
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: var(--spacing-2xl);
+}
+
+/* Top Bar */
+.top-bar {
+  background: var(--bg-card);
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-2xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+}
+
+.top-bar-left h1 {
+  font-size: var(--font-size-3xl);
+  color: var(--text-white);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.top-bar-left p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: var(--font-size-md);
+}
+
+.top-bar-right {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+/* Content Cards */
+.content-card {
+  background: var(--gradient-card);
+  padding: var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-primary);
+}
+
+.content-card h2 {
+  font-size: var(--font-size-xl);
+  color: var(--text-white);
+  margin: 0 0 var(--spacing-xl) 0;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.content-card h2 svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--color-primary);
+}
+
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: var(--spacing-lg);
+  left: var(--spacing-lg);
+  z-index: var(--z-mobile-toggle);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  box-shadow: var(--shadow-primary-lg);
+}
+
+.mobile-menu-toggle span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: var(--text-white);
+  margin: var(--spacing-xs) auto;
+  border-radius: 2px;
+  transition: all var(--transition-base);
+}
