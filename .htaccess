@@ -1,0 +1,78 @@
+# Schütze die Konfigurationsdatei vor direktem Zugriff
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Schütze andere sensible Dateien
+<FilesMatch "\.(env|ini|log)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Security Headers
+<IfModule mod_headers.c>
+    # Verhindere XSS-Angriffe
+    Header set X-XSS-Protection "1; mode=block"
+
+    # Verhindere MIME-Type Sniffing
+    Header set X-Content-Type-Options "nosniff"
+
+    # Clickjacking-Schutz
+    Header set X-Frame-Options "SAMEORIGIN"
+
+    # Strict Transport Security (HTTPS)
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Content Security Policy (Cloudflare Turnstile + ElevenLabs Widget + Firebase + Railway Leads Bot)
+    Header set Content-Security-Policy "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://unpkg.com https://*.elevenlabs.io https://www.gstatic.com https://www.googletagmanager.com blob: data:; style-src 'self' 'unsafe-inline' https://*.elevenlabs.io; img-src 'self' data: https://storage.googleapis.com https://*.elevenlabs.io https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' https://*.elevenlabs.io; connect-src 'self' https://challenges.cloudflare.com https://*.elevenlabs.io wss://*.elevenlabs.io https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://www.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com https://*.up.railway.app; frame-src 'self' https://challenges.cloudflare.com https://*.firebaseapp.com; media-src 'self' https://*.elevenlabs.io blob:; worker-src 'self' blob:; default-src 'self';"
+
+    # Referrer Policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Permissions Policy (erlaubt Mikrofon für ElevenLabs Voice Agent)
+    Header set Permissions-Policy "geolocation=(), microphone=(self), camera=()"
+</IfModule>
+
+# Verhindere Directory Listing
+Options -Indexes
+
+# PHP Security Settings
+<IfModule mod_php7.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_flag expose_php Off
+</IfModule>
+
+# URL Rewriting für saubere Struktur
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Schütze sensible Verzeichnisse vor direktem Zugriff
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^NICHTHOCHLADEN/ - [F,L]
+
+    # Erlaube direkten Zugriff auf Admin-Bereich
+    RewriteCond %{REQUEST_URI} ^/admin/ [NC]
+    RewriteRule ^ - [L]
+
+    # Erlaube direkten Zugriff auf Kundenbereich
+    RewriteCond %{REQUEST_URI} ^/customer/ [NC]
+    RewriteRule ^ - [L]
+
+    # Erlaube direkten Zugriff auf Assets
+    RewriteCond %{REQUEST_URI} ^/assets/ [NC]
+    RewriteRule ^ - [L]
+
+    # Erlaube direkten Zugriff auf Leads Bot
+    RewriteCond %{REQUEST_URI} ^/leads_bot/ [NC]
+    RewriteRule ^ - [L]
+
+    # Leite Root-Anfrage auf index.html um
+    RewriteRule ^$ index.html [L]
+
+    # Spezielle Dateien im Root (robots.txt, sitemap.xml, favicon.ico)
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(robots\.txt|sitemap\.xml|favicon\.ico)$ - [L]
+</IfModule>

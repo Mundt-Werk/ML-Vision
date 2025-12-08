@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kunden-Verwaltung - ML Vision Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Futura Book', Arial, sans-serif;
+            background: #0f1419;
+            color: #e1e8ed;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1a1f2e 0%, #151922 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-right: 1px solid rgba(4, 169, 212, 0.2);
+        }
+
+        .sidebar-logo {
+            padding: 0 20px 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo img {
+            height: 60px;
+        }
+
+        .admin-badge-sidebar {
+            background: rgba(255, 59, 48, 0.2);
+            color: #ff3b30;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            display: inline-block;
+            border: 1px solid rgba(255, 59, 48, 0.3);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: rgba(225, 232, 237, 0.6);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #04A9D4;
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            color: #fff;
+            background: rgba(4, 169, 212, 0.15);
+        }
+
+        .sidebar-menu a.active::before,
+        .sidebar-menu a:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .sidebar-section-title {
+            padding: 20px 20px 10px 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: rgba(225, 232, 237, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+
+        .sidebar-footer a {
+            display: block;
+            padding: 10px;
+            color: #ff4757;
+            text-decoration: none;
+            text-align: center;
+            border: 2px solid #ff4757;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-footer a:hover {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: #1a1f2e;
+            padding: 20px 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-bar-left h1 {
+            font-size: 28px;
+            color: #fff;
+            margin: 0 0 5px 0;
+        }
+
+        .top-bar-left p {
+            color: rgba(225, 232, 237, 0.6);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .add-customer-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(4, 169, 212, 0.3);
+        }
+
+        .add-customer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        /* Table */
+        .customers-table-container {
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .customers-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .customers-table thead {
+            border-bottom: 2px solid rgba(4, 169, 212, 0.2);
+        }
+
+        .customers-table th {
+            padding: 15px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: rgba(225, 232, 237, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .customers-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .customers-table tbody tr {
+            transition: background 0.3s;
+        }
+
+        .customers-table tbody tr:hover {
+            background: rgba(4, 169, 212, 0.05);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(76, 217, 100, 0.2);
+            color: #4cd964;
+            border: 1px solid rgba(76, 217, 100, 0.3);
+        }
+
+        .status-inactive {
+            background: rgba(255, 69, 58, 0.2);
+            color: #ff453a;
+            border: 1px solid rgba(255, 69, 58, 0.3);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: rgba(4, 169, 212, 0.2);
+            color: #04A9D4;
+            border: 1px solid rgba(4, 169, 212, 0.3);
+        }
+
+        .btn-edit:hover {
+            background: rgba(4, 169, 212, 0.3);
+        }
+
+        .btn-delete {
+            background: rgba(255, 69, 58, 0.2);
+            color: #ff453a;
+            border: 1px solid rgba(255, 69, 58, 0.3);
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 69, 58, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #04A9D4;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(225, 232, 237, 0.6);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .form-section {
+            background: rgba(4, 169, 212, 0.05);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .form-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #04A9D4;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: rgba(225, 232, 237, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label .required {
+            color: #ff453a;
+            margin-left: 3px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Futura Book', Arial, sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group select {
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2304A9D4' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        .form-group select option {
+            background: #1a1f2e;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #04A9D4;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            text-transform: none;
+            font-weight: normal;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .range-slider {
+            width: 100%;
+        }
+
+        .range-value {
+            display: inline-block;
+            background: rgba(4, 169, 212, 0.2);
+            color: #04A9D4;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: rgba(225, 232, 237, 0.8);
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(225, 232, 237, 0.6);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(225, 232, 237, 0.6);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 2000;
+            background: #04A9D4;
+            border: none;
+            border-radius: 12px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: #fff;
+            margin: 5px auto;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        /* Responsive Table Cards for Mobile */
+        @media (max-width: 768px) {
+            .customers-table {
+                width: 100%;
+                max-width: 100%;
+                display: block;
+            }
+
+            .customers-table thead {
+                display: none;
+            }
+
+            .customers-table tbody {
+                display: block;
+                width: 100%;
+            }
+
+            .customers-table tbody tr {
+                display: block;
+                margin-bottom: 15px;
+                background: rgba(4, 169, 212, 0.05);
+                border: 1px solid rgba(4, 169, 212, 0.2);
+                border-radius: 12px;
+                padding: 12px;
+                width: 100%;
+                max-width: 100%;
+                cursor: pointer;
+            }
+
+            .customers-table tbody tr:hover {
+                background: rgba(4, 169, 212, 0.1);
+            }
+
+            .customers-table td {
+                display: block;
+                text-align: left;
+                padding: 8px 0;
+                border-bottom: none;
+                width: 100%;
+                max-width: 100%;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .customers-table td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                text-transform: uppercase;
+                font-size: 10px;
+                color: rgba(225, 232, 237, 0.6);
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .customers-table td:last-child {
+                padding-top: 12px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: 8px;
+            }
+
+            .customers-table td strong,
+            .customers-table td span {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .action-btn {
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+                padding: 10px;
+                text-align: center;
+            }
+
+            /* Form rows to single column on mobile */
+            .form-row {
+                grid-template-columns: 1fr !important;
+                gap: 12px;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+
+            .form-section-title {
+                font-size: 15px;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        /* Tablet & Desktop */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+            }
+
+            .sidebar-menu a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .top-bar {
+                padding: 15px 20px;
+            }
+
+            .top-bar-left h1 {
+                font-size: 24px;
+            }
+
+            .modal-content {
+                max-width: 700px;
+            }
+        }
+
+        /* Small Mobile (< 480px) */
+        @media (max-width: 480px) {
+            .mobile-menu-toggle {
+                top: 10px;
+                left: 10px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .main-content {
+                padding: 65px 8px 10px 8px !important;
+                width: 100%;
+                max-width: 100vw;
+            }
+
+            .top-bar {
+                padding: 12px;
+                margin-bottom: 15px;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .top-bar-left h1 {
+                font-size: 20px;
+                word-wrap: break-word;
+            }
+
+            .top-bar-left p {
+                font-size: 11px;
+            }
+
+            .add-customer-btn {
+                width: 100%;
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .customers-table-container {
+                padding: 10px;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .customers-table tbody tr {
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+
+            .modal-content {
+                padding: 12px;
+                width: 98%;
+                max-width: 98vw;
+            }
+
+            .modal-header {
+                margin-bottom: 12px;
+            }
+
+            .modal-header h2 {
+                font-size: 18px;
+            }
+
+            .form-section {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .form-section-title {
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            .form-group label {
+                font-size: 11px;
+                margin-bottom: 6px;
+            }
+
+            .action-btn {
+                font-size: 12px;
+                padding: 10px;
+                margin: 4px 0;
+                width: 100%;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 15px;
+            }
+
+            .btn-submit,
+            .btn-cancel {
+                width: 100%;
+            }
+        }
+
+        /* Mobile (max-width: 768px) */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 75px 12px 15px 12px;
+                width: 100%;
+                max-width: 100vw;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+                width: 100%;
+                max-width: 100%;
+                padding: 15px;
+            }
+
+            .customers-table-container {
+                padding: 12px;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            .add-customer-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision Logo">
+                <div class="admin-badge-sidebar">ADMIN</div>
+            </div>
+
+            <div class="sidebar-section-title">Verwaltung</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="../dashboard.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Benutzerverwaltung
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Kunden
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Tools</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="leads-bot.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
+                        </svg>
+                        Leads Bot
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">System</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="settings.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Einstellungen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn">Abmelden</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <h1>Kunden-Verwaltung</h1>
+                    <p>Verwalten Sie alle Kunden-Accounts</p>
+                </div>
+                <div>
+                    <button class="add-customer-btn" onclick="openAddCustomerModal()">+ Neuer Kunde</button>
+                </div>
+            </div>
+
+            <div class="customers-table-container">
+                <div id="loadingState" class="loading">
+                    Lade Kunden...
+                </div>
+
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <h3>Noch keine Kunden</h3>
+                    <p>Legen Sie den ersten Kunden an.</p>
+                </div>
+
+                <table class="customers-table" id="customersTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Kundennr.</th>
+                            <th>Firmenname</th>
+                            <th>Ansprechpartner</th>
+                            <th>E-Mail</th>
+                            <th>Telefon</th>
+                            <th>Erstellt am</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Customer Modal -->
+    <div class="modal" id="customerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Neuer Kunde</h2>
+                <button class="modal-close" onclick="closeCustomerModal()">&times;</button>
+            </div>
+
+            <form id="customerForm">
+                <input type="hidden" id="customerId">
+
+                <!-- Sektion 1: Kunde & Kontakt -->
+                <div class="form-section">
+                    <div class="form-section-title">1. Kunde & Kontakt</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companyName">Firmenname <span class="required">*</span></label>
+                            <input type="text" id="companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="industry">Branche</label>
+                            <input type="text" id="industry" placeholder="z.B. IT, Handel, Handwerk">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactFirstName">Ansprechpartner Vorname <span class="required">*</span></label>
+                            <input type="text" id="contactFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactLastName">Ansprechpartner Nachname <span class="required">*</span></label>
+                            <input type="text" id="contactLastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactRole">Rolle im Unternehmen</label>
+                            <input type="text" id="contactRole" placeholder="z.B. Geschäftsführer, IT-Leiter">
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeCount">Mitarbeiterzahl</label>
+                            <input type="number" id="employeeCount" placeholder="Anzahl Mitarbeiter">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">E-Mail <span class="required">*</span></label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefonnummer <span class="required">*</span></label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="website">Website</label>
+                            <input type="url" id="website" placeholder="https://...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sektion 2: Problem & Ziele -->
+                <div class="form-section">
+                    <div class="form-section-title">2. Problem & Ziele</div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="mainProblem">Was ist das Hauptproblem? <span class="required">*</span></label>
+                            <textarea id="mainProblem" placeholder="Warum kontaktiert der Kunde uns?" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="urgency">Dringlichkeit <span class="required">*</span></label>
+                            <input type="range" id="urgency" class="range-slider" min="1" max="5" value="3" oninput="document.getElementById('urgencyValue').textContent = this.value">
+                            <span class="range-value" id="urgencyValue">3</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="timeLost">Zeitverlust aktuell (Std./Woche)</label>
+                            <input type="number" id="timeLost" placeholder="Stunden pro Woche">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="currentSolution">Wie wird es bisher gelöst?</label>
+                            <textarea id="currentSolution" placeholder="Aktuelle Lösung/Workaround"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="monthlyCost">Monatliche Kosten durch Problem (€)</label>
+                            <input type="number" id="monthlyCost" placeholder="Optional">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sektion 3: Prozesse heute -->
+                <div class="form-section">
+                    <div class="form-section-title">3. Prozesse heute</div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Wo kommen Anfragen rein?</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="incomingPhone" name="incoming">
+                                    <label for="incomingPhone">Telefon</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="incomingWhatsApp" name="incoming">
+                                    <label for="incomingWhatsApp">WhatsApp</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="incomingEmail" name="incoming">
+                                    <label for="incomingEmail">E-Mail</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="incomingWebsite" name="incoming">
+                                    <label for="incomingWebsite">Website</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="incomingSocial" name="incoming">
+                                    <label for="incomingSocial">Social Media</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="responseTime">Durchschnittliche Antwortzeit</label>
+                            <select id="responseTime">
+                                <option value="">Bitte wählen</option>
+                                <option value="< 5 Min">< 5 Minuten</option>
+                                <option value="5-30 Min">5-30 Minuten</option>
+                                <option value="1-2 Std">1-2 Stunden</option>
+                                <option value="2-4 Std">2-4 Stunden</option>
+                                <option value="> 4 Std">> 4 Stunden</option>
+                                <option value="> 1 Tag">> 1 Tag</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="requestHandler">Wer bearbeitet Anfragen?</label>
+                            <input type="text" id="requestHandler" placeholder="z.B. Sekretariat, alle, Chef">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="processErrors">Typische Fehler/Probleme im Prozess</label>
+                            <textarea id="processErrors" placeholder="Was läuft schief?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="peakTimes">Peak-Zeiten</label>
+                            <textarea id="peakTimes" placeholder="z.B. morgens 8-10, Wochenende"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sektion 4: Gewünschtes Zielbild -->
+                <div class="form-section">
+                    <div class="form-section-title">4. Gewünschtes Zielbild</div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="idealProcess">Wie soll der ideale Prozess aussehen? <span class="required">*</span></label>
+                            <textarea id="idealProcess" placeholder="Beschreibung des Wunschprozesses" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Gewünschte Lösungen</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="solutionPhoneAssistant" name="solutions">
+                                    <label for="solutionPhoneAssistant">Telefon-Assistent</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="solutionEmailSorting" name="solutions">
+                                    <label for="solutionEmailSorting">E-Mail-Sortierung</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="solutionChatbot" name="solutions">
+                                    <label for="solutionChatbot">Chatbot</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="solutionAppointments" name="solutions">
+                                    <label for="solutionAppointments">Terminvereinbarung</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="solutionQuotes" name="solutions">
+                                    <label for="solutionQuotes">Angebots-Automation</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="solutionKnowledgeBase" name="solutions">
+                                    <label for="solutionKnowledgeBase">Wissensdatenbank</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="expectedResults">Erwartete Ergebnisse</label>
+                            <textarea id="expectedResults" placeholder="Zeiteinsparung, Fehlerreduktion, besseres Kundenerlebnis..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sektion 5: Technische Infrastruktur -->
+                <div class="form-section">
+                    <div class="form-section-title">5. Technik / Systeme</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="domainProvider">Domain-Anbieter</label>
+                            <input type="text" id="domainProvider" placeholder="z.B. Strato, 1&1, Ionos">
+                        </div>
+                        <div class="form-group">
+                            <label for="websiteSystem">Website-System</label>
+                            <input type="text" id="websiteSystem" placeholder="WordPress, HTML, Shopify, Wix...">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="emailSystem">E-Mail-System</label>
+                            <input type="text" id="emailSystem" placeholder="Google Workspace, MS Exchange...">
+                        </div>
+                        <div class="form-group">
+                            <label for="crmSystem">CRM-System</label>
+                            <input type="text" id="crmSystem" placeholder="Falls vorhanden">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectTool">Projektmanagement-Tool</label>
+                            <input type="text" id="projectTool" placeholder="Trello, Asana, Monday...">
+                        </div>
+                        <div class="form-group">
+                            <label for="cloudStorage">Cloudspeicher</label>
+                            <input type="text" id="cloudStorage" placeholder="Google Drive, Dropbox, OneDrive...">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phoneSystem">Telefonanlage / VoIP Provider</label>
+                            <input type="text" id="phoneSystem" placeholder="z.B. Telekom, Sipgate">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumberType">Nummerntyp</label>
+                            <select id="phoneNumberType">
+                                <option value="">Bitte wählen</option>
+                                <option value="Festnetz">Festnetz</option>
+                                <option value="Mobil">Mobil</option>
+                                <option value="SIP">SIP</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="apiAccess">API-Zugänge vorhanden?</label>
+                            <textarea id="apiAccess" placeholder="Welche Systeme haben APIs?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sektion 6: Datenschutz / DSGVO -->
+                <div class="form-section">
+                    <div class="form-section-title">6. Datenschutz</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerDataStored">Werden Kundendaten gespeichert?</label>
+                            <select id="customerDataStored">
+                                <option value="">Bitte wählen</option>
+                                <option value="Ja">Ja</option>
+                                <option value="Nein">Nein</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="avContract">AV-Vertrag vorhanden?</label>
+                            <select id="avContract">
+                                <option value="">Bitte wählen</option>
+                                <option value="Ja">Ja</option>
+                                <option value="Nein">Nein</option>
+                                <option value="Benötigt">Wird benötigt</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dataTypes">Welche Daten werden gespeichert?</label>
+                            <textarea id="dataTypes" placeholder="z.B. Name, E-Mail, Telefon..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="euDataRequired">Daten müssen in EU bleiben?</label>
+                            <select id="euDataRequired">
+                                <option value="">Bitte wählen</option>
+                                <option value="Ja">Ja, zwingend</option>
+                                <option value="Nein">Nein</option>
+                                <option value="Unklar">Unklar</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="criticalIndustry">Kritische Branche?</label>
+                            <select id="criticalIndustry">
+                                <option value="">Bitte wählen</option>
+                                <option value="Nein">Nein</option>
+                                <option value="Medizin">Medizin / Gesundheit</option>
+                                <option value="Recht">Rechtsberatung</option>
+                                <option value="Beratung">Unternehmensberatung</option>
+                                <option value="HR">Personalwesen (HR)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sektion 7: Budget & Timeline -->
+                <div class="form-section">
+                    <div class="form-section-title">7. Budget & Timeline</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="budgetRange">Budgetrahmen</label>
+                            <select id="budgetRange">
+                                <option value="">Bitte wählen</option>
+                                <option value="< 1.000€">< 1.000€</option>
+                                <option value="1.000€ - 5.000€">1.000€ - 5.000€</option>
+                                <option value="5.000€ - 10.000€">5.000€ - 10.000€</option>
+                                <option value="10.000€ - 25.000€">10.000€ - 25.000€</option>
+                                <option value="> 25.000€">> 25.000€</option>
+                                <option value="Noch unklar">Noch unklar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="decisionMaker">Entscheidungsbefugte Person</label>
+                            <input type="text" id="decisionMaker" placeholder="Name und Position">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectStart">Wann soll das Projekt starten? <span class="required">*</span></label>
+                            <select id="projectStart" required>
+                                <option value="">Bitte wählen</option>
+                                <option value="Sofort">Sofort</option>
+                                <option value="Innerhalb 1 Monat">Innerhalb 1 Monat</option>
+                                <option value="1-3 Monate">1-3 Monate</option>
+                                <option value="3-6 Monate">3-6 Monate</option>
+                                <option value="> 6 Monate">> 6 Monate</option>
+                                <option value="Noch unklar">Noch unklar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="deadline">Zeitkritische Deadlines?</label>
+                            <input type="text" id="deadline" placeholder="Falls vorhanden">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sektion 8: Interne Notizen -->
+                <div class="form-section">
+                    <div class="form-section-title">8. Interne Notizen</div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="shortDescription">Kurzbeschreibung</label>
+                            <textarea id="shortDescription" placeholder="Zusammenfassung des Gesprächs"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="challenges">Herausforderungen</label>
+                            <textarea id="challenges" placeholder="Besondere Herausforderungen oder Risiken"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="insights">Erkenntnisse</label>
+                            <textarea id="insights" placeholder="Wichtige Erkenntnisse aus dem Gespräch"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label for="nextSteps">Next Steps</label>
+                            <textarea id="nextSteps" placeholder="Was sind die nächsten Schritte?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeCustomerModal()">Abbrechen</button>
+                    <button type="submit" class="btn-submit" id="submitBtn">Kunde anlegen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer Detail View Modal -->
+    <div class="modal" id="customerDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Kundendetails</h2>
+                <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
+            <div id="customerDetailContent">
+                <!-- Content will be filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic with Static Data -->
+    <script>
+        // Static customer data (später durch Firebase ersetzt)
+        let customers = [
+            {
+                id: 'C-001',
+                customerNumber: 'K-20241201',
+                companyName: 'Meier Handwerk GmbH',
+                contactFirstName: 'Hans',
+                contactLastName: 'Meier',
+                contactRole: 'Geschäftsführer',
+                email: 'hans.meier@meier-handwerk.de',
+                phone: '+49 123 456789',
+                website: 'https://meier-handwerk.de',
+                industry: 'Handwerk',
+                employeeCount: 15,
+                mainProblem: 'Zu viele verpasste Anrufe außerhalb der Geschäftszeiten',
+                urgency: 4,
+                currentSolution: 'Anrufbeantworter, Rückrufe am nächsten Tag',
+                timeLost: 10,
+                monthlyCost: 2000,
+                incomingChannels: ['Telefon', 'E-Mail', 'Website'],
+                responseTime: '2-4 Std',
+                requestHandler: 'Sekretariat',
+                processErrors: 'Kunden warten zu lange auf Rückmeldung',
+                peakTimes: 'Morgens 8-10 Uhr',
+                idealProcess: '24/7 Telefon-Assistent zur Aufnahme von Anfragen',
+                desiredSolutions: ['Telefon-Assistent', 'Terminvereinbarung'],
+                expectedResults: 'Keine verpassten Anrufe mehr, bessere Kundenzufriedenheit',
+                domainProvider: 'Strato',
+                websiteSystem: 'WordPress',
+                emailSystem: 'Google Workspace',
+                crmSystem: '',
+                projectTool: '',
+                cloudStorage: 'Google Drive',
+                phoneSystem: 'Telekom',
+                phoneNumberType: 'Festnetz',
+                apiAccess: '',
+                customerDataStored: 'Ja',
+                dataTypes: 'Name, Telefon, E-Mail, Adresse',
+                avContract: 'Benötigt',
+                euDataRequired: 'Ja',
+                criticalIndustry: 'Nein',
+                budgetRange: '1.000€ - 5.000€',
+                decisionMaker: 'Hans Meier, Geschäftsführer',
+                projectStart: 'Innerhalb 1 Monat',
+                deadline: '',
+                shortDescription: 'Handwerksbetrieb braucht Telefon-Assistenten',
+                challenges: 'Technische Anbindung an alte Telefonanlage',
+                insights: 'Sehr motiviert, schnelle Umsetzung gewünscht',
+                nextSteps: 'Angebot erstellen, Telefonanlage prüfen',
+                createdAt: '2024-12-01T10:30:00'
+            },
+            {
+                id: 'C-002',
+                customerNumber: 'K-20241202',
+                companyName: 'TechStart Solutions',
+                contactFirstName: 'Laura',
+                contactLastName: 'Schmidt',
+                contactRole: 'Marketing-Leiterin',
+                email: 'l.schmidt@techstart.de',
+                phone: '+49 987 654321',
+                website: 'https://techstart-solutions.de',
+                industry: 'IT / Software',
+                employeeCount: 25,
+                mainProblem: 'Lead-Generierung über Website nicht automatisiert',
+                urgency: 3,
+                currentSolution: 'Kontaktformular, manuelle Bearbeitung',
+                timeLost: 15,
+                monthlyCost: 3500,
+                incomingChannels: ['E-Mail', 'Website', 'Social Media'],
+                responseTime: '1-2 Std',
+                requestHandler: 'Marketing-Team',
+                processErrors: 'Leads werden zu spät qualifiziert',
+                peakTimes: 'Nachmittags 14-17 Uhr',
+                idealProcess: 'Automatische Lead-Qualifizierung und Chatbot',
+                desiredSolutions: ['Chatbot', 'E-Mail-Sortierung', 'Wissensdatenbank'],
+                expectedResults: 'Schnellere Lead-Bearbeitung, höhere Conversion',
+                domainProvider: 'Ionos',
+                websiteSystem: 'Custom React',
+                emailSystem: 'MS Exchange',
+                crmSystem: 'HubSpot',
+                projectTool: 'Monday',
+                cloudStorage: 'OneDrive',
+                phoneSystem: 'Sipgate',
+                phoneNumberType: 'SIP',
+                apiAccess: 'Website API, HubSpot API verfügbar',
+                customerDataStored: 'Ja',
+                dataTypes: 'Firmendaten, Kontaktdaten, Interaktionshistorie',
+                avContract: 'Ja',
+                euDataRequired: 'Ja',
+                criticalIndustry: 'Nein',
+                budgetRange: '5.000€ - 10.000€',
+                decisionMaker: 'Michael Berg, CEO',
+                projectStart: '1-3 Monate',
+                deadline: 'Q1 2025',
+                shortDescription: 'Software-Firma will Lead-Prozess automatisieren',
+                challenges: 'Integration in bestehendes HubSpot CRM',
+                insights: 'Haben bereits Erfahrung mit Automatisierung',
+                nextSteps: 'Demo-Termin vereinbaren, API-Dokumentation prüfen',
+                createdAt: '2024-12-02T14:15:00'
+            }
+        ];
+
+        // Current customer number counter (für automatische Generierung)
+        let customerNumberCounter = 20241203;
+
+        // Global variables
+        let currentEditId = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCustomers();
+        });
+
+        // Generate next customer number
+        function generateCustomerNumber() {
+            const number = 'K-' + customerNumberCounter;
+            customerNumberCounter++;
+            return number;
+        }
+
+        // Load all customers
+        function loadCustomers() {
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+            const table = document.getElementById('customersTable');
+            const tbody = document.getElementById('customersTableBody');
+
+            // Simulate loading
+            loadingState.style.display = 'block';
+            emptyState.style.display = 'none';
+            table.style.display = 'none';
+
+            setTimeout(() => {
+                if (customers.length === 0) {
+                    loadingState.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+
+                customers.forEach((customer) => {
+                    const row = createCustomerRow(customer);
+                    tbody.appendChild(row);
+                });
+
+                loadingState.style.display = 'none';
+                table.style.display = 'table';
+            }, 500);
+        }
+
+        // Create table row for customer
+        function createCustomerRow(customer) {
+            const tr = document.createElement('tr');
+            tr.style.cursor = 'pointer';
+
+            const createdDate = new Date(customer.createdAt).toLocaleDateString('de-DE');
+            const contactName = `${customer.contactFirstName} ${customer.contactLastName}`;
+
+            tr.innerHTML = `
+                <td data-label="Kundennr."><strong>${customer.customerNumber}</strong></td>
+                <td data-label="Firmenname">${customer.companyName}</td>
+                <td data-label="Ansprechpartner">${contactName}</td>
+                <td data-label="E-Mail">${customer.email}</td>
+                <td data-label="Telefon">${customer.phone}</td>
+                <td data-label="Erstellt am">${createdDate}</td>
+                <td data-label="Aktionen">
+                    <button class="action-btn btn-edit" onclick="event.stopPropagation(); editCustomer('${customer.id}')">Bearbeiten</button>
+                    <button class="action-btn btn-edit" onclick="event.stopPropagation(); viewCustomerDetails('${customer.id}')">Details</button>
+                    <button class="action-btn btn-delete" onclick="event.stopPropagation(); deleteCustomer('${customer.id}')">Löschen</button>
+                </td>
+            `;
+
+            // Click on row to view details
+            tr.addEventListener('click', () => viewCustomerDetails(customer.id));
+
+            return tr;
+        }
+
+        // Open modal for adding customer
+        window.openAddCustomerModal = function() {
+            currentEditId = null;
+            document.getElementById('modalTitle').textContent = 'Neuer Kunde';
+            document.getElementById('submitBtn').textContent = 'Kunde anlegen';
+            document.getElementById('customerForm').reset();
+            document.getElementById('customerId').value = '';
+            document.getElementById('urgencyValue').textContent = '3';
+            document.getElementById('customerModal').classList.add('active');
+        };
+
+        // Open modal for editing customer
+        window.editCustomer = function(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return;
+
+            currentEditId = customerId;
+            document.getElementById('modalTitle').textContent = 'Kunde bearbeiten';
+            document.getElementById('submitBtn').textContent = 'Änderungen speichern';
+
+            // Fill form with customer data
+            document.getElementById('customerId').value = customerId;
+            document.getElementById('companyName').value = customer.companyName || '';
+            document.getElementById('industry').value = customer.industry || '';
+            document.getElementById('contactFirstName').value = customer.contactFirstName || '';
+            document.getElementById('contactLastName').value = customer.contactLastName || '';
+            document.getElementById('contactRole').value = customer.contactRole || '';
+            document.getElementById('employeeCount').value = customer.employeeCount || '';
+            document.getElementById('email').value = customer.email || '';
+            document.getElementById('phone').value = customer.phone || '';
+            document.getElementById('website').value = customer.website || '';
+
+            document.getElementById('mainProblem').value = customer.mainProblem || '';
+            document.getElementById('urgency').value = customer.urgency || 3;
+            document.getElementById('urgencyValue').textContent = customer.urgency || 3;
+            document.getElementById('currentSolution').value = customer.currentSolution || '';
+            document.getElementById('timeLost').value = customer.timeLost || '';
+            document.getElementById('monthlyCost').value = customer.monthlyCost || '';
+
+            // Set checkboxes for incoming channels
+            ['Phone', 'WhatsApp', 'Email', 'Website', 'Social'].forEach(channel => {
+                const checkbox = document.getElementById(`incoming${channel}`);
+                if (checkbox && customer.incomingChannels) {
+                    checkbox.checked = customer.incomingChannels.some(c =>
+                        c.toLowerCase().includes(channel.toLowerCase())
+                    );
+                }
+            });
+
+            document.getElementById('responseTime').value = customer.responseTime || '';
+            document.getElementById('requestHandler').value = customer.requestHandler || '';
+            document.getElementById('processErrors').value = customer.processErrors || '';
+            document.getElementById('peakTimes').value = customer.peakTimes || '';
+
+            document.getElementById('idealProcess').value = customer.idealProcess || '';
+
+            // Set checkboxes for solutions
+            ['PhoneAssistant', 'EmailSorting', 'Chatbot', 'Appointments', 'Quotes', 'KnowledgeBase'].forEach(solution => {
+                const checkbox = document.getElementById(`solution${solution}`);
+                if (checkbox && customer.desiredSolutions) {
+                    checkbox.checked = customer.desiredSolutions.some(s =>
+                        s.toLowerCase().replace(/[-\s]/g, '').includes(solution.toLowerCase().replace(/[-\s]/g, ''))
+                    );
+                }
+            });
+
+            document.getElementById('expectedResults').value = customer.expectedResults || '';
+
+            document.getElementById('domainProvider').value = customer.domainProvider || '';
+            document.getElementById('websiteSystem').value = customer.websiteSystem || '';
+            document.getElementById('emailSystem').value = customer.emailSystem || '';
+            document.getElementById('crmSystem').value = customer.crmSystem || '';
+            document.getElementById('projectTool').value = customer.projectTool || '';
+            document.getElementById('cloudStorage').value = customer.cloudStorage || '';
+            document.getElementById('phoneSystem').value = customer.phoneSystem || '';
+            document.getElementById('phoneNumberType').value = customer.phoneNumberType || '';
+            document.getElementById('apiAccess').value = customer.apiAccess || '';
+
+            document.getElementById('customerDataStored').value = customer.customerDataStored || '';
+            document.getElementById('dataTypes').value = customer.dataTypes || '';
+            document.getElementById('avContract').value = customer.avContract || '';
+            document.getElementById('euDataRequired').value = customer.euDataRequired || '';
+            document.getElementById('criticalIndustry').value = customer.criticalIndustry || '';
+
+            document.getElementById('budgetRange').value = customer.budgetRange || '';
+            document.getElementById('decisionMaker').value = customer.decisionMaker || '';
+            document.getElementById('projectStart').value = customer.projectStart || '';
+            document.getElementById('deadline').value = customer.deadline || '';
+
+            document.getElementById('shortDescription').value = customer.shortDescription || '';
+            document.getElementById('challenges').value = customer.challenges || '';
+            document.getElementById('insights').value = customer.insights || '';
+            document.getElementById('nextSteps').value = customer.nextSteps || '';
+
+            document.getElementById('customerModal').classList.add('active');
+        };
+
+        // Close modals
+        window.closeCustomerModal = function() {
+            document.getElementById('customerModal').classList.remove('active');
+            currentEditId = null;
+        };
+
+        window.closeDetailModal = function() {
+            document.getElementById('customerDetailModal').classList.remove('active');
+        };
+
+        // View customer details
+        window.viewCustomerDetails = function(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const detailContent = document.getElementById('customerDetailContent');
+            const contactName = `${customer.contactFirstName} ${customer.contactLastName}`;
+
+            // Build incoming channels text
+            const incomingChannels = customer.incomingChannels ? customer.incomingChannels.join(', ') : '-';
+            const desiredSolutions = customer.desiredSolutions ? customer.desiredSolutions.join(', ') : '-';
+
+            detailContent.innerHTML = `
+                <div class="form-section">
+                    <div class="form-section-title">Kunde & Kontakt</div>
+                    <p><strong>Kundennummer:</strong> ${customer.customerNumber}</p>
+                    <p><strong>Firmenname:</strong> ${customer.companyName}</p>
+                    <p><strong>Ansprechpartner:</strong> ${contactName}</p>
+                    <p><strong>Rolle:</strong> ${customer.contactRole || '-'}</p>
+                    <p><strong>E-Mail:</strong> ${customer.email}</p>
+                    <p><strong>Telefon:</strong> ${customer.phone}</p>
+                    <p><strong>Website:</strong> ${customer.website ? `<a href="${customer.website}" target="_blank">${customer.website}</a>` : '-'}</p>
+                    <p><strong>Branche:</strong> ${customer.industry || '-'}</p>
+                    <p><strong>Mitarbeiter:</strong> ${customer.employeeCount || '-'}</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Problem & Ziele</div>
+                    <p><strong>Hauptproblem:</strong> ${customer.mainProblem || '-'}</p>
+                    <p><strong>Dringlichkeit:</strong> ${customer.urgency || '-'} / 5</p>
+                    <p><strong>Bisherige Lösung:</strong> ${customer.currentSolution || '-'}</p>
+                    <p><strong>Zeitverlust:</strong> ${customer.timeLost ? customer.timeLost + ' Std./Woche' : '-'}</p>
+                    <p><strong>Monatliche Kosten:</strong> ${customer.monthlyCost ? customer.monthlyCost + ' €' : '-'}</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Prozesse heute</div>
+                    <p><strong>Anfragen kommen rein über:</strong> ${incomingChannels}</p>
+                    <p><strong>Antwortzeit:</strong> ${customer.responseTime || '-'}</p>
+                    <p><strong>Bearbeitet von:</strong> ${customer.requestHandler || '-'}</p>
+                    <p><strong>Probleme im Prozess:</strong> ${customer.processErrors || '-'}</p>
+                    <p><strong>Peak-Zeiten:</strong> ${customer.peakTimes || '-'}</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Gewünschtes Zielbild</div>
+                    <p><strong>Idealer Prozess:</strong> ${customer.idealProcess || '-'}</p>
+                    <p><strong>Gewünschte Lösungen:</strong> ${desiredSolutions}</p>
+                    <p><strong>Erwartete Ergebnisse:</strong> ${customer.expectedResults || '-'}</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Technische Infrastruktur</div>
+                    <p><strong>Domain-Anbieter:</strong> ${customer.domainProvider || '-'}</p>
+                    <p><strong>Website-System:</strong> ${customer.websiteSystem || '-'}</p>
+                    <p><strong>E-Mail-System:</strong> ${customer.emailSystem || '-'}</p>
+                    <p><strong>CRM:</strong> ${customer.crmSystem || '-'}</p>
+                    <p><strong>Projektmanagement:</strong> ${customer.projectTool || '-'}</p>
+                    <p><strong>Cloud-Speicher:</strong> ${customer.cloudStorage || '-'}</p>
+                    <p><strong>Telefonanlage:</strong> ${customer.phoneSystem || '-'}</p>
+                    <p><strong>Nummerntyp:</strong> ${customer.phoneNumberType || '-'}</p>
+                    <p><strong>API-Zugänge:</strong> ${customer.apiAccess || '-'}</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Datenschutz</div>
+                    <p><strong>Kundendaten gespeichert:</strong> ${customer.customerDataStored || '-'}</p>
+                    <p><strong>Welche Daten:</strong> ${customer.dataTypes || '-'}</p>
+                    <p><strong>AV-Vertrag:</strong> ${customer.avContract || '-'}</p>
+                    <p><strong>EU-Daten erforderlich:</strong> ${customer.euDataRequired || '-'}</p>
+                    <p><strong>Kritische Branche:</strong> ${customer.criticalIndustry || '-'}</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Budget & Timeline</div>
+                    <p><strong>Budgetrahmen:</strong> ${customer.budgetRange || '-'}</p>
+                    <p><strong>Entscheider:</strong> ${customer.decisionMaker || '-'}</p>
+                    <p><strong>Projektstart:</strong> ${customer.projectStart || '-'}</p>
+                    <p><strong>Deadlines:</strong> ${customer.deadline || '-'}</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Interne Notizen</div>
+                    <p><strong>Kurzbeschreibung:</strong> ${customer.shortDescription || '-'}</p>
+                    <p><strong>Herausforderungen:</strong> ${customer.challenges || '-'}</p>
+                    <p><strong>Erkenntnisse:</strong> ${customer.insights || '-'}</p>
+                    <p><strong>Next Steps:</strong> ${customer.nextSteps || '-'}</p>
+                </div>
+
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="btn-submit" onclick="editCustomer('${customer.id}'); closeDetailModal();">Bearbeiten</button>
+                </div>
+            `;
+
+            document.getElementById('customerDetailModal').classList.add('active');
+        };
+
+        // Handle form submit
+        document.getElementById('customerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Wird gespeichert...';
+
+            // Collect form data
+            const formData = {
+                companyName: document.getElementById('companyName').value,
+                industry: document.getElementById('industry').value,
+                contactFirstName: document.getElementById('contactFirstName').value,
+                contactLastName: document.getElementById('contactLastName').value,
+                contactRole: document.getElementById('contactRole').value,
+                employeeCount: document.getElementById('employeeCount').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                website: document.getElementById('website').value,
+
+                mainProblem: document.getElementById('mainProblem').value,
+                urgency: parseInt(document.getElementById('urgency').value),
+                currentSolution: document.getElementById('currentSolution').value,
+                timeLost: document.getElementById('timeLost').value,
+                monthlyCost: document.getElementById('monthlyCost').value,
+
+                incomingChannels: Array.from(document.querySelectorAll('input[name="incoming"]:checked'))
+                    .map(cb => cb.nextElementSibling.textContent),
+                responseTime: document.getElementById('responseTime').value,
+                requestHandler: document.getElementById('requestHandler').value,
+                processErrors: document.getElementById('processErrors').value,
+                peakTimes: document.getElementById('peakTimes').value,
+
+                idealProcess: document.getElementById('idealProcess').value,
+                desiredSolutions: Array.from(document.querySelectorAll('input[name="solutions"]:checked'))
+                    .map(cb => cb.nextElementSibling.textContent),
+                expectedResults: document.getElementById('expectedResults').value,
+
+                domainProvider: document.getElementById('domainProvider').value,
+                websiteSystem: document.getElementById('websiteSystem').value,
+                emailSystem: document.getElementById('emailSystem').value,
+                crmSystem: document.getElementById('crmSystem').value,
+                projectTool: document.getElementById('projectTool').value,
+                cloudStorage: document.getElementById('cloudStorage').value,
+                phoneSystem: document.getElementById('phoneSystem').value,
+                phoneNumberType: document.getElementById('phoneNumberType').value,
+                apiAccess: document.getElementById('apiAccess').value,
+
+                customerDataStored: document.getElementById('customerDataStored').value,
+                dataTypes: document.getElementById('dataTypes').value,
+                avContract: document.getElementById('avContract').value,
+                euDataRequired: document.getElementById('euDataRequired').value,
+                criticalIndustry: document.getElementById('criticalIndustry').value,
+
+                budgetRange: document.getElementById('budgetRange').value,
+                decisionMaker: document.getElementById('decisionMaker').value,
+                projectStart: document.getElementById('projectStart').value,
+                deadline: document.getElementById('deadline').value,
+
+                shortDescription: document.getElementById('shortDescription').value,
+                challenges: document.getElementById('challenges').value,
+                insights: document.getElementById('insights').value,
+                nextSteps: document.getElementById('nextSteps').value
+            };
+
+            setTimeout(() => {
+                if (currentEditId) {
+                    // Update existing customer
+                    const index = customers.findIndex(c => c.id === currentEditId);
+                    if (index !== -1) {
+                        customers[index] = {
+                            ...customers[index],
+                            ...formData,
+                            updatedAt: new Date().toISOString()
+                        };
+                    }
+                    alert('Kunde erfolgreich aktualisiert!');
+                } else {
+                    // Create new customer
+                    const newCustomer = {
+                        id: 'C-' + String(customers.length + 1).padStart(3, '0'),
+                        customerNumber: generateCustomerNumber(),
+                        ...formData,
+                        createdAt: new Date().toISOString()
+                    };
+                    customers.unshift(newCustomer);
+                    alert(`Kunde erfolgreich angelegt!\nKundennummer: ${newCustomer.customerNumber}`);
+                }
+
+                closeCustomerModal();
+                loadCustomers();
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }, 500);
+        });
+
+        // Delete customer
+        window.deleteCustomer = function(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return;
+
+            if (!confirm(`Möchten Sie diesen Kunden wirklich löschen?\n\nFirma: ${customer.companyName}\nKundennummer: ${customer.customerNumber}\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`)) {
+                return;
+            }
+
+            customers = customers.filter(c => c.id !== customerId);
+            alert('Kunde erfolgreich gelöscht!');
+            loadCustomers();
+        };
+
+        // Mobile Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

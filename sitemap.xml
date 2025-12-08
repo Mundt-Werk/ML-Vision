@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <!-- Startseite / Homepage -->
+    <url>
+        <loc>https://vision-ml.de/</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Landingpage Düren -->
+    <url>
+        <loc>https://vision-ml.de/ki-automatisierung-dueren.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Blog Hauptseite -->
+    <url>
+        <loc>https://vision-ml.de/blog.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Blog Hauptartikel 1 -->
+    <url>
+        <loc>https://vision-ml.de/workflow-automatisierung.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Blog Hauptartikel 2 -->
+    <url>
+        <loc>https://vision-ml.de/voice-agents-chatbots.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Blog Artikel 3 -->
+    <url>
+        <loc>https://vision-ml.de/blog-ki-automatisierung-dueren.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Blog Artikel 4 -->
+    <url>
+        <loc>https://vision-ml.de/blog-voice-agents-nrw.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Blog Artikel 5 -->
+    <url>
+        <loc>https://vision-ml.de/blog-workflow-automatisierung.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Impressum -->
+    <url>
+        <loc>https://vision-ml.de/impressum.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- Datenschutz -->
+    <url>
+        <loc>https://vision-ml.de/datenschutz.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+</urlset>

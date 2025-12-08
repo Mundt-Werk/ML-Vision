@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Einstellungen - ML Vision Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Futura Book', Arial, sans-serif;
+            background: #0f1419;
+            color: #e1e8ed;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1a1f2e 0%, #151922 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-right: 1px solid rgba(4, 169, 212, 0.2);
+        }
+
+        .sidebar-logo {
+            padding: 0 20px 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo img {
+            height: 60px;
+        }
+
+        .admin-badge-sidebar {
+            background: rgba(255, 59, 48, 0.2);
+            color: #ff3b30;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            display: inline-block;
+            border: 1px solid rgba(255, 59, 48, 0.3);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: rgba(225, 232, 237, 0.6);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #04A9D4;
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            color: #fff;
+            background: rgba(4, 169, 212, 0.15);
+        }
+
+        .sidebar-menu a.active::before,
+        .sidebar-menu a:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .sidebar-section-title {
+            padding: 20px 20px 10px 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: rgba(225, 232, 237, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+
+        .sidebar-footer a {
+            display: block;
+            padding: 10px;
+            color: #ff4757;
+            text-decoration: none;
+            text-align: center;
+            border: 2px solid #ff4757;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-footer a:hover {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: #1a1f2e;
+            padding: 20px 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-bar h1 {
+            font-size: 28px;
+            color: #fff;
+            margin: 0 0 5px 0;
+        }
+
+        .top-bar p {
+            color: rgba(225, 232, 237, 0.6);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Settings Card */
+        .settings-card {
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .settings-card h2 {
+            font-size: 20px;
+            color: #04A9D4;
+            margin: 0 0 20px 0;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            color: rgba(225, 232, 237, 0.8);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Futura Book', Arial, sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2304A9D4' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        .form-group select option {
+            background: #1a1f2e;
+            color: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #04A9D4;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .save-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(4, 169, 212, 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        .info-box {
+            background: rgba(4, 169, 212, 0.1);
+            border-left: 4px solid #04A9D4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: rgba(225, 232, 237, 0.8);
+            font-size: 14px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision Logo">
+                <div class="admin-badge-sidebar">ADMIN</div>
+            </div>
+
+            <div class="sidebar-section-title">Verwaltung</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="../dashboard.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Benutzerverwaltung
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Kunden
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Tools</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="leads-bot.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
+                        </svg>
+                        Leads Bot
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">System</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="settings.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Einstellungen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn">Abmelden</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1>Einstellungen</h1>
+                <p>Allgemeine System-Einstellungen</p>
+            </div>
+
+            <!-- General Settings -->
+            <div class="settings-card">
+                <h2>Allgemeine Einstellungen</h2>
+                <form id="generalForm">
+                    <div class="form-group">
+                        <label for="companyName">Firmenname</label>
+                        <input type="text" id="companyName" value="ML Vision">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactEmail">Kontakt E-Mail</label>
+                        <input type="email" id="contactEmail" value="info@ml-vision.de">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactPhone">Kontakt Telefon</label>
+                        <input type="tel" id="contactPhone" value="+49 123 456789">
+                    </div>
+
+                    <button type="button" class="save-btn" onclick="saveGeneralSettings()">Einstellungen speichern</button>
+                </form>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="settings-card">
+                <h2>Benachrichtigungen</h2>
+                <form id="notificationForm">
+                    <div class="form-group">
+                        <label for="emailNotifications">E-Mail Benachrichtigungen</label>
+                        <select id="emailNotifications">
+                            <option value="all" selected>Alle Benachrichtigungen</option>
+                            <option value="important">Nur wichtige</option>
+                            <option value="none">Keine</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notificationEmail">Benachrichtigungs-E-Mail</label>
+                        <input type="email" id="notificationEmail" value="admin@ml-vision.de">
+                    </div>
+
+                    <button type="button" class="save-btn" onclick="saveNotificationSettings()">Einstellungen speichern</button>
+                </form>
+            </div>
+
+            <!-- System Info -->
+            <div class="settings-card">
+                <h2>System-Information</h2>
+                <p style="color: rgba(225, 232, 237, 0.6); margin-bottom: 15px;">Version: 1.0.0</p>
+                <p style="color: rgba(225, 232, 237, 0.6); margin-bottom: 15px;">Letztes Update: 05.12.2024</p>
+
+                <div class="info-box">
+                    <p><strong>Hinweis:</strong> Die Einstellungen werden aktuell lokal gespeichert. Nach der Firebase-Integration werden sie in der Cloud synchronisiert.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function saveGeneralSettings() {
+            const companyName = document.getElementById('companyName').value;
+            const contactEmail = document.getElementById('contactEmail').value;
+            const contactPhone = document.getElementById('contactPhone').value;
+
+            // Später: Speichern in Firebase
+            console.log('Speichere allgemeine Einstellungen:', {
+                companyName,
+                contactEmail,
+                contactPhone
+            });
+
+            alert('Einstellungen erfolgreich gespeichert!');
+        }
+
+        function saveNotificationSettings() {
+            const emailNotifications = document.getElementById('emailNotifications').value;
+            const notificationEmail = document.getElementById('notificationEmail').value;
+
+            // Später: Speichern in Firebase
+            console.log('Speichere Benachrichtigungseinstellungen:', {
+                emailNotifications,
+                notificationEmail
+            });
+
+            alert('Benachrichtigungseinstellungen erfolgreich gespeichert!');
+        }
+    </script>
+</body>
+</html>

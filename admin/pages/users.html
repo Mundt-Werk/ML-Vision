@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benutzerverwaltung - ML Vision Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Futura Book', Arial, sans-serif;
+            background: #0f1419;
+            color: #e1e8ed;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1a1f2e 0%, #151922 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-right: 1px solid rgba(4, 169, 212, 0.2);
+        }
+
+        .sidebar-logo {
+            padding: 0 20px 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo img {
+            height: 60px;
+        }
+
+        .admin-badge-sidebar {
+            background: rgba(255, 59, 48, 0.2);
+            color: #ff3b30;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            display: inline-block;
+            border: 1px solid rgba(255, 59, 48, 0.3);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: rgba(225, 232, 237, 0.6);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #04A9D4;
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            color: #fff;
+            background: rgba(4, 169, 212, 0.15);
+        }
+
+        .sidebar-menu a.active::before,
+        .sidebar-menu a:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .sidebar-section-title {
+            padding: 20px 20px 10px 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: rgba(225, 232, 237, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+
+        .sidebar-footer a {
+            display: block;
+            padding: 10px;
+            color: #ff4757;
+            text-decoration: none;
+            text-align: center;
+            border: 2px solid #ff4757;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-footer a:hover {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: #1a1f2e;
+            padding: 20px 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-bar-left h1 {
+            font-size: 28px;
+            color: #fff;
+            margin: 0 0 5px 0;
+        }
+
+        .top-bar-left p {
+            color: rgba(225, 232, 237, 0.6);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .add-user-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(4, 169, 212, 0.3);
+        }
+
+        .add-user-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        /* Table */
+        .users-table-container {
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table thead {
+            border-bottom: 2px solid rgba(4, 169, 212, 0.2);
+        }
+
+        .users-table th {
+            padding: 15px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: rgba(225, 232, 237, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .users-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .users-table tbody tr {
+            transition: background 0.3s;
+        }
+
+        .users-table tbody tr:hover {
+            background: rgba(4, 169, 212, 0.05);
+        }
+
+        .role-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: rgba(255, 59, 48, 0.2);
+            color: #ff453a;
+            border: 1px solid rgba(255, 59, 48, 0.3);
+        }
+
+        .role-customer {
+            background: rgba(4, 169, 212, 0.2);
+            color: #04A9D4;
+            border: 1px solid rgba(4, 169, 212, 0.3);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: rgba(4, 169, 212, 0.2);
+            color: #04A9D4;
+            border: 1px solid rgba(4, 169, 212, 0.3);
+        }
+
+        .btn-edit:hover {
+            background: rgba(4, 169, 212, 0.3);
+        }
+
+        .btn-delete {
+            background: rgba(255, 69, 58, 0.2);
+            color: #ff453a;
+            border: 1px solid rgba(255, 69, 58, 0.3);
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 69, 58, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(225, 232, 237, 0.6);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            color: rgba(225, 232, 237, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Futura Book', Arial, sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2304A9D4' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        .form-group select option {
+            background: #1a1f2e;
+            color: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #04A9D4;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(225, 232, 237, 0.6);
+            cursor: pointer;
+            padding: 5px;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: #04A9D4;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: rgba(225, 232, 237, 0.8);
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(225, 232, 237, 0.6);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(225, 232, 237, 0.6);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 2000;
+            background: #04A9D4;
+            border: none;
+            border-radius: 12px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: #fff;
+            margin: 5px auto;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        /* Responsive Table Cards for Mobile */
+        @media (max-width: 768px) {
+            .users-table {
+                width: 100%;
+                max-width: 100%;
+                display: block;
+            }
+
+            .users-table thead {
+                display: none;
+            }
+
+            .users-table tbody {
+                display: block;
+                width: 100%;
+            }
+
+            .users-table tbody tr {
+                display: block;
+                margin-bottom: 15px;
+                background: rgba(4, 169, 212, 0.05);
+                border: 1px solid rgba(4, 169, 212, 0.2);
+                border-radius: 12px;
+                padding: 12px;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .users-table tbody tr:hover {
+                background: rgba(4, 169, 212, 0.1);
+            }
+
+            .users-table td {
+                display: block;
+                text-align: left;
+                padding: 8px 0;
+                border-bottom: none;
+                width: 100%;
+                max-width: 100%;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .users-table td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                text-transform: uppercase;
+                font-size: 10px;
+                color: rgba(225, 232, 237, 0.6);
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .users-table td:last-child {
+                padding-top: 12px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: 8px;
+            }
+
+            .users-table td strong,
+            .users-table td span {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .action-btn {
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+                padding: 10px;
+                text-align: center;
+            }
+
+            .role-badge {
+                display: inline-block;
+                max-width: 100%;
+            }
+        }
+
+        /* Tablet & Desktop */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+            }
+
+            .sidebar-menu a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .top-bar {
+                padding: 15px 20px;
+            }
+
+            .top-bar-left h1 {
+                font-size: 24px;
+            }
+        }
+
+        /* Small Mobile (< 480px) */
+        @media (max-width: 480px) {
+            .mobile-menu-toggle {
+                top: 10px;
+                left: 10px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .main-content {
+                padding: 65px 8px 10px 8px !important;
+                width: 100%;
+                max-width: 100vw;
+            }
+
+            .top-bar {
+                padding: 12px;
+                margin-bottom: 15px;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .top-bar-left h1 {
+                font-size: 20px;
+                word-wrap: break-word;
+            }
+
+            .top-bar-left p {
+                font-size: 11px;
+            }
+
+            .add-user-btn {
+                width: 100%;
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .users-table-container {
+                padding: 10px;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .users-table tbody tr {
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+
+            .modal-content {
+                padding: 15px;
+                width: 98%;
+                max-width: 98vw;
+            }
+
+            .modal-header {
+                margin-bottom: 15px;
+            }
+
+            .modal-header h2 {
+                font-size: 18px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group input,
+            .form-group select {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .btn-submit,
+            .btn-cancel {
+                width: 100%;
+            }
+        }
+
+        /* Mobile (max-width: 768px) */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 75px 12px 15px 12px;
+                width: 100%;
+                max-width: 100vw;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+                width: 100%;
+                max-width: 100%;
+                padding: 15px;
+            }
+
+            .users-table-container {
+                padding: 12px;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            .add-user-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision Logo">
+                <div class="admin-badge-sidebar">ADMIN</div>
+            </div>
+
+            <div class="sidebar-section-title">Verwaltung</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="../dashboard.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Benutzerverwaltung
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Kunden
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Tools</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="leads-bot.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
+                        </svg>
+                        Leads Bot
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">System</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="settings.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Einstellungen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn">Abmelden</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <h1>Benutzerverwaltung</h1>
+                    <p>Verwalten Sie Login-Accounts für Admins und Kunden</p>
+                </div>
+                <div>
+                    <button class="add-user-btn" onclick="openAddUserModal()">+ Neuer Benutzer</button>
+                </div>
+            </div>
+
+            <div class="users-table-container">
+                <div id="loadingState" class="loading">
+                    Lade Benutzer...
+                </div>
+
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <h3>Noch keine Benutzer</h3>
+                    <p>Legen Sie den ersten Benutzer an.</p>
+                </div>
+
+                <table class="users-table" id="usersTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>E-Mail</th>
+                            <th>Rolle</th>
+                            <th>Erstellt am</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div class="modal" id="alertModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="alertTitle">Hinweis</h2>
+                <button class="modal-close" onclick="closeAlertModal()">&times;</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <p id="alertMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
+            </div>
+            <div class="form-actions" style="margin-top: 20px;">
+                <button class="btn-submit" onclick="closeAlertModal()" style="width: 100%;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="confirmTitle">Bestätigung</h2>
+                <button class="modal-close" onclick="closeConfirmModal(false)">&times;</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <p id="confirmMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
+            </div>
+            <div class="form-actions" style="margin-top: 20px;">
+                <button class="btn-cancel" onclick="closeConfirmModal(false)">Abbrechen</button>
+                <button class="btn-submit" onclick="closeConfirmModal(true)">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit User Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Neuer Benutzer</h2>
+                <button class="modal-close" onclick="closeUserModal()">&times;</button>
+            </div>
+
+            <form id="userForm">
+                <input type="hidden" id="userId">
+
+                <div class="form-group">
+                    <label for="userName">Name *</label>
+                    <input type="text" id="userName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userEmail">E-Mail *</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userPassword">Passwort * (min. 6 Zeichen)</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="userPassword" minlength="6" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('userPassword')" aria-label="Passwort anzeigen/verstecken">
+                            👁️
+                        </button>
+                    </div>
+                    <small style="color: rgba(225, 232, 237, 0.6); font-size: 12px; display: block; margin-top: 5px;">
+                        Beim Bearbeiten optional - nur bei neuem Passwort ausfüllen
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="userRole">Rolle *</label>
+                    <select id="userRole" required>
+                        <option value="">Bitte wählen</option>
+                        <option value="admin">Administrator</option>
+                        <option value="customer">Kunde (Login-Account)</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeUserModal()">Abbrechen</button>
+                    <button type="submit" class="btn-submit" id="submitBtn">Benutzer anlegen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { auth, db } from '../../assets/js/firebase-config.js';
+        import {
+            createUserWithEmailAndPassword,
+            deleteUser as firebaseDeleteUser,
+            updateEmail,
+            updatePassword
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import {
+            collection,
+            getDocs,
+            doc,
+            setDoc,
+            updateDoc,
+            deleteDoc,
+            query,
+            orderBy
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let users = [];
+        let currentEditId = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Prüfe ob Benutzer eingeloggt ist und Admin-Rolle hat
+            const { user, role } = await checkAuthState();
+
+            if (!user) {
+                // Nicht eingeloggt - zurück zum Login
+                window.location.href = '/login.html';
+                return;
+            }
+
+            if (role !== 'admin') {
+                // Kein Admin - zurück zum Kunden-Dashboard
+                window.location.href = '/customer/dashboard.html';
+                return;
+            }
+
+            // Admin eingeloggt - lade Benutzer
+            loadUsers();
+        });
+
+        // Auth State Check Helper
+        async function checkAuthState() {
+            return new Promise((resolve) => {
+                import('../../assets/js/firebase-config.js').then(({ auth, db }) => {
+                    import('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js').then(({ onAuthStateChanged }) => {
+                        import('https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js').then(({ doc, getDoc }) => {
+                            onAuthStateChanged(auth, async (user) => {
+                                if (user) {
+                                    try {
+                                        const userDoc = await getDoc(doc(db, 'users', user.uid));
+                                        const role = userDoc.exists() ? userDoc.data().role : 'customer';
+                                        resolve({ user, role });
+                                    } catch (error) {
+                                        console.error('Fehler beim Abrufen der Rolle:', error);
+                                        resolve({ user, role: 'customer' });
+                                    }
+                                } else {
+                                    resolve({ user: null, role: null });
+                                }
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        // Load all users from Firebase
+        async function loadUsers() {
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+            const table = document.getElementById('usersTable');
+            const tbody = document.getElementById('usersTableBody');
+
+            loadingState.style.display = 'block';
+            emptyState.style.display = 'none';
+            table.style.display = 'none';
+
+            try {
+                // Fetch users from Firestore (ohne orderBy um alle zu bekommen)
+                const usersQuery = collection(db, 'users');
+                const querySnapshot = await getDocs(usersQuery);
+
+                users = [];
+                querySnapshot.forEach((doc) => {
+                    users.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                // Sortiere nach createdAt (mit Fallback für alte Einträge)
+                users.sort((a, b) => {
+                    const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+                    const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+                    return dateB - dateA; // Neueste zuerst
+                });
+
+                if (users.length === 0) {
+                    loadingState.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+
+                users.forEach((user) => {
+                    const row = createUserRow(user);
+                    tbody.appendChild(row);
+                });
+
+                loadingState.style.display = 'none';
+                table.style.display = 'table';
+
+            } catch (error) {
+                console.error('Fehler beim Laden der Benutzer:', error);
+                loadingState.innerHTML = '<p style="color: #ff453a;">Fehler beim Laden der Benutzer</p>';
+            }
+        }
+
+        // Create table row for user
+        function createUserRow(user) {
+            const tr = document.createElement('tr');
+
+            const createdDate = user.createdAt
+                ? new Date(user.createdAt).toLocaleDateString('de-DE')
+                : '-';
+            const roleClass = user.role === 'admin' ? 'role-admin' : 'role-customer';
+            const roleText = user.role === 'admin' ? 'Administrator' : 'Kunde';
+
+            tr.innerHTML = `
+                <td data-label="Name"><strong>${user.name || '-'}</strong></td>
+                <td data-label="E-Mail">${user.email || '-'}</td>
+                <td data-label="Rolle"><span class="role-badge ${roleClass}">${roleText}</span></td>
+                <td data-label="Erstellt am">${createdDate}</td>
+                <td data-label="Aktionen">
+                    <button class="action-btn btn-edit" onclick="editUser('${user.id}')">Bearbeiten</button>
+                    <button class="action-btn btn-delete" onclick="deleteUser('${user.id}')">Löschen</button>
+                </td>
+            `;
+
+            return tr;
+        }
+
+        // Open modal for adding user
+        window.openAddUserModal = function() {
+            currentEditId = null;
+            document.getElementById('modalTitle').textContent = 'Neuer Benutzer';
+            document.getElementById('submitBtn').textContent = 'Benutzer anlegen';
+            document.getElementById('userForm').reset();
+            document.getElementById('userId').value = '';
+            document.getElementById('userPassword').required = true;
+            document.getElementById('userModal').classList.add('active');
+        };
+
+        // Open modal for editing user
+        window.editUser = function(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            currentEditId = userId;
+            document.getElementById('modalTitle').textContent = 'Benutzer bearbeiten';
+            document.getElementById('submitBtn').textContent = 'Änderungen speichern';
+            document.getElementById('userId').value = userId;
+            document.getElementById('userName').value = user.name || '';
+            document.getElementById('userEmail').value = user.email || '';
+            document.getElementById('userRole').value = user.role || '';
+            document.getElementById('userPassword').value = '';
+            document.getElementById('userPassword').required = false;
+
+            document.getElementById('userModal').classList.add('active');
+        };
+
+        // Close modal
+        window.closeUserModal = function() {
+            document.getElementById('userModal').classList.remove('active');
+            currentEditId = null;
+        };
+
+        // Handle form submit
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Wird gespeichert...';
+
+            const formData = {
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                role: document.getElementById('userRole').value,
+                password: document.getElementById('userPassword').value
+            };
+
+            try {
+                if (currentEditId) {
+                    // Update existing user in Firestore
+                    const userRef = doc(db, 'users', currentEditId);
+
+                    await updateDoc(userRef, {
+                        name: formData.name,
+                        email: formData.email,
+                        role: formData.role,
+                        updatedAt: new Date().toISOString()
+                    });
+
+                    showAlert('Benutzer erfolgreich aktualisiert!', 'Erfolg');
+                } else {
+                    // Create new user with Firebase Auth
+                    const userCredential = await createUserWithEmailAndPassword(
+                        auth,
+                        formData.email,
+                        formData.password
+                    );
+
+                    const user = userCredential.user;
+
+                    // Create user document in Firestore
+                    await setDoc(doc(db, 'users', user.uid), {
+                        name: formData.name,
+                        email: formData.email,
+                        role: formData.role,
+                        createdAt: new Date().toISOString()
+                    });
+
+                    showAlert(`Benutzer erfolgreich angelegt!\n\nLogin-Daten:\nE-Mail: ${formData.email}\nPasswort: ${formData.password}`, 'Erfolg');
+                }
+
+                closeUserModal();
+                await loadUsers();
+
+            } catch (error) {
+                console.error('Fehler beim Speichern:', error);
+                let errorMessage = 'Fehler beim Speichern des Benutzers.';
+
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'Diese E-Mail-Adresse wird bereits verwendet.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Ungültige E-Mail-Adresse.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Das Passwort muss mindestens 6 Zeichen lang sein.';
+                        break;
+                }
+
+                showAlert(errorMessage, 'Fehler');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+
+        // Delete user
+        window.deleteUser = async function(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            const confirmed = await showConfirm(
+                `Möchten Sie diesen Benutzer wirklich löschen?\n\nName: ${user.name}\nE-Mail: ${user.email}\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`,
+                'Benutzer löschen'
+            );
+
+            if (!confirmed) return;
+
+            try {
+                // Delete user document from Firestore
+                await deleteDoc(doc(db, 'users', userId));
+
+                showAlert('Benutzer erfolgreich gelöscht!', 'Erfolg');
+                await loadUsers();
+
+            } catch (error) {
+                console.error('Fehler beim Löschen:', error);
+                showAlert('Fehler beim Löschen des Benutzers.', 'Fehler');
+            }
+        };
+
+        // Custom Alert Modal
+        function showAlert(message, title = 'Hinweis') {
+            document.getElementById('alertTitle').textContent = title;
+            document.getElementById('alertMessage').textContent = message;
+            document.getElementById('alertModal').classList.add('active');
+        }
+
+        function closeAlertModal() {
+            document.getElementById('alertModal').classList.remove('active');
+        }
+
+        // Custom Confirm Modal
+        let confirmCallback = null;
+
+        function showConfirm(message, title = 'Bestätigung') {
+            return new Promise((resolve) => {
+                document.getElementById('confirmTitle').textContent = title;
+                document.getElementById('confirmMessage').textContent = message;
+                document.getElementById('confirmModal').classList.add('active');
+                confirmCallback = resolve;
+            });
+        }
+
+        function closeConfirmModal(confirmed) {
+            document.getElementById('confirmModal').classList.remove('active');
+            if (confirmCallback) {
+                confirmCallback(confirmed);
+                confirmCallback = null;
+            }
+        }
+
+        // Password Toggle
+        window.togglePassword = function(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        };
+
+        // Close modals on outside click
+        document.addEventListener('click', function(event) {
+            // User Modal
+            const userModal = document.getElementById('userModal');
+            if (event.target === userModal) {
+                closeUserModal();
+            }
+
+            // Alert Modal
+            const alertModal = document.getElementById('alertModal');
+            if (event.target === alertModal) {
+                closeAlertModal();
+            }
+
+            // Confirm Modal
+            const confirmModal = document.getElementById('confirmModal');
+            if (event.target === confirmModal) {
+                closeConfirmModal(false);
+            }
+
+            // Sidebar on mobile
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Mobile Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+
+    <!-- Firebase Authentication & Logout -->
+    <script type="module">
+        import { initDashboard } from '../../assets/js/dashboard.js';
+
+        // Initialize admin dashboard with role check and logout functionality
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initDashboard('admin');
+        });
+    </script>
+</body>
+</html>

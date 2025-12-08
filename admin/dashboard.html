@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ML Vision</title>
+    <meta name="robots" content="noindex, nofollow">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/img/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Futura Book', Arial, sans-serif;
+            background: #0f1419;
+            color: #e1e8ed;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1a1f2e 0%, #151922 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-right: 1px solid rgba(4, 169, 212, 0.2);
+        }
+
+        .sidebar-logo {
+            padding: 0 20px 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo img {
+            height: 60px;
+        }
+
+        .admin-badge-sidebar {
+            background: rgba(255, 59, 48, 0.2);
+            color: #ff3b30;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            display: inline-block;
+            border: 1px solid rgba(255, 59, 48, 0.3);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: rgba(225, 232, 237, 0.6);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #04A9D4;
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            color: #fff;
+            background: rgba(4, 169, 212, 0.15);
+        }
+
+        .sidebar-menu a.active::before,
+        .sidebar-menu a:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .sidebar-section-title {
+            padding: 20px 20px 10px 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: rgba(225, 232, 237, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+
+        .sidebar-footer a {
+            display: block;
+            padding: 10px;
+            color: #ff4757;
+            text-decoration: none;
+            text-align: center;
+            border: 2px solid #ff4757;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-footer a:hover {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: #1a1f2e;
+            padding: 20px 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-bar-left h1 {
+            font-size: 28px;
+            color: #fff;
+            margin: 0 0 5px 0;
+        }
+
+        .top-bar-left p {
+            color: rgba(225, 232, 237, 0.6);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .top-bar-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .quick-action {
+            padding: 10px 20px;
+            background: rgba(4, 169, 212, 0.1);
+            border: 1px solid rgba(4, 169, 212, 0.3);
+            border-radius: 8px;
+            color: #04A9D4;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .quick-action:hover {
+            background: rgba(4, 169, 212, 0.2);
+            border-color: #04A9D4;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1a1f2e 0%, #151922 100%);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(4, 169, 212, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(4, 169, 212, 0.3);
+            border-color: #04A9D4;
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-card-title {
+            font-size: 13px;
+            color: rgba(225, 232, 237, 0.6);
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(4, 169, 212, 0.3);
+        }
+
+        .stat-card-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+        }
+
+        .stat-card-value {
+            font-size: 42px;
+            font-weight: bold;
+            color: #fff;
+            margin: 0 0 10px 0;
+            text-shadow: 0 2px 10px rgba(4, 169, 212, 0.3);
+        }
+
+        .stat-card-change {
+            font-size: 13px;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-card-change.negative {
+            color: #ef4444;
+        }
+
+        .stat-card-change svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .content-card {
+            background: linear-gradient(135deg, #1a1f2e 0%, #151922 100%);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(4, 169, 212, 0.2);
+        }
+
+        .content-card h2 {
+            font-size: 20px;
+            color: #fff;
+            margin: 0 0 25px 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-card h2 svg {
+            width: 24px;
+            height: 24px;
+            fill: #04A9D4;
+        }
+
+        /* System Status */
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(4, 169, 212, 0.05);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(4, 169, 212, 0.1);
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: inherit;
+            filter: blur(4px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .status-indicator.success {
+            background: #10b981;
+        }
+
+        .status-indicator.error {
+            background: #ef4444;
+        }
+
+        .status-indicator.warning {
+            background: #f59e0b;
+        }
+
+        .status-text {
+            flex: 1;
+        }
+
+        .status-text strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+
+        .status-text small {
+            color: rgba(225, 232, 237, 0.6);
+            font-size: 13px;
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(4, 169, 212, 0.1);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(4, 169, 212, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #04A9D4;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .activity-content p {
+            margin: 0;
+            color: rgba(225, 232, 237, 0.6);
+            font-size: 14px;
+        }
+
+        .activity-time {
+            color: rgba(225, 232, 237, 0.4);
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .quick-stat {
+            background: rgba(4, 169, 212, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(4, 169, 212, 0.1);
+            text-align: center;
+        }
+
+        .quick-stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #04A9D4;
+            margin: 0 0 5px 0;
+        }
+
+        .quick-stat-label {
+            font-size: 13px;
+            color: rgba(225, 232, 237, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 2000;
+            background: #04A9D4;
+            border: none;
+            border-radius: 12px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: #fff;
+            margin: 5px auto;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 80px 15px 20px 15px;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Custom Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(225, 232, 237, 0.6);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(4, 169, 212, 0.4);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: rgba(225, 232, 237, 0.8);
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../assets/img/logo_white_trans.png" alt="ML Vision">
+                <div class="admin-badge-sidebar">Admin</div>
+            </div>
+
+            <div class="sidebar-section-title">Verwaltung</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="dashboard.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="pages/users.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Benutzerverwaltung
+                    </a>
+                </li>
+                <li>
+                    <a href="pages/customers.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Kunden
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Tools</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="pages/leads-bot.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
+                        </svg>
+                        Leads Bot
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">System</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="pages/settings.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Einstellungen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn">Abmelden</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <h1>Admin Dashboard</h1>
+                    <p>Willkommen zurück, Administrator</p>
+                </div>
+                <div class="top-bar-right">
+                    <a href="pages/leads-bot.html" class="quick-action">Leads Bot öffnen</a>
+                    <a href="pages/settings.html" class="quick-action">Einstellungen</a>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Gesamte Kunden</span>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">247</div>
+                    <div class="stat-card-change">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7 14l5-5 5 5z"/>
+                        </svg>
+                        +18 diese Woche
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Aktive Leads</span>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">1,842</div>
+                    <div class="stat-card-change">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7 14l5-5 5 5z"/>
+                        </svg>
+                        +12.5% vs. letzter Monat
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Conversion Rate</span>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">34.2%</div>
+                    <div class="stat-card-change">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7 14l5-5 5 5z"/>
+                        </svg>
+                        +5.8% vs. letzter Monat
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Monatlicher Umsatz</span>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">42.8K</div>
+                    <div class="stat-card-change">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7 14l5-5 5 5z"/>
+                        </svg>
+                        +24.3% vs. letzter Monat
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <div class="content-card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                        </svg>
+                        Systemstatus
+                    </h2>
+                    <div class="status-item">
+                        <div class="status-indicator success"></div>
+                        <div class="status-text">
+                            <strong>Leads Bot System</strong>
+                            <small>Alle Systeme betriebsbereit - 24/7 aktiv</small>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-indicator success"></div>
+                        <div class="status-text">
+                            <strong>Voice Agent API</strong>
+                            <small>Betriebsbereit - 342 Gespräche heute</small>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-indicator warning"></div>
+                        <div class="status-text">
+                            <strong>Workflow-Automatisierung</strong>
+                            <small>Erhöhte Auslastung - 87 aktive Workflows</small>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-indicator success"></div>
+                        <div class="status-text">
+                            <strong>Datenbank</strong>
+                            <small>Optimal - Letzte Sicherung: Heute, 03:00 Uhr</small>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-indicator success"></div>
+                        <div class="status-text">
+                            <strong>CRM-Integration</strong>
+                            <small>Synchronisiert - Alle Systeme verbunden</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                        </svg>
+                        Quick Stats
+                    </h2>
+                    <div class="quick-stats">
+                        <div class="quick-stat">
+                            <div class="quick-stat-value">94.2%</div>
+                            <div class="quick-stat-label">Uptime</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-value">1,247</div>
+                            <div class="quick-stat-label">Minuten heute</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-value">87</div>
+                            <div class="quick-stat-label">Workflows</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-value">152ms</div>
+                            <div class="quick-stat-label">Avg. Latenz</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="content-card">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                    </svg>
+                    Letzte Aktivitäten
+                </h2>
+                <ul class="activity-feed">
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <strong>Neuer Kunde registriert</strong>
+                            <p>MaxTech GmbH hat sich für den Professional Plan angemeldet</p>
+                        </div>
+                        <div class="activity-time">Vor 5 Min</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <strong>Leads Bot: Neue Konversation</strong>
+                            <p>42 neue Leads erfasst und kategorisiert</p>
+                        </div>
+                        <div class="activity-time">Vor 12 Min</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <strong>Workflow erfolgreich ausgeführt</strong>
+                            <p>"Email-Automation-Serie" für 127 Kontakte abgeschlossen</p>
+                        </div>
+                        <div class="activity-time">Vor 23 Min</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <strong>System-Update durchgeführt</strong>
+                            <p>Security Patch v2.4.1 erfolgreich installiert</p>
+                        </div>
+                        <div class="activity-time">Vor 1 Std</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <strong>Monatlicher Analytics-Report generiert</strong>
+                            <p>Performance-Bericht für November erstellt</p>
+                        </div>
+                        <div class="activity-time">Vor 2 Std</div>
+                    </li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div class="modal" id="alertModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="alertTitle">Hinweis</h2>
+                <button class="modal-close" onclick="closeAlertModal()">&times;</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <p id="alertMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
+            </div>
+            <div class="form-actions" style="margin-top: 20px;">
+                <button class="btn-submit" onclick="closeAlertModal()" style="width: 100%;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="confirmTitle">Bestätigung</h2>
+                <button class="modal-close" onclick="closeConfirmModal(false)">&times;</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <p id="confirmMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
+            </div>
+            <div class="form-actions" style="margin-top: 20px;">
+                <button class="btn-cancel" onclick="closeConfirmModal(false)">Abbrechen</button>
+                <button class="btn-submit" onclick="closeConfirmModal(true)">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+
+            // Alert Modal
+            const alertModal = document.getElementById('alertModal');
+            if (event.target === alertModal) {
+                closeAlertModal();
+            }
+
+            // Confirm Modal
+            const confirmModal = document.getElementById('confirmModal');
+            if (event.target === confirmModal) {
+                closeConfirmModal(false);
+            }
+        });
+
+        // Custom Alert Modal
+        window.showAlert = function(message, title = 'Hinweis') {
+            document.getElementById('alertTitle').textContent = title;
+            document.getElementById('alertMessage').textContent = message;
+            document.getElementById('alertModal').classList.add('active');
+        };
+
+        function closeAlertModal() {
+            document.getElementById('alertModal').classList.remove('active');
+        }
+
+        // Custom Confirm Modal
+        let confirmCallback = null;
+
+        window.showConfirm = function(message, title = 'Bestätigung') {
+            return new Promise((resolve) => {
+                document.getElementById('confirmTitle').textContent = title;
+                document.getElementById('confirmMessage').textContent = message;
+                document.getElementById('confirmModal').classList.add('active');
+                confirmCallback = resolve;
+            });
+        };
+
+        function closeConfirmModal(confirmed) {
+            document.getElementById('confirmModal').classList.remove('active');
+            if (confirmCallback) {
+                confirmCallback(confirmed);
+                confirmCallback = null;
+            }
+        }
+    </script>
+
+    <!-- Firebase Authentication -->
+    <script type="module">
+        import { initDashboard } from '../assets/js/dashboard.js';
+
+        // Initialize admin dashboard with role check
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initDashboard('admin');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# robots.txt für vision-ml.de
+# Optimiert für Suchmaschinen-Crawling
+
+User-agent: *
+Allow: /
+
+# Blockiere sensible Bereiche
+Disallow: /config.php
+Disallow: /send-mail.php
+Disallow: /csrf-token.php
+Disallow: /PHPMailer/
+
+# Sitemap-Verweis
+Sitemap: https://vision-ml.de/sitemap.xml
+
+# Spezifische Bot-Anweisungen
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Blockiere bekannte Scraper und Bad Bots
+User-agent: SemrushBot
+User-agent: AhrefsBot
+User-agent: DotBot
+Crawl-delay: 10

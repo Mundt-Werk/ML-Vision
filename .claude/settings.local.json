@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(cp:*)",
+      "Bash(dir:*)",
+      "Bash(mkdir:*)",
+      "Bash(nul)",
+      "Bash(findstr:*)",
+      "WebSearch",
+      "Bash(if exist elevenlabs-custom.js move elevenlabs-custom.js elevenlabs-custom.js.backup)",
+      "Bash(test:*)",
+      "WebFetch(domain:elevenlabs.io)",
+      "Bash(python -m http.server:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:maps.googleapis.com)",
+      "Bash(netstat:*)",
+      "Bash(pm2 list:*)",
+      "WebFetch(domain:ml-vision-leads-bot-production.up.railway.app)",
+      "Bash(npm start)",
+      "Bash(timeout:*)",
+      "Bash(taskkill /F /PID 19312)",
+      "Bash(taskkill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

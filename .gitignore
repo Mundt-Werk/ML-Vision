@@ -1,0 +1,52 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+config.php
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Logs
+logs/
+*.log
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Build outputs
+dist/
+build/
+
+# Sensitive files
+NICHTHOCHLADEN/
+*.pem
+*.key
+credentials.json
+
+# OS files
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+*.backup
+ARCHIV_ALTE_DATEIEN/
