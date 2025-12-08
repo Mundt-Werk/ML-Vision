@@ -1,0 +1,77 @@
+/**
+ * Table Components
+ * Wiederverwendbare Tabellen-Styles
+ */
+
+.users-table,
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--spacing-lg);
+}
+
+.users-table thead tr,
+.data-table thead tr {
+  border-bottom: 2px solid var(--border-primary);
+}
+
+.users-table th,
+.data-table th {
+  text-align: left;
+  padding: 15px;
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.users-table td,
+.data-table td {
+  padding: 15px;
+  border-bottom: 1px solid rgba(4, 169, 212, 0.1);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+}
+
+.users-table tbody tr,
+.data-table tbody tr {
+  transition: background var(--transition-base);
+}
+
+.users-table tbody tr:hover,
+.data-table tbody tr:hover {
+  background: rgba(4, 169, 212, 0.05);
+}
+
+/* Table Actions */
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: var(--spacing-xs);
+  transition: all var(--transition-base);
+}
+
+.btn-edit {
+  background: rgba(4, 169, 212, 0.2);
+  color: var(--color-primary);
+  border: 1px solid var(--border-primary-strong);
+}
+
+.btn-edit:hover {
+  background: rgba(4, 169, 212, 0.3);
+}
+
+.btn-delete {
+  background: rgba(255, 69, 58, 0.2);
+  color: #ff453a;
+  border: 1px solid rgba(255, 69, 58, 0.3);
+}
+
+.btn-delete:hover {
+  background: rgba(255, 69, 58, 0.3);
+}

@@ -26,7 +26,10 @@
       "Bash(npm start)",
       "Bash(timeout:*)",
       "Bash(taskkill /F /PID 19312)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(cat:*)",
+      "Bash(\"D:\\Projekte\\Kunden\\ML_Vision\\Brand\\Webdesign\\admin\\pages\\users_temp.html\" <<'EOF'\n    <!-- Refactored CSS -->\n    <link rel=\"stylesheet\" href=\"../../assets/css/base/variables.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/base/reset.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/base/typography.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/components/sidebar.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/components/modal.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/components/buttons.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/components/forms.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/components/tables.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/layouts/admin-layout.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/pages/users.css\">\n    <link rel=\"stylesheet\" href=\"../../assets/css/utilities/responsive.css\">\nEOF)",
+      "Bash(move:*)"
     ],
     "deny": [],
     "ask": []
