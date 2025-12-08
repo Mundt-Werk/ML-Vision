@@ -34,7 +34,7 @@
     <main class="login-main">
         <div class="login-container">
             <div class="login-logo">
-                <img src="../assets/img/logo_color_trans.png" alt="ML Vision Logo">
+                <img src="../assets/img/logo_white_trans.png" alt="ML Vision Logo">
             </div>
 
             <h1 class="login-title">Willkommen zurück</h1>
@@ -69,7 +69,24 @@
     </main>
 
     <script type="module">
-        import { login, redirectByRole } from '../assets/js/auth.js';
+        import { login, redirectByRole, checkAuthState } from '../assets/js/auth.js';
+        import { auth } from '../assets/js/firebase-config.js';
+        import {
+            setPersistence,
+            browserLocalPersistence,
+            browserSessionPersistence
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // Check if user is already logged in on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { user, role } = await checkAuthState();
+
+            if (user) {
+                // User is already logged in - redirect to dashboard
+                redirectByRole(role);
+                return;
+            }
+        });
 
         // Login Form Handler
         const loginForm = document.getElementById('loginForm');
@@ -111,6 +128,15 @@
             loginButton.textContent = 'Anmeldung läuft...';
 
             try {
+                // Set Firebase Auth Persistence based on "remember me" checkbox
+                if (remember) {
+                    // Keep user logged in even after browser closes
+                    await setPersistence(auth, browserLocalPersistence);
+                } else {
+                    // Only keep user logged in for this session
+                    await setPersistence(auth, browserSessionPersistence);
+                }
+
                 // Firebase Authentication
                 const result = await login(email, password);
 
