@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isOwner(customerId) {
+      return isAuthenticated() &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.customerId == customerId;
+    }
+
+    // ========================================================================
+    // USERS Collection (Admin-Verwaltung)
+    // ========================================================================
+    match /users/{userId} {
+      // Lesen: User darf eigene Daten lesen, Admin darf alle lesen
+      allow read: if isAuthenticated() &&
+                     (request.auth.uid == userId || isAdmin());
+
+      // Schreiben: Nur Admin darf Users erstellen/ändern
+      allow write: if isAdmin();
+    }
+
+    // ========================================================================
+    // CUSTOMERS Collection (Kunden-Stammdaten)
+    // ========================================================================
+    match /customers/{customerId} {
+      // Lesen: Kunde darf eigene Daten lesen, Admin darf alle lesen
+      allow read: if isOwner(customerId) || isAdmin();
+
+      // Schreiben: Kunde darf eigene Daten ändern (Profil), Admin darf alle ändern
+      allow update: if isOwner(customerId) || isAdmin();
+
+      // Erstellen/Löschen: Nur Admin
+      allow create, delete: if isAdmin();
+    }
+
+    // ========================================================================
+    // CALLS Collection (Voice-Gespräche)
+    // ========================================================================
+    match /calls/{callId} {
+      // Lesen: Kunde darf nur eigene Calls lesen, Admin darf alle lesen
+      allow read: if isAuthenticated() &&
+                     (isOwner(resource.data.customerId) || isAdmin());
+
+      // Schreiben: Nur Cloud Functions (via Admin SDK)
+      allow write: if false;
+    }
+
+    // ========================================================================
+    // TICKETS Collection (Support-Tickets)
+    // ========================================================================
+    match /tickets/{ticketId} {
+      // Lesen: Kunde darf eigene Tickets lesen, Admin darf alle lesen
+      allow read: if isAuthenticated() &&
+                     (isOwner(resource.data.customerId) || isAdmin());
+
+      // Erstellen: Kunde darf eigene Tickets erstellen
+      allow create: if isAuthenticated() &&
+                       isOwner(request.resource.data.customerId);
+
+      // Update: Kunde darf eigene Tickets aktualisieren (Antworten), Admin alle
+      allow update: if isAuthenticated() &&
+                       (isOwner(resource.data.customerId) || isAdmin());
+
+      // Löschen: Nur Admin
+      allow delete: if isAdmin();
+    }
+
+    // ========================================================================
+    // INVOICES Collection (Rechnungen)
+    // ========================================================================
+    match /invoices/{invoiceId} {
+      // Lesen: Kunde darf nur eigene Rechnungen lesen, Admin darf alle lesen
+      allow read: if isAuthenticated() &&
+                     (isOwner(resource.data.customerId) || isAdmin());
+
+      // Schreiben: Nur Cloud Functions (via Admin SDK)
+      allow write: if false;
+    }
+
+    // ========================================================================
+    // CUSTOMER_MODULES Collection (Modul-Aktivierungen)
+    // ========================================================================
+    match /customer_modules/{customerId} {
+      // Lesen: Kunde darf eigene Module lesen, Admin darf alle lesen
+      allow read: if isOwner(customerId) || isAdmin();
+
+      // Schreiben: Nur Admin
+      allow write: if isAdmin();
+    }
+
+    // ========================================================================
+    // Default: Alles andere ablehnen
+    // ========================================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
