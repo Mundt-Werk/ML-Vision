@@ -312,7 +312,7 @@
 
             if (!user) {
                 // Nicht eingeloggt - zurück zum Login
-                window.location.href = '/login.html';
+                window.location.href = '/public/login.html';
                 return;
             }
 
@@ -324,6 +324,23 @@
 
             // Admin eingeloggt - lade Benutzer
             loadUsers();
+
+            // Setup logout button
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    console.log('Logout clicked');
+                    try {
+                        await signOut(auth);
+                        console.log('Logout successful');
+                        window.location.href = '/public/login.html';
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                        alert('Fehler beim Abmelden');
+                    }
+                });
+            }
 
             // Close modals on outside click (clicking on overlay background)
             const userModal = document.getElementById('userModal');

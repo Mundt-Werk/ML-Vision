@@ -1,0 +1,40 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isOwner(customerId) {
+      return isAuthenticated() &&
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.customerId == customerId;
+    }
+
+    // ========================================================================
+    // TICKETS File Uploads
+    // ========================================================================
+    match /tickets/{customerId}/{ticketId}/{allPaths=**} {
+      // Lesen: Kunde darf eigene Ticket-Dateien lesen, Admin alle
+      allow read: if isOwner(customerId) || isAdmin();
+
+      // Schreiben: Kunde darf eigene Dateien hochladen (max 10 MB, erlaubte MIME-Types)
+      allow write: if isOwner(customerId) &&
+                      request.resource.size < 10 * 1024 * 1024 && // max 10 MB
+                      request.resource.contentType.matches('image/.*|application/pdf|text/.*|application/msword|application/vnd.*');
+    }
+
+    // ========================================================================
+    // Default: Alles andere ablehnen
+    // ========================================================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

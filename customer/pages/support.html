@@ -32,40 +32,85 @@
         .dashboard-header h1 {font-size: 32px; color: #1a1a1a; margin: 0 0 10px 0;}
         .dashboard-header p {color: #6b7280; margin: 0;}
 
-        .support-grid {display: grid; grid-template-columns: 2fr 1fr; gap: 20px;}
-        .ticket-card {background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);}
-        .ticket-card h2 {margin: 0 0 20px 0; font-size: 20px;}
-        .create-ticket-btn {width: 100%; padding: 15px; background: #04A9D4; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 20px; transition: all 0.3s;}
+        /* View Modes */
+        .view-mode {display: none;}
+        .view-mode.active {display: block;}
+
+        /* Ticket List View */
+        .support-header {display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;}
+        .create-ticket-btn {padding: 12px 24px; background: #04A9D4; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s;}
         .create-ticket-btn:hover {background: #0390b8; transform: translateY(-2px);}
 
-        .ticket-item {padding: 15px; background: #f9fafb; border-left: 4px solid #04A9D4; border-radius: 8px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s;}
-        .ticket-item:hover {background: #f3f4f6; transform: translateX(4px);}
-        .ticket-header {display: flex; justify-content: space-between; margin-bottom: 8px;}
-        .ticket-id {font-size: 13px; font-weight: bold; color: #1a1a1a;}
-        .ticket-status {padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold;}
+        .tickets-list {background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); overflow: hidden;}
+        .ticket-item {padding: 20px; border-bottom: 1px solid #e5e7eb; cursor: pointer; transition: all 0.2s;}
+        .ticket-item:hover {background: #f9fafb;}
+        .ticket-item:last-child {border-bottom: none;}
+        .ticket-header {display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
+        .ticket-title {font-size: 16px; font-weight: bold; color: #1a1a1a; margin: 0;}
+        .ticket-status {padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: bold;}
         .ticket-status.open {background: #fef3c7; color: #92400e;}
-        .ticket-status.closed {background: #d1fae5; color: #065f46;}
         .ticket-status.pending {background: #dbeafe; color: #1e40af;}
-        .ticket-title {font-size: 14px; color: #1a1a1a; margin-bottom: 5px;}
-        .ticket-date {font-size: 12px; color: #6b7280;}
+        .ticket-status.closed {background: #d1fae5; color: #065f46;}
+        .ticket-meta {font-size: 13px; color: #6b7280; margin-top: 8px;}
+        .ticket-body {font-size: 14px; color: #4b5563; margin-top: 8px; line-height: 1.5;}
 
-        .mobile-menu-toggle {display: none; position: fixed; top: 20px; left: 20px; z-index: 2000; background: #04A9D4; border: none; border-radius: 8px; width: 50px; height: 50px; cursor: pointer;}
-        .mobile-menu-toggle span {display: block; width: 24px; height: 3px; background: #fff; margin: 5px auto; border-radius: 2px;}
+        /* Pagination */
+        .pagination {display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px;}
+        .pagination button {padding: 8px 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; transition: all 0.2s;}
+        .pagination button:hover:not(:disabled) {background: #04A9D4; color: #fff; border-color: #04A9D4;}
+        .pagination button:disabled {opacity: 0.5; cursor: not-allowed;}
+        .pagination .page-info {color: #6b7280; font-size: 14px;}
+
+        /* Create Ticket Form */
+        .create-form-card {background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); max-width: 800px; margin: 0 auto;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block; font-weight: bold; margin-bottom: 8px; color: #1a1a1a;}
+        .form-group input, .form-group select, .form-group textarea {width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 14px;}
+        .form-group textarea {resize: vertical; min-height: 150px;}
+        .form-group input[type="file"] {padding: 8px;}
+        .form-actions {display: flex; gap: 10px; margin-top: 30px;}
+        .btn-primary {flex: 1; padding: 14px; background: #04A9D4; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s;}
+        .btn-primary:hover {background: #0390b8;}
+        .btn-secondary {flex: 1; padding: 14px; background: #fff; color: #6b7280; border: 2px solid #e5e7eb; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s;}
+        .btn-secondary:hover {border-color: #04A9D4; color: #04A9D4;}
+
+        /* Ticket Detail View */
+        .detail-header {display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px;}
+        .detail-title {font-size: 24px; font-weight: bold; color: #1a1a1a; margin: 0;}
+        .detail-meta {font-size: 14px; color: #6b7280; margin-top: 8px;}
+        .back-btn {padding: 10px 20px; background: #fff; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;}
+        .back-btn:hover {border-color: #04A9D4; color: #04A9D4;}
+
+        .messages-thread {background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); margin-bottom: 20px;}
+        .message-item {padding: 20px; border-left: 4px solid #e5e7eb; background: #f9fafb; border-radius: 8px; margin-bottom: 20px;}
+        .message-item.customer {border-left-color: #04A9D4; background: #ecfeff;}
+        .message-item.support {border-left-color: #10b981; background: #d1fae5;}
+        .message-header {display: flex; justify-content: space-between; margin-bottom: 10px;}
+        .message-author {font-weight: bold; color: #1a1a1a;}
+        .message-time {font-size: 13px; color: #6b7280;}
+        .message-text {color: #4b5563; line-height: 1.6; white-space: pre-wrap;}
+        .message-files {margin-top: 15px;}
+        .file-attachment {display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; margin-right: 10px; text-decoration: none; color: #04A9D4; transition: all 0.2s;}
+        .file-attachment:hover {background: #f9fafb; border-color: #04A9D4;}
+
+        .reply-form {background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);}
+        .reply-form h3 {margin: 0 0 20px 0;}
+
+        .loading {text-align: center; padding: 40px; color: #6b7280;}
+        .empty-state {text-align: center; padding: 60px 20px; color: #6b7280;}
+        .empty-state h3 {color: #1a1a1a; margin-bottom: 10px;}
 
         @media (max-width: 768px) {
             .sidebar {transform: translateX(-100%); transition: transform 0.3s;}
             .sidebar.active {transform: translateX(0);}
             .main-content {margin-left: 0; padding: 80px 15px 20px 15px;}
-            .mobile-menu-toggle {display: block;}
-            .support-grid {grid-template-columns: 1fr;}
+            .support-header {flex-direction: column; align-items: stretch; gap: 15px;}
+            .form-actions {flex-direction: column;}
+            .detail-header {flex-direction: column; gap: 20px;}
         }
     </style>
 </head>
 <body>
-    <button class="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('active')">
-        <span></span><span></span><span></span>
-    </button>
-
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo"><img src="../../assets/img/logo_white_trans.png" alt="ML Vision"></div>
@@ -81,63 +126,123 @@
                 <p>Stellen Sie Fragen und verfolgen Sie Ihre Support-Anfragen</p>
             </div>
 
-            <div class="support-grid">
-                <div class="ticket-card">
-                    <button class="create-ticket-btn">+ Neues Ticket erstellen</button>
-                    <h2>Meine Tickets</h2>
-                    <div class="ticket-item">
-                        <div class="ticket-header">
-                            <span class="ticket-id">#12345</span>
-                            <span class="ticket-status open">Offen</span>
-                        </div>
-                        <div class="ticket-title">Problem mit Workflow-Automatisierung</div>
-                        <div class="ticket-date">Erstellt: 18.11.2025, 10:30 Uhr</div>
-                    </div>
-                    <div class="ticket-item">
-                        <div class="ticket-header">
-                            <span class="ticket-id">#12344</span>
-                            <span class="ticket-status pending">In Bearbeitung</span>
-                        </div>
-                        <div class="ticket-title">Frage zur API-Integration</div>
-                        <div class="ticket-date">Erstellt: 17.11.2025, 14:20 Uhr</div>
-                    </div>
-                    <div class="ticket-item">
-                        <div class="ticket-header">
-                            <span class="ticket-id">#12343</span>
-                            <span class="ticket-status closed">Geschlossen</span>
-                        </div>
-                        <div class="ticket-title">Anfrage zu Rechnungsdetails</div>
-                        <div class="ticket-date">Erstellt: 15.11.2025, 09:15 Uhr</div>
-                    </div>
+            <!-- LIST VIEW -->
+            <div id="listView" class="view-mode active">
+                <div class="support-header">
+                    <h2 style="margin: 0;">Meine Tickets</h2>
+                    <button class="create-ticket-btn" id="newTicketBtn">+ Neues Ticket erstellen</button>
                 </div>
 
-                <div class="ticket-card">
-                    <h2>Schnellhilfe</h2>
-                    <p style="color: #6b7280; font-size: 14px; margin: 0 0 15px 0;">Häufig gestellte Fragen:</p>
-                    <div style="background: #f9fafb; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer;">
-                        <strong style="display: block; margin-bottom: 5px; font-size: 14px;">Wie ändere ich mein Passwort?</strong>
-                        <small style="color: #6b7280;">Gehe zu Sicherheit & Logs → Passwort ändern</small>
+                <div class="tickets-list" id="ticketsList">
+                    <div class="loading">Lade Tickets...</div>
+                </div>
+
+                <div class="pagination" id="pagination" style="display: none;">
+                    <button id="prevPage">Zurück</button>
+                    <span class="page-info" id="pageInfo">Seite 1 von 1</span>
+                    <button id="nextPage">Weiter</button>
+                </div>
+            </div>
+
+            <!-- CREATE VIEW -->
+            <div id="createView" class="view-mode">
+                <div class="create-form-card">
+                    <h2 style="margin-top: 0;">Neues Ticket erstellen</h2>
+                    <form id="createTicketForm">
+                        <div class="form-group">
+                            <label for="ticketTitle">Betreff *</label>
+                            <input type="text" id="ticketTitle" required placeholder="z.B. Probleme beim Export">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ticketCategory">Kategorie *</label>
+                            <select id="ticketCategory" required>
+                                <option value="Frage">Frage</option>
+                                <option value="Problem">Problem</option>
+                                <option value="Feature-Request">Feature-Request</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ticketPriority">Priorität *</label>
+                            <select id="ticketPriority" required>
+                                <option value="low">Niedrig</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="high">Hoch</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ticketBody">Nachricht *</label>
+                            <textarea id="ticketBody" required placeholder="Beschreiben Sie Ihr Anliegen..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ticketFile">Datei anhängen (optional, max 10 MB)</label>
+                            <input type="file" id="ticketFile" accept="image/*,application/pdf,.doc,.docx,.txt">
+                            <small style="color: #6b7280; display: block; margin-top: 5px;">Erlaubt: Bilder, PDF, Word, Text</small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" id="cancelCreateBtn">Abbrechen</button>
+                            <button type="submit" class="btn-primary">Ticket erstellen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- DETAIL VIEW -->
+            <div id="detailView" class="view-mode">
+                <div class="detail-header">
+                    <div>
+                        <h2 class="detail-title" id="detailTitle">Loading...</h2>
+                        <p class="detail-meta" id="detailMeta"></p>
                     </div>
-                    <div style="background: #f9fafb; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer;">
-                        <strong style="display: block; margin-bottom: 5px; font-size: 14px;">Wie exportiere ich meine Daten?</strong>
-                        <small style="color: #6b7280;">Nutzen Sie die Export-Funktionen in den jeweiligen Bereichen</small>
-                    </div>
-                    <div style="background: #f9fafb; padding: 12px; border-radius: 8px; cursor: pointer;">
-                        <strong style="display: block; margin-bottom: 5px; font-size: 14px;">Kontakt zum Support-Team</strong>
-                        <small style="color: #6b7280;">E-Mail: support@vision-ml.de<br>Tel: +49 123 456789</small>
-                    </div>
+                    <button class="back-btn" id="backToListBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Zurück
+                    </button>
+                </div>
+
+                <div class="messages-thread" id="messagesThread">
+                    <div class="loading">Lade Nachrichten...</div>
+                </div>
+
+                <div class="reply-form">
+                    <h3>Antworten</h3>
+                    <form id="replyForm">
+                        <div class="form-group">
+                            <label for="replyText">Ihre Antwort</label>
+                            <textarea id="replyText" required placeholder="Schreiben Sie Ihre Antwort..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="replyFile">Datei anhängen (optional)</label>
+                            <input type="file" id="replyFile" accept="image/*,application/pdf,.doc,.docx,.txt">
+                        </div>
+
+                        <button type="submit" class="btn-primary">Antwort senden</button>
+                    </form>
                 </div>
             </div>
         </main>
     </div>
 
     <script type="module">
-        import { auth, db } from '../../assets/js/firebase-config.js';
+        import { auth, db, storage } from '../../assets/js/firebase-config.js';
         import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-        import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { collection, query, where, orderBy, limit, getDocs, doc, getDoc, addDoc, serverTimestamp, startAfter } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
         import { initCustomerSidebar, checkModuleAccess } from '../../assets/js/components/CustomerSidebar.js';
 
         let currentCustomerId = null;
+        let currentUser = null;
+        let currentTicketId = null;
+        let allTickets = [];
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 20;
 
         document.addEventListener('DOMContentLoaded', async () => {
             onAuthStateChanged(auth, async (user) => {
@@ -146,22 +251,22 @@
                     return;
                 }
 
+                currentUser = user;
+
                 try {
-                    // Load customerId from users collection
+                    // Load customerId
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
                     if (userDoc.exists()) {
                         currentCustomerId = userDoc.data().customerId;
 
-                        // Check if support module is enabled
+                        // Check module access
                         const hasAccess = await checkModuleAccess(currentCustomerId, 'support');
-                        if (!hasAccess) {
-                            return; // checkModuleAccess already redirects
-                        }
+                        if (!hasAccess) return;
 
-                        // Initialize sidebar with support module
+                        // Initialize sidebar
                         await initCustomerSidebar(currentCustomerId, 'support');
 
-                        // Initialize logout button
+                        // Initialize logout
                         document.getElementById('logoutBtn').addEventListener('click', async (e) => {
                             e.preventDefault();
                             try {
@@ -169,12 +274,15 @@
                                 window.location.href = '../../public/login.html';
                             } catch (error) {
                                 console.error('Logout error:', error);
-                                alert('Fehler beim Abmelden. Bitte versuchen Sie es erneut.');
+                                alert('Fehler beim Abmelden.');
                             }
                         });
-                    } else {
-                        console.error('User document not found');
-                        window.location.href = '../../public/login.html';
+
+                        // Load tickets
+                        await loadTickets();
+
+                        // Initialize event listeners
+                        initEventListeners();
                     }
                 } catch (error) {
                     console.error('Error loading user data:', error);
@@ -182,6 +290,368 @@
                 }
             });
         });
+
+        function initEventListeners() {
+            // New ticket button
+            document.getElementById('newTicketBtn').addEventListener('click', () => {
+                showView('create');
+            });
+
+            // Cancel create
+            document.getElementById('cancelCreateBtn').addEventListener('click', () => {
+                showView('list');
+                document.getElementById('createTicketForm').reset();
+            });
+
+            // Create ticket form
+            document.getElementById('createTicketForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await createTicket();
+            });
+
+            // Back to list
+            document.getElementById('backToListBtn').addEventListener('click', () => {
+                showView('list');
+                currentTicketId = null;
+            });
+
+            // Reply form
+            document.getElementById('replyForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await sendReply();
+            });
+
+            // Pagination
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTickets();
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', () => {
+                const totalPages = Math.ceil(allTickets.length / ITEMS_PER_PAGE);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTickets();
+                }
+            });
+        }
+
+        function showView(view) {
+            document.querySelectorAll('.view-mode').forEach(el => el.classList.remove('active'));
+            document.getElementById(`${view}View`).classList.add('active');
+        }
+
+        async function loadTickets() {
+            try {
+                const q = query(
+                    collection(db, 'tickets'),
+                    where('customerId', '==', currentCustomerId),
+                    orderBy('updatedAt', 'desc')
+                );
+
+                const snapshot = await getDocs(q);
+                allTickets = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                renderTickets();
+            } catch (error) {
+                console.error('Error loading tickets:', error);
+                document.getElementById('ticketsList').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Fehler beim Laden</h3>
+                        <p>Tickets konnten nicht geladen werden.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderTickets() {
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageTickets = allTickets.slice(start, end);
+
+            if (pageTickets.length === 0) {
+                document.getElementById('ticketsList').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Keine Tickets vorhanden</h3>
+                        <p>Erstellen Sie Ihr erstes Support-Ticket.</p>
+                    </div>
+                `;
+                document.getElementById('pagination').style.display = 'none';
+                return;
+            }
+
+            const html = pageTickets.map(ticket => `
+                <div class="ticket-item" onclick="window.viewTicket('${ticket.id}')">
+                    <div class="ticket-header">
+                        <h3 class="ticket-title">${escapeHtml(ticket.title)}</h3>
+                        <span class="ticket-status ${ticket.status}">${getStatusText(ticket.status)}</span>
+                    </div>
+                    <p class="ticket-body">${escapeHtml(ticket.body?.substring(0, 200))}${ticket.body?.length > 200 ? '...' : ''}</p>
+                    <div class="ticket-meta">
+                        ${ticket.category || 'Allgemein'} • Erstellt: ${formatDate(ticket.createdAt)} • Aktualisiert: ${formatDate(ticket.updatedAt)}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('ticketsList').innerHTML = html;
+
+            // Pagination
+            const totalPages = Math.ceil(allTickets.length / ITEMS_PER_PAGE);
+            document.getElementById('pageInfo').textContent = `Seite ${currentPage} von ${totalPages}`;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages;
+            document.getElementById('pagination').style.display = totalPages > 1 ? 'flex' : 'none';
+        }
+
+        window.viewTicket = async function(ticketId) {
+            currentTicketId = ticketId;
+            showView('detail');
+            await loadTicketDetail(ticketId);
+        };
+
+        async function loadTicketDetail(ticketId) {
+            try {
+                // Load ticket
+                const ticketDoc = await getDoc(doc(db, 'tickets', ticketId));
+                const ticket = ticketDoc.data();
+
+                document.getElementById('detailTitle').textContent = ticket.title;
+                document.getElementById('detailMeta').innerHTML = `
+                    <span class="ticket-status ${ticket.status}">${getStatusText(ticket.status)}</span> •
+                    ${ticket.category || 'Allgemein'} •
+                    Erstellt: ${formatDate(ticket.createdAt)}
+                `;
+
+                // Load messages
+                const messagesQuery = query(
+                    collection(db, 'tickets', ticketId, 'messages'),
+                    orderBy('createdAt', 'asc')
+                );
+
+                const messagesSnapshot = await getDocs(messagesQuery);
+                const messages = messagesSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                // Render messages
+                const initialMessage = {
+                    author: 'customer',
+                    authorName: 'Sie',
+                    text: ticket.body,
+                    createdAt: ticket.createdAt,
+                    files: ticket.files || []
+                };
+
+                const allMessages = [initialMessage, ...messages];
+
+                const messagesHtml = allMessages.map(msg => `
+                    <div class="message-item ${msg.author}">
+                        <div class="message-header">
+                            <span class="message-author">${escapeHtml(msg.authorName)}</span>
+                            <span class="message-time">${formatDate(msg.createdAt)}</span>
+                        </div>
+                        <div class="message-text">${escapeHtml(msg.text)}</div>
+                        ${msg.files && msg.files.length > 0 ? `
+                            <div class="message-files">
+                                ${msg.files.map(file => `
+                                    <a href="${file.fileUrl}" target="_blank" class="file-attachment">
+                                        📎 ${escapeHtml(file.fileName)}
+                                    </a>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+
+                document.getElementById('messagesThread').innerHTML = messagesHtml;
+            } catch (error) {
+                console.error('Error loading ticket detail:', error);
+                document.getElementById('messagesThread').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Fehler beim Laden</h3>
+                        <p>Ticket konnte nicht geladen werden.</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function createTicket() {
+            const title = document.getElementById('ticketTitle').value;
+            const category = document.getElementById('ticketCategory').value;
+            const priority = document.getElementById('ticketPriority').value;
+            const body = document.getElementById('ticketBody').value;
+            const fileInput = document.getElementById('ticketFile');
+
+            try {
+                const btn = document.querySelector('#createTicketForm button[type="submit"]');
+                btn.disabled = true;
+                btn.textContent = 'Erstelle Ticket...';
+
+                // Upload file if exists
+                let files = [];
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+
+                    // Check file size
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('Datei ist zu groß (max 10 MB)');
+                        btn.disabled = false;
+                        btn.textContent = 'Ticket erstellen';
+                        return;
+                    }
+
+                    // Upload to storage
+                    const timestamp = Date.now();
+                    const storageRef = ref(storage, `tickets/${currentCustomerId}/temp_${timestamp}/${file.name}`);
+                    await uploadBytes(storageRef, file);
+                    const fileUrl = await getDownloadURL(storageRef);
+
+                    files.push({
+                        fileName: file.name,
+                        fileUrl: fileUrl,
+                        fileSize: file.size,
+                        mimeType: file.type,
+                        uploadedAt: new Date().toISOString()
+                    });
+                }
+
+                // Create ticket
+                const ticketData = {
+                    customerId: currentCustomerId,
+                    title: title,
+                    body: body,
+                    category: category,
+                    priority: priority,
+                    status: 'open',
+                    files: files,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+
+                const docRef = await addDoc(collection(db, 'tickets'), ticketData);
+
+                // Update file path with real ticketId
+                if (files.length > 0) {
+                    // Files will be moved by admin or left as-is
+                }
+
+                alert('Ticket erfolgreich erstellt!');
+                document.getElementById('createTicketForm').reset();
+                showView('list');
+                await loadTickets();
+            } catch (error) {
+                console.error('Error creating ticket:', error);
+                alert('Fehler beim Erstellen des Tickets: ' + error.message);
+            } finally {
+                const btn = document.querySelector('#createTicketForm button[type="submit"]');
+                btn.disabled = false;
+                btn.textContent = 'Ticket erstellen';
+            }
+        }
+
+        async function sendReply() {
+            const text = document.getElementById('replyText').value;
+            const fileInput = document.getElementById('replyFile');
+
+            try {
+                const btn = document.querySelector('#replyForm button[type="submit"]');
+                btn.disabled = true;
+                btn.textContent = 'Sende Antwort...';
+
+                // Upload file if exists
+                let files = [];
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('Datei ist zu groß (max 10 MB)');
+                        btn.disabled = false;
+                        btn.textContent = 'Antwort senden';
+                        return;
+                    }
+
+                    const timestamp = Date.now();
+                    const storageRef = ref(storage, `tickets/${currentCustomerId}/${currentTicketId}/${timestamp}_${file.name}`);
+                    await uploadBytes(storageRef, file);
+                    const fileUrl = await getDownloadURL(storageRef);
+
+                    files.push({
+                        fileName: file.name,
+                        fileUrl: fileUrl,
+                        fileSize: file.size,
+                        mimeType: file.type,
+                        uploadedAt: new Date().toISOString()
+                    });
+                }
+
+                // Create message
+                const messageData = {
+                    ticketId: currentTicketId,
+                    author: 'customer',
+                    authorId: currentUser.uid,
+                    authorName: currentUser.displayName || currentUser.email || 'Sie',
+                    text: text,
+                    files: files,
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(collection(db, 'tickets', currentTicketId, 'messages'), messageData);
+
+                document.getElementById('replyForm').reset();
+                await loadTicketDetail(currentTicketId);
+                alert('Antwort gesendet!');
+            } catch (error) {
+                console.error('Error sending reply:', error);
+                alert('Fehler beim Senden der Antwort: ' + error.message);
+            } finally {
+                const btn = document.querySelector('#replyForm button[type="submit"]');
+                btn.disabled = false;
+                btn.textContent = 'Antwort senden';
+            }
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'open': 'Offen',
+                'pending': 'In Bearbeitung',
+                'closed': 'Geschlossen'
+            };
+            return statusMap[status] || status;
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return 'N/A';
+
+            let date;
+            if (timestamp.toDate) {
+                date = timestamp.toDate();
+            } else if (timestamp.seconds) {
+                date = new Date(timestamp.seconds * 1000);
+            } else {
+                date = new Date(timestamp);
+            }
+
+            return date.toLocaleDateString('de-DE', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 </html>

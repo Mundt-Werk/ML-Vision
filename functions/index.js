@@ -127,6 +127,19 @@ async function getCustomerIdFromPhoneNumber(phoneNumber) {
 // ============================================================================
 
 /**
+ * Helper: E-Mail Transporter konfigurieren
+ */
+function getEmailTransporter() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: functions.config().email?.user || process.env.EMAIL_USER,
+      pass: functions.config().email?.password || process.env.EMAIL_PASSWORD
+    }
+  });
+}
+
+/**
  * Sendet E-Mail bei neuem Ticket
  * Trigger: onCreate in Collection 'tickets'
  */
@@ -144,31 +157,38 @@ exports.sendTicketNotification = functions.firestore
       const customer = customerDoc.data();
 
       // E-Mail-Transporter konfigurieren
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: functions.config().email.user,
-          pass: functions.config().email.password
-        }
-      });
+      const transporter = getEmailTransporter();
+
+      // Support E-Mail Adresse
+      const supportEmail = functions.config().email?.support || process.env.EMAIL_SUPPORT || 'support@ml-vision.de';
 
       // E-Mail senden
       await transporter.sendMail({
-        from: functions.config().email.user,
-        to: functions.config().email.support,
-        subject: `[Support] Neues Ticket: ${ticket.title}`,
+        from: functions.config().email?.user || process.env.EMAIL_USER,
+        to: supportEmail,
+        subject: `[Support] Neues Ticket #${ticketId.substring(0, 8)}: ${ticket.title}`,
         html: `
-          <h2>Neues Support-Ticket</h2>
-          <p><strong>Ticket-ID:</strong> ${ticketId}</p>
-          <p><strong>Kunde:</strong> ${customer?.name || ticket.customerId}</p>
-          <p><strong>E-Mail:</strong> ${customer?.email || 'N/A'}</p>
-          <p><strong>Kategorie:</strong> ${ticket.category}</p>
-          <p><strong>Priorität:</strong> ${ticket.priority}</p>
-          <hr>
-          <p><strong>Nachricht:</strong></p>
-          <p>${ticket.messages[0]?.text || 'Keine Nachricht'}</p>
-          <hr>
-          <p><a href="https://${functions.config().hosting.domain}/admin/tickets/${ticketId}" style="background: #04A9D4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Ticket öffnen</a></p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #04A9D4;">Neues Support-Ticket</h2>
+            <div style="background: #f5f7fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p><strong>Ticket-ID:</strong> ${ticketId}</p>
+              <p><strong>Kunde:</strong> ${customer?.name || ticket.customerId}</p>
+              <p><strong>E-Mail:</strong> ${customer?.email || 'N/A'}</p>
+              <p><strong>Kategorie:</strong> ${ticket.category || 'Allgemein'}</p>
+              <p><strong>Priorität:</strong> ${ticket.priority || 'normal'}</p>
+              <p><strong>Status:</strong> ${ticket.status}</p>
+            </div>
+            <div style="background: #fff; padding: 20px; border-left: 4px solid #04A9D4; margin: 20px 0;">
+              <h3 style="margin-top: 0;">Nachricht:</h3>
+              <p style="white-space: pre-wrap;">${ticket.body || 'Keine Nachricht'}</p>
+            </div>
+            <p style="text-align: center; margin-top: 30px;">
+              <a href="https://your-domain.com/admin/pages/support.html?ticket=${ticketId}"
+                 style="background: #04A9D4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                Ticket öffnen
+              </a>
+            </p>
+          </div>
         `
       });
 
@@ -176,74 +196,107 @@ exports.sendTicketNotification = functions.firestore
       return { success: true };
     } catch (error) {
       console.error('Error sending ticket notification:', error);
-      throw error;
+      // Don't throw error to avoid blocking ticket creation
+      return { success: false, error: error.message };
     }
   });
 
 /**
- * Sendet E-Mail bei Antwort auf Ticket
- * Trigger: onUpdate in Collection 'tickets' (wenn neue Message hinzugefügt wird)
+ * Sendet E-Mail bei neuer Message in Ticket
+ * Trigger: onCreate in Subcollection 'tickets/{ticketId}/messages'
  */
-exports.sendReplyNotification = functions.firestore
-  .document('tickets/{ticketId}')
-  .onUpdate(async (change, context) => {
-    const before = change.before.data();
-    const after = change.after.data();
+exports.sendMessageNotification = functions.firestore
+  .document('tickets/{ticketId}/messages/{messageId}')
+  .onCreate(async (snap, context) => {
+    const message = snap.data();
     const ticketId = context.params.ticketId;
+    const messageId = context.params.messageId;
 
-    // Prüfe ob neue Message hinzugefügt wurde
-    if (after.messages.length === before.messages.length) {
-      return null; // Keine neue Message
-    }
-
-    const newMessage = after.messages[after.messages.length - 1];
-    console.log(`New reply on ticket ${ticketId} from ${newMessage.author}`);
+    console.log(`New message in ticket ${ticketId}: ${messageId}`);
 
     try {
-      // Hole Customer-Daten
-      const customerDoc = await db.collection('customers').doc(after.customerId).get();
-      const customer = customerDoc.data();
+      // Hole Ticket-Daten
+      const ticketDoc = await db.collection('tickets').doc(ticketId).get();
+      const ticket = ticketDoc.data();
 
-      // E-Mail-Transporter
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: functions.config().email.user,
-          pass: functions.config().email.password
-        }
-      });
-
-      // Bestimme Empfänger basierend auf Author
-      const recipient = newMessage.author === 'customer'
-        ? functions.config().email.support  // Kunde antwortet → Support benachrichtigen
-        : customer?.email;                   // Support antwortet → Kunde benachrichtigen
-
-      if (!recipient) {
-        console.log('No recipient found, skipping email');
-        return null;
+      if (!ticket) {
+        console.error(`Ticket ${ticketId} not found`);
+        return { success: false, error: 'Ticket not found' };
       }
 
-      // E-Mail senden
-      await transporter.sendMail({
-        from: functions.config().email.user,
-        to: recipient,
-        subject: `[Support] Neue Antwort: ${after.title}`,
-        html: `
-          <h2>Neue Antwort auf Ticket #${ticketId}</h2>
-          <p><strong>Von:</strong> ${newMessage.authorName}</p>
-          <p><strong>Ticket:</strong> ${after.title}</p>
-          <hr>
-          <p>${newMessage.text}</p>
-          <hr>
-          <p><a href="https://${functions.config().hosting.domain}/${newMessage.author === 'customer' ? 'admin' : 'customer'}/tickets/${ticketId}" style="background: #04A9D4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Ticket öffnen</a></p>
-        `
+      // Hole Customer-Daten
+      const customerDoc = await db.collection('customers').doc(ticket.customerId).get();
+      const customer = customerDoc.data();
+
+      const transporter = getEmailTransporter();
+      const supportEmail = functions.config().email?.support || process.env.EMAIL_SUPPORT || 'support@ml-vision.de';
+
+      // Sende E-Mail abhängig vom Author
+      if (message.author === 'customer') {
+        // Kunde hat geantwortet → Benachrichtige Support
+        await transporter.sendMail({
+          from: functions.config().email?.user || process.env.EMAIL_USER,
+          to: supportEmail,
+          subject: `[Support] Antwort zu Ticket #${ticketId.substring(0, 8)}: ${ticket.title}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #04A9D4;">Neue Antwort vom Kunden</h2>
+              <div style="background: #f5f7fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p><strong>Ticket-ID:</strong> ${ticketId}</p>
+                <p><strong>Kunde:</strong> ${customer?.name || ticket.customerId}</p>
+                <p><strong>Von:</strong> ${message.authorName}</p>
+              </div>
+              <div style="background: #fff; padding: 20px; border-left: 4px solid #04A9D4; margin: 20px 0;">
+                <h3 style="margin-top: 0;">Nachricht:</h3>
+                <p style="white-space: pre-wrap;">${message.text}</p>
+              </div>
+              <p style="text-align: center; margin-top: 30px;">
+                <a href="https://your-domain.com/admin/pages/support.html?ticket=${ticketId}"
+                   style="background: #04A9D4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                  Ticket öffnen
+                </a>
+              </p>
+            </div>
+          `
+        });
+      } else if (message.author === 'support' && customer?.email) {
+        // Support hat geantwortet → Benachrichtige Kunde
+        await transporter.sendMail({
+          from: functions.config().email?.user || process.env.EMAIL_USER,
+          to: customer.email,
+          subject: `Antwort zu Ihrem Support-Ticket: ${ticket.title}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #04A9D4;">Antwort vom ML Vision Support</h2>
+              <div style="background: #f5f7fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p><strong>Ticket:</strong> ${ticket.title}</p>
+                <p><strong>Von:</strong> ${message.authorName}</p>
+              </div>
+              <div style="background: #fff; padding: 20px; border-left: 4px solid #04A9D4; margin: 20px 0;">
+                <h3 style="margin-top: 0;">Nachricht:</h3>
+                <p style="white-space: pre-wrap;">${message.text}</p>
+              </div>
+              <p style="text-align: center; margin-top: 30px;">
+                <a href="https://your-domain.com/customer/pages/support.html?ticket=${ticketId}"
+                   style="background: #04A9D4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                  Ticket öffnen
+                </a>
+              </p>
+            </div>
+          `
+        });
+      }
+
+      // Update ticket updatedAt timestamp
+      await db.collection('tickets').doc(ticketId).update({
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
       });
 
-      console.log(`Reply notification sent for ticket ${ticketId}`);
+      console.log(`Email sent for message ${messageId} in ticket ${ticketId}`);
       return { success: true };
     } catch (error) {
-      console.error('Error sending reply notification:', error);
-      throw error;
+      console.error('Error sending message notification:', error);
+      return { success: false, error: error.message };
     }
   });
 
