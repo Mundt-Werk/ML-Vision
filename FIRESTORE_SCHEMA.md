@@ -238,45 +238,80 @@ match /tickets/{customerId}/{ticketId}/{allPaths=**} {
 
 ## 5. Collection: `invoices`
 
-**Zweck:** Rechnungen (Stripe Import)
-**Document ID:** Stripe Invoice ID
+**Zweck:** Rechnungen (manuell oder Stripe Import)
+**Document ID:** Auto-generiert oder Stripe Invoice ID
 
 ```javascript
 {
-  invoiceId: "in_stripe_invoice_123",
+  invoiceId: "auto_generated_or_stripe_id",
+  invoiceNo: "INV-2024-001",        // Eindeutig je Kunde
   customerId: "cust_001",
-  invoiceNumber: "INV-2024-001",
-  date: "2024-12-01T00:00:00Z",
-  amount: 79.00,                    // Euro
-  currency: "eur",
+  date: "2024-12-01T00:00:00Z",     // Rechnungsdatum
+  description: "Professional Plan - Dezember 2024",  // optional
+  amountGross: 7900,                // In Cent (79,00 €)
+  currency: "EUR",
   status: "paid",                   // paid | open | uncollectible
-  pdfUrl: "https://pay.stripe.com/invoice/.../pdf",
-  hostedInvoiceUrl: "https://invoice.stripe.com/i/...",
 
-  // Optional: Stripe Meta-Daten
+  // PDF Storage
+  pdfPath: "/invoices/cust_001/INV-2024-001.pdf",  // Firebase Storage Pfad
+  pdfUrl: "https://storage.googleapis.com/.../INV-2024-001.pdf",  // Download URL (optional)
+
+  // Optional: Plan-Informationen
+  planName: "Professional Plan",    // optional
+  period: "2025-12",                // optional (YYYY-MM)
+
+  // Optional: Stripe Meta-Daten (bei Stripe-Import)
   stripeData: {
-    subtotal: 79.00,
-    tax: 0.00,
-    total: 79.00
+    invoiceId: "in_stripe_invoice_123",
+    subtotal: 7900,
+    tax: 0,
+    total: 7900,
+    hostedInvoiceUrl: "https://invoice.stripe.com/i/..."
   },
 
-  importedAt: "2024-12-10T04:00:00Z"
+  createdAt: "2024-12-01T00:00:00Z",
+  updatedAt: "2024-12-10T04:00:00Z"
 }
 ```
 
 **Firestore Rules:**
 ```javascript
 match /invoices/{invoiceId} {
-  allow read: if isOwner(resource.data.customerId) || isAdmin();
-  allow write: if false; // Nur via Cloud Functions
+  // Lesen: Kunde darf nur eigene Rechnungen lesen UND invoices-Modul muss aktiv sein
+  allow read: if isAuthenticated() &&
+                 ((isOwner(resource.data.customerId) &&
+                   hasModuleEnabled(resource.data.customerId, 'invoices'))
+                  || isAdmin());
+
+  // Schreiben: Nur Admin darf Rechnungen erstellen/ändern
+  allow create, update: if isAdmin();
+
+  // Löschen: Nur Admin
+  allow delete: if isAdmin();
+}
+```
+
+**Storage Rules:**
+```javascript
+match /invoices/{customerId}/{invoiceNo} {
+  // Lesen: Kunde darf nur eigene PDFs lesen
+  allow read: if isOwner(customerId) || isAdmin();
+
+  // Schreiben: Nur Admin darf PDFs hochladen
+  allow write: if isAdmin();
 }
 ```
 
 **Indexes:**
 ```javascript
 // customerId + date (DESC) - für Liste
-// customerId + status + date (DESC) - für Filter
+// customerId + status + date (DESC) - für Status-Filter
 ```
+
+**Betragsformatierung:**
+- `amountGross` wird in **Cent** gespeichert (z.B. 7900 für 79,00 €)
+- Frontend rechnet: `amountGross / 100` für Anzeige
+- Vorteil: Keine Floating-Point-Probleme
 
 ---
 

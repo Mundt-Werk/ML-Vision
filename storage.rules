@@ -31,6 +31,17 @@ service firebase.storage {
     }
 
     // ========================================================================
+    // INVOICES PDFs
+    // ========================================================================
+    match /invoices/{customerId}/{invoiceNo} {
+      // Lesen: Kunde darf nur eigene Rechnungs-PDFs lesen
+      allow read: if isOwner(customerId) || isAdmin();
+
+      // Schreiben: Nur Admin darf PDFs hochladen/ändern
+      allow write: if isAdmin();
+    }
+
+    // ========================================================================
     // Default: Alles andere ablehnen
     // ========================================================================
     match /{allPaths=**} {

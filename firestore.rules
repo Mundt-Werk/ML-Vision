@@ -115,8 +115,11 @@ service cloud.firestore {
                        hasModuleEnabled(resource.data.customerId, 'invoices'))
                       || isAdmin());
 
-      // Schreiben: Nur Cloud Functions (via Admin SDK)
-      allow write: if false;
+      // Erstellen/Ändern: Nur Admin darf Rechnungen verwalten
+      allow create, update: if isAdmin();
+
+      // Löschen: Nur Admin
+      allow delete: if isAdmin();
     }
 
     // ========================================================================
