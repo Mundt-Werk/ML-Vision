@@ -61,8 +61,8 @@ service cloud.firestore {
                       hasModuleEnabled(resource.data.customerId, 'voice'))
                      || isAdmin();
 
-      // Schreiben: Nur Cloud Functions (via Admin SDK)
-      allow write: if false;
+      // Schreiben: Admin oder Cloud Functions (für Testing/Seeding)
+      allow write: if isAdmin();
     }
 
     // ========================================================================
