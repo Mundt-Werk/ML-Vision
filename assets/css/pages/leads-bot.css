@@ -296,18 +296,102 @@
 
   .results-actions {
     width: 100%;
+    flex-direction: column;
   }
 
   .btn-export {
     flex: 1;
+    width: 100%;
   }
 
-  .leads-table {
-    font-size: var(--font-size-sm);
+  /* Hide table headers on mobile */
+  .leads-table thead {
+    display: none;
   }
 
-  .leads-table th,
+  /* Make table rows display as cards */
+  .leads-table tbody tr {
+    display: block;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    padding: 15px;
+    background: rgba(4, 169, 212, 0.03);
+  }
+
+  /* Make table cells display as blocks with labels */
   .leads-table td {
-    padding: 10px;
+    display: block;
+    text-align: left;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(4, 169, 212, 0.08);
+    font-size: 14px;
+  }
+
+  .leads-table td:last-child {
+    border-bottom: none;
+  }
+
+  /* Add data labels before each cell */
+  .leads-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Larger font for name */
+  .leads-table td:first-child strong {
+    font-size: 16px;
+  }
+
+  /* Priority badges - better mobile display */
+  .priority-badge {
+    display: inline-block;
+    margin-top: 5px;
+  }
+
+  /* Bot Container */
+  .bot-container {
+    padding: var(--spacing-md);
+  }
+
+  .bot-container h2 {
+    font-size: 18px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  /* Form spacing on mobile */
+  .form-row {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  /* Button Start */
+  .btn-start {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    margin-top: var(--spacing-md);
+  }
+
+  /* Progress and Results */
+  .progress-section,
+  .results-section {
+    padding: var(--spacing-md);
+  }
+
+  /* Table Container */
+  .table-container {
+    margin-top: var(--spacing-md);
+    overflow-x: visible; /* Allow cards to be fully visible */
   }
 }

@@ -136,13 +136,13 @@
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
                 <h2 id="alertTitle">Hinweis</h2>
-                <button class="modal-close" onclick="closeAlertModal()">&times;</button>
+                <button type="button" class="modal-close" id="alertModalClose">&times;</button>
             </div>
             <div style="padding: 20px 0;">
                 <p id="alertMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
             </div>
             <div class="form-actions" style="margin-top: 20px;">
-                <button class="btn-submit" onclick="closeAlertModal()" style="width: 100%;">OK</button>
+                <button type="button" class="btn-submit" id="alertOkBtn" style="width: 100%;">OK</button>
             </div>
         </div>
     </div>
@@ -152,14 +152,14 @@
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
                 <h2 id="confirmTitle">Bestätigung</h2>
-                <button class="modal-close" onclick="closeConfirmModal(false)">&times;</button>
+                <button type="button" class="modal-close" id="confirmModalClose">&times;</button>
             </div>
             <div style="padding: 20px 0;">
                 <p id="confirmMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
             </div>
             <div class="form-actions" style="margin-top: 20px;">
-                <button class="btn-cancel" onclick="closeConfirmModal(false)">Abbrechen</button>
-                <button class="btn-submit" onclick="closeConfirmModal(true)">Bestätigen</button>
+                <button type="button" class="btn-cancel" id="confirmCancelBtn">Abbrechen</button>
+                <button type="button" class="btn-submit" id="confirmSubmitBtn">Bestätigen</button>
             </div>
         </div>
     </div>
@@ -217,12 +217,15 @@
 
     <!-- Firebase Logic -->
     <script type="module">
-        import { auth, db } from '../../assets/js/firebase-config.js';
+        import { auth, db, app } from '../../assets/js/firebase-config.js';
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import {
             createUserWithEmailAndPassword,
             deleteUser as firebaseDeleteUser,
             updateEmail,
-            updatePassword
+            updatePassword,
+            signOut
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import {
             collection,
@@ -240,6 +243,70 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', async () => {
+            // Setup alert modal button listeners
+            const alertOkBtn = document.getElementById('alertOkBtn');
+            const alertCloseBtn = document.getElementById('alertModalClose');
+
+            if (alertOkBtn) {
+                alertOkBtn.addEventListener('click', function() {
+                    console.log('Alert OK clicked');
+                    document.getElementById('alertModal').classList.remove('active');
+                });
+            }
+
+            if (alertCloseBtn) {
+                alertCloseBtn.addEventListener('click', function() {
+                    console.log('Alert Close clicked');
+                    document.getElementById('alertModal').classList.remove('active');
+                });
+            }
+
+            // Setup confirm modal button listeners
+            console.log('Setting up confirm modal listeners...');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+            const submitBtn = document.getElementById('confirmSubmitBtn');
+            const closeBtn = document.getElementById('confirmModalClose');
+
+            console.log('Cancel button:', cancelBtn);
+            console.log('Submit button:', submitBtn);
+            console.log('Close button:', closeBtn);
+
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function() {
+                    console.log('Cancel clicked - CLOSING MODAL DIRECTLY');
+                    document.getElementById('confirmModal').classList.remove('active');
+                    if (confirmCallback) {
+                        confirmCallback(false);
+                        confirmCallback = null;
+                    }
+                });
+            }
+
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function() {
+                    console.log('Submit clicked - CLOSING MODAL DIRECTLY');
+                    document.getElementById('confirmModal').classList.remove('active');
+                    if (confirmCallback) {
+                        console.log('Calling confirmCallback with TRUE');
+                        confirmCallback(true);
+                        confirmCallback = null;
+                    } else {
+                        console.log('NO confirmCallback!');
+                    }
+                });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    console.log('Close clicked - CLOSING MODAL DIRECTLY');
+                    document.getElementById('confirmModal').classList.remove('active');
+                    if (confirmCallback) {
+                        confirmCallback(false);
+                        confirmCallback = null;
+                    }
+                });
+            }
+
             // Prüfe ob Benutzer eingeloggt ist und Admin-Rolle hat
             const { user, role } = await checkAuthState();
 
@@ -257,6 +324,29 @@
 
             // Admin eingeloggt - lade Benutzer
             loadUsers();
+
+            // Close modals on outside click (clicking on overlay background)
+            const userModal = document.getElementById('userModal');
+            const alertModal = document.getElementById('alertModal');
+            const confirmModal = document.getElementById('confirmModal');
+
+            userModal.addEventListener('click', function(e) {
+                if (e.target === userModal) {
+                    closeUserModal();
+                }
+            });
+
+            alertModal.addEventListener('click', function(e) {
+                if (e.target === alertModal) {
+                    closeAlertModal();
+                }
+            });
+
+            confirmModal.addEventListener('click', function(e) {
+                if (e.target === confirmModal) {
+                    closeConfirmModal(false);
+                }
+            });
         });
 
         // Auth State Check Helper
@@ -427,22 +517,43 @@
 
                     showAlert('Benutzer erfolgreich aktualisiert!', 'Erfolg');
                 } else {
-                    // Create new user with Firebase Auth
+                    // WICHTIG: Separate Firebase Auth Instanz für Benutzererstellung
+                    // Dies verhindert, dass der Admin ausgeloggt wird
+                    const secondaryApp = initializeApp({
+                        apiKey: "AIzaSyCmh6usqZJeeFgYwaJ6ixOhWVqE3zCaNDs",
+                        authDomain: "ml-vision-273ee.firebaseapp.com",
+                        projectId: "ml-vision-273ee"
+                    }, 'Secondary');
+
+                    const secondaryAuth = getAuth(secondaryApp);
+
+                    // Create new user with secondary Auth instance
                     const userCredential = await createUserWithEmailAndPassword(
-                        auth,
+                        secondaryAuth,
                         formData.email,
                         formData.password
                     );
 
                     const user = userCredential.user;
 
-                    // Create user document in Firestore
+                    // Create user document in Firestore (using main db instance)
                     await setDoc(doc(db, 'users', user.uid), {
                         name: formData.name,
                         email: formData.email,
                         role: formData.role,
                         createdAt: new Date().toISOString()
                     });
+
+                    // Sign out from secondary auth instance
+                    await signOut(secondaryAuth);
+
+                    // Clean up: delete secondary app instance
+                    try {
+                        await secondaryApp.delete();
+                    } catch (deleteError) {
+                        // Ignore errors when deleting the secondary app
+                        console.log('Secondary app cleanup:', deleteError);
+                    }
 
                     showAlert(`Benutzer erfolgreich angelegt!\n\nLogin-Daten:\nE-Mail: ${formData.email}\nPasswort: ${formData.password}`, 'Erfolg');
                 }
@@ -479,7 +590,7 @@
             if (!user) return;
 
             const confirmed = await showConfirm(
-                `Möchten Sie diesen Benutzer wirklich löschen?\n\nName: ${user.name}\nE-Mail: ${user.email}\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`,
+                `Möchten Sie diesen Benutzer wirklich löschen?\n\nName: ${user.name}\nE-Mail: ${user.email}\n\nHINWEIS: Der Benutzer wird aus der Datenbank gelöscht. Der Authentication-Eintrag muss manuell in der Firebase Console gelöscht werden.`,
                 'Benutzer löschen'
             );
 
@@ -489,7 +600,7 @@
                 // Delete user document from Firestore
                 await deleteDoc(doc(db, 'users', userId));
 
-                showAlert('Benutzer erfolgreich gelöscht!', 'Erfolg');
+                showAlert(`Benutzer aus Datenbank gelöscht!\n\nWICHTIG: Bitte löschen Sie den Benutzer auch manuell in der Firebase Authentication Console:\nhttps://console.firebase.google.com/project/ml-vision-273ee/authentication/users\n\nSuchen Sie nach: ${user.email}`, 'Teilweise gelöscht');
                 await loadUsers();
 
             } catch (error) {
@@ -505,9 +616,9 @@
             document.getElementById('alertModal').classList.add('active');
         }
 
-        function closeAlertModal() {
+        window.closeAlertModal = function() {
             document.getElementById('alertModal').classList.remove('active');
-        }
+        };
 
         // Custom Confirm Modal
         let confirmCallback = null;
@@ -521,13 +632,22 @@
             });
         }
 
-        function closeConfirmModal(confirmed) {
-            document.getElementById('confirmModal').classList.remove('active');
+        window.closeConfirmModal = function(confirmed) {
+            console.log('closeConfirmModal called with:', confirmed);
+            console.log('confirmCallback exists:', !!confirmCallback);
+            const modal = document.getElementById('confirmModal');
+            console.log('Modal element:', modal);
+            console.log('Modal classes before:', modal.className);
+            modal.classList.remove('active');
+            console.log('Modal classes after:', modal.className);
             if (confirmCallback) {
+                console.log('Calling confirmCallback with:', confirmed);
                 confirmCallback(confirmed);
                 confirmCallback = null;
+            } else {
+                console.log('No confirmCallback available!');
             }
-        }
+        };
 
         // Password Toggle
         window.togglePassword = function(inputId) {
@@ -542,37 +662,6 @@
                 button.textContent = '👁️';
             }
         };
-
-        // Close modals on outside click
-        document.addEventListener('click', function(event) {
-            // User Modal
-            const userModal = document.getElementById('userModal');
-            if (event.target === userModal) {
-                closeUserModal();
-            }
-
-            // Alert Modal
-            const alertModal = document.getElementById('alertModal');
-            if (event.target === alertModal) {
-                closeAlertModal();
-            }
-
-            // Confirm Modal
-            const confirmModal = document.getElementById('confirmModal');
-            if (event.target === confirmModal) {
-                closeConfirmModal(false);
-            }
-
-            // Sidebar on mobile
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.querySelector('.mobile-menu-toggle');
-
-            if (window.innerWidth <= 768) {
-                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
-                    sidebar.classList.remove('active');
-                }
-            }
-        });
 
     </script>
 

@@ -16,14 +16,12 @@
 
 /* Top Bar */
 .top-bar {
-  background: var(--bg-card);
   padding: var(--spacing-lg) var(--spacing-2xl);
   border-radius: var(--radius-lg);
   margin-bottom: var(--spacing-2xl);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow-md);
 }
 
 .top-bar-left h1 {
@@ -102,3 +100,9 @@
   border-radius: 2px;
   transition: all var(--transition-base);
 }
+
+.settings-card {
+  margin-bottom: 16px;
+}
+
+

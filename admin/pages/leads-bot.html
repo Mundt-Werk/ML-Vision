@@ -364,13 +364,13 @@
 
             leadsTableBody.innerHTML = currentLeads.map(lead => `
                 <tr>
-                    <td><strong>${lead.name}</strong></td>
-                    <td>${lead.category || '-'}</td>
-                    <td>${lead.city || '-'}</td>
-                    <td>${lead.phone || '-'}</td>
-                    <td>${lead.website ? `<a href="${lead.website}" target="_blank" style="color: #04A9D4;">Link</a>` : '-'}</td>
-                    <td>${lead.rating ? lead.rating + ' ⭐' : '-'}</td>
-                    <td><span class="priority-badge priority-${lead.priority || 'low'}">${lead.priority || 'LOW'}</span></td>
+                    <td data-label="Name"><strong>${lead.name}</strong></td>
+                    <td data-label="Kategorie">${lead.category || '-'}</td>
+                    <td data-label="Stadt">${lead.city || '-'}</td>
+                    <td data-label="Telefon">${lead.phone || '-'}</td>
+                    <td data-label="Website">${lead.website ? `<a href="${lead.website}" target="_blank" style="color: #04A9D4;">Link</a>` : '-'}</td>
+                    <td data-label="Bewertung">${lead.rating ? lead.rating + ' ⭐' : '-'}</td>
+                    <td data-label="Priorität"><span class="priority-badge priority-${lead.priority || 'low'}">${lead.priority || 'LOW'}</span></td>
                 </tr>
             `).join('');
         }
@@ -421,18 +421,9 @@
             sidebar.classList.toggle('active');
         }
 
-        // Close sidebar when clicking outside on mobile
+        // Close modals and sidebar on outside click
         document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.querySelector('.mobile-menu-toggle');
-
-            if (window.innerWidth <= 768) {
-                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
-                    sidebar.classList.remove('active');
-                }
-            }
-
-            // Alert Modal
+            // Alert Modal - check if click is directly on the modal overlay
             const alertModal = document.getElementById('alertModal');
             if (event.target === alertModal) {
                 closeAlertModal();
@@ -442,6 +433,16 @@
             const confirmModal = document.getElementById('confirmModal');
             if (event.target === confirmModal) {
                 closeConfirmModal(false);
+            }
+
+            // Sidebar on mobile
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
             }
         });
 

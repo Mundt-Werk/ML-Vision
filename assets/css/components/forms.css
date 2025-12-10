@@ -3,7 +3,19 @@
  * Wiederverwendbare Formular-Elemente
  */
 
+/* Form Rows - Two column layout */
+.form-row {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+.form-row.single {
+  display: block;
+}
+
 .form-group {
+  flex: 1;
   margin-bottom: var(--spacing-lg);
 }
 
@@ -15,6 +27,11 @@
   color: rgba(225, 232, 237, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.form-group label .required {
+  color: #ff453a;
+  margin-left: 4px;
 }
 
 .form-group input,
@@ -79,4 +96,108 @@
 
 .password-toggle:hover {
   color: var(--color-primary);
+}
+
+/* Checkbox Group */
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+}
+
+.checkbox-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-primary);
+}
+
+.checkbox-item label {
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+  margin-left: var(--spacing-sm);
+}
+
+/* Range Slider */
+.range-slider {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px var(--color-primary);
+}
+
+.range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-base);
+}
+
+.range-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px var(--color-primary);
+}
+
+.range-value {
+  display: inline-block;
+  margin-left: var(--spacing-md);
+  color: var(--color-primary);
+  font-weight: bold;
+  font-size: var(--font-size-lg);
+  min-width: 30px;
+  text-align: center;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-primary);
 }

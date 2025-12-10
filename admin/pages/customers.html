@@ -141,13 +141,13 @@
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
                 <h2 id="alertTitle">Hinweis</h2>
-                <button class="modal-close" onclick="closeAlertModal()">&times;</button>
+                <button type="button" class="modal-close" onclick="closeAlertModal()">&times;</button>
             </div>
             <div style="padding: 20px 0;">
                 <p id="alertMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
             </div>
             <div class="form-actions" style="margin-top: 20px;">
-                <button class="btn-submit" onclick="closeAlertModal()" style="width: 100%;">OK</button>
+                <button type="button" class="btn-submit" onclick="closeAlertModal()" style="width: 100%;">OK</button>
             </div>
         </div>
     </div>
@@ -157,14 +157,14 @@
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
                 <h2 id="confirmTitle">Bestätigung</h2>
-                <button class="modal-close" onclick="closeConfirmModal(false)">&times;</button>
+                <button type="button" class="modal-close" onclick="closeConfirmModal(false)">&times;</button>
             </div>
             <div style="padding: 20px 0;">
                 <p id="confirmMessage" style="color: rgba(225, 232, 237, 0.8); line-height: 1.6; white-space: pre-line;"></p>
             </div>
             <div class="form-actions" style="margin-top: 20px;">
-                <button class="btn-cancel" onclick="closeConfirmModal(false)">Abbrechen</button>
-                <button class="btn-submit" onclick="closeConfirmModal(true)">Bestätigen</button>
+                <button type="button" class="btn-cancel" onclick="closeConfirmModal(false)">Abbrechen</button>
+                <button type="button" class="btn-submit" onclick="closeConfirmModal(true)">Bestätigen</button>
             </div>
         </div>
     </div>
@@ -1104,6 +1104,71 @@
             showAlert('Kunde erfolgreich gelöscht!', 'Erfolg');
             loadCustomers();
         };
+
+        // Custom Alert Modal
+        function showAlert(message, title = 'Hinweis') {
+            document.getElementById('alertTitle').textContent = title;
+            document.getElementById('alertMessage').textContent = message;
+            document.getElementById('alertModal').classList.add('active');
+        }
+
+        window.closeAlertModal = function() {
+            document.getElementById('alertModal').classList.remove('active');
+        };
+
+        // Custom Confirm Modal
+        let confirmCallback = null;
+
+        function showConfirm(message, title = 'Bestätigung') {
+            return new Promise((resolve) => {
+                document.getElementById('confirmTitle').textContent = title;
+                document.getElementById('confirmMessage').textContent = message;
+                document.getElementById('confirmModal').classList.add('active');
+                confirmCallback = resolve;
+            });
+        }
+
+        window.closeConfirmModal = function(confirmed) {
+            document.getElementById('confirmModal').classList.remove('active');
+            if (confirmCallback) {
+                confirmCallback(confirmed);
+                confirmCallback = null;
+            }
+        };
+
+        // Prevent clicks on modal content from bubbling to overlay
+        document.querySelectorAll('.modal-content').forEach(content => {
+            content.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+
+        // Close modals on outside click (clicking on overlay background)
+        document.addEventListener('click', function(event) {
+            // Customer Modal - check if click is directly on the modal overlay
+            const customerModal = document.getElementById('customerModal');
+            if (event.target === customerModal) {
+                closeCustomerModal();
+            }
+
+            // Customer Detail Modal
+            const detailModal = document.getElementById('customerDetailModal');
+            if (event.target === detailModal) {
+                closeDetailModal();
+            }
+
+            // Alert Modal
+            const alertModal = document.getElementById('alertModal');
+            if (event.target === alertModal) {
+                closeAlertModal();
+            }
+
+            // Confirm Modal
+            const confirmModal = document.getElementById('confirmModal');
+            if (event.target === confirmModal) {
+                closeConfirmModal(false);
+            }
+        });
 
     </script>
 

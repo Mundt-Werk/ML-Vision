@@ -81,3 +81,106 @@
 .btn-delete:hover {
   background: rgba(255, 69, 58, 0.3);
 }
+
+/* Table Container - Prevent Horizontal Scroll */
+.users-table-container,
+.customers-table-container,
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile Responsive Tables */
+@media (max-width: 768px) {
+  /* Hide table headers on mobile */
+  .users-table thead,
+  .customers-table thead,
+  .data-table thead {
+    display: none;
+  }
+
+  /* Make table rows display as cards */
+  .users-table tbody tr,
+  .customers-table tbody tr,
+  .data-table tbody tr {
+    display: block;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    padding: 15px;
+    background: rgba(4, 169, 212, 0.03);
+  }
+
+  /* Make table cells display as blocks with labels */
+  .users-table td,
+  .customers-table td,
+  .data-table td {
+    display: block;
+    text-align: left;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(4, 169, 212, 0.08);
+    font-size: 14px;
+  }
+
+  .users-table td:last-child,
+  .customers-table td:last-child,
+  .data-table td:last-child {
+    border-bottom: none;
+    padding-top: 15px;
+  }
+
+  /* Add data labels before each cell */
+  .users-table td[data-label]::before,
+  .customers-table td[data-label]::before,
+  .data-table td[data-label]::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Mobile action buttons */
+  .users-table td[data-label="Aktionen"],
+  .customers-table td[data-label="Aktionen"],
+  .data-table td[data-label="Aktionen"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 15px;
+  }
+
+  .users-table td[data-label="Aktionen"]::before,
+  .customers-table td[data-label="Aktionen"]::before,
+  .data-table td[data-label="Aktionen"]::before {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Make action buttons full width on mobile */
+  .action-btn {
+    flex: 1;
+    min-width: calc(50% - 4px);
+    padding: 10px 12px;
+    font-size: 13px;
+    text-align: center;
+    margin-right: 0;
+  }
+
+  /* Larger font sizes for better readability */
+  .users-table td strong,
+  .customers-table td strong,
+  .data-table td strong {
+    font-size: 16px;
+  }
+
+  /* Role badges - full width on mobile */
+  .role-badge {
+    display: inline-block;
+    margin-top: 5px;
+  }
+}
