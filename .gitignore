@@ -41,6 +41,7 @@ NICHTHOCHLADEN/
 *.pem
 *.key
 credentials.json
+firebase-service-account.json
 
 # OS files
 Thumbs.db

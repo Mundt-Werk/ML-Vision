@@ -1,0 +1,20 @@
+{
+  "name": "mlvision-test-data-scripts",
+  "version": "1.0.0",
+  "description": "Testdaten-Generator für ML Vision Customer Dashboard",
+  "main": "seed-test-data.js",
+  "scripts": {
+    "seed": "node seed-test-data.js",
+    "seed-browser": "echo 'Open seed-test-data-browser.html in your browser'"
+  },
+  "keywords": [
+    "firebase",
+    "test-data",
+    "seeding"
+  ],
+  "author": "ML Vision",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

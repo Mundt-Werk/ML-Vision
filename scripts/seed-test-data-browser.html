@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testdaten Generator - ML Vision</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #04A9D4;
+            margin-top: 0;
+        }
+        .info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        button {
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(4, 169, 212, 0.3);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #log {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            display: none;
+        }
+        #log.active {
+            display: block;
+        }
+        .log-line {
+            margin: 5px 0;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff4444; }
+        .info-line { color: #00aaff; }
+        .warning-line { color: #ffaa00; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 ML Vision Testdaten Generator</h1>
+
+        <div class="info">
+            <strong>ℹ️ Information</strong><br>
+            Dieses Tool erstellt komplette Testdaten für das ML Vision Customer Dashboard:
+            <ul>
+                <li><strong>Customer:</strong> cust_test (alle Module aktiv)</li>
+                <li><strong>User:</strong> test@mlvision.de / testpassword123</li>
+                <li><strong>Calls:</strong> 30-40 Einträge mit verschiedenen Status & Dauer</li>
+                <li><strong>Tickets:</strong> 8 Tickets mit Messages</li>
+                <li><strong>Invoices:</strong> 5 Rechnungen</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Warnung</strong><br>
+            Sie müssen als <strong>Admin</strong> angemeldet sein, um Testdaten zu erstellen!<br>
+            Bestehende Daten mit ID "cust_test" werden überschrieben.
+        </div>
+
+        <button id="startBtn" onclick="startSeeding()">Testdaten generieren</button>
+        <button onclick="clearLog()">Log löschen</button>
+
+        <div id="log"></div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from '../assets/js/firebase-config.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+        import { doc, setDoc, addDoc, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+        let currentUser = null;
+
+        // Check authentication
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (!user) {
+                log('❌ Nicht angemeldet! Bitte melden Sie sich als Admin an.', 'error');
+                document.getElementById('startBtn').disabled = true;
+            } else {
+                log(`✅ Angemeldet als: ${user.email}`, 'success');
+            }
+        });
+
+        // Helper Functions
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            logDiv.classList.add('active');
+            const line = document.createElement('div');
+            line.className = `log-line ${type}-line`;
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(line);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        window.clearLog = function() {
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('log').classList.remove('active');
+        }
+
+        function randomChoice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function daysAgo(days) {
+            const date = new Date();
+            date.setDate(date.getDate() - days);
+            return date;
+        }
+
+        // 1. Customer erstellen
+        async function createCustomer() {
+            log('📦 Creating customer...', 'info');
+
+            await setDoc(doc(db, 'customers', 'cust_test'), {
+                customerId: 'cust_test',
+                name: 'Test Firma GmbH',
+                email: 'kontakt@testfirma.de',
+                phone: '+49 30 12345678',
+
+                modules: {
+                    voice: true,
+                    support: true,
+                    invoices: true,
+                    settings: true
+                },
+
+                planName: 'Professional Plan',
+                planPrice: 79,
+                planFeatures: [
+                    '500 Voice-Calls/Monat',
+                    'Unbegrenzte Support-Tickets',
+                    'Rechnungsverwaltung'
+                ],
+
+                notifications: {
+                    email: true,
+                    tickets: true,
+                    invoices: true
+                },
+
+                createdAt: daysAgo(90).toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+
+            log('✅ Customer created: cust_test', 'success');
+        }
+
+        // 2. Calls erstellen
+        async function createCalls() {
+            log('📞 Creating calls...', 'info');
+
+            const statuses = ['completed', 'completed', 'completed', 'failed', 'unknown'];
+            const numCalls = randomInt(30, 40);
+
+            for (let i = 0; i < numCalls; i++) {
+                const callId = `CA${Date.now()}${i}${randomInt(1000, 9999)}`;
+                const status = randomChoice(statuses);
+                const duration = status === 'completed' ? randomInt(30, 600) : 0;
+                const daysOld = randomInt(0, 30);
+
+                await setDoc(doc(db, 'calls', callId), {
+                    callId: callId,
+                    customerId: 'cust_test',
+                    timestamp: daysAgo(daysOld).toISOString(),
+                    duration: duration,
+                    status: status,
+                    phoneNumber: `+4915${randomInt(10000000, 99999999)}`,
+                    recordingUrl: status === 'completed'
+                        ? `https://api.twilio.com/recordings/${callId}.mp3`
+                        : null,
+                    importedAt: new Date().toISOString()
+                });
+
+                if ((i + 1) % 10 === 0) {
+                    log(`  ⏳ ${i + 1}/${numCalls} calls created...`, 'info');
+                }
+            }
+
+            log(`✅ ${numCalls} calls created`, 'success');
+        }
+
+        // 3. Tickets erstellen
+        async function createTickets() {
+            log('🎫 Creating tickets...', 'info');
+
+            const ticketTemplates = [
+                {
+                    title: 'Wie exportiere ich Gespräche?',
+                    body: 'Ich finde den Export-Button nicht. Können Sie mir helfen?',
+                    category: 'Frage',
+                    status: 'open',
+                    priority: 'normal'
+                },
+                {
+                    title: 'Rechnung vom Januar fehlt',
+                    body: 'In meiner Übersicht fehlt die Rechnung vom Januar 2025. Können Sie diese nachträglich hochladen?',
+                    category: 'Problem',
+                    status: 'pending',
+                    priority: 'high'
+                },
+                {
+                    title: 'Feature-Request: Anruffilter',
+                    body: 'Wäre es möglich, in der Gesprächsübersicht nach Telefonnummern zu filtern?',
+                    category: 'Feature-Request',
+                    status: 'open',
+                    priority: 'low'
+                },
+                {
+                    title: 'Voice-Agent antwortet nicht',
+                    body: 'Seit gestern Abend nimmt der Voice-Agent keine Anrufe mehr entgegen. Können Sie das prüfen?',
+                    category: 'Problem',
+                    status: 'closed',
+                    priority: 'high'
+                },
+                {
+                    title: 'Wie ändere ich mein Passwort?',
+                    body: 'Ich möchte mein Passwort ändern, finde aber die Option nicht.',
+                    category: 'Frage',
+                    status: 'closed',
+                    priority: 'normal'
+                },
+                {
+                    title: 'API-Integration Dokumentation',
+                    body: 'Gibt es eine API-Dokumentation für die Integration in unser CRM?',
+                    category: 'Frage',
+                    status: 'pending',
+                    priority: 'normal'
+                },
+                {
+                    title: 'Fehler beim PDF-Download',
+                    body: 'Beim Versuch, die Rechnung vom Februar herunterzuladen, bekomme ich einen Fehler.',
+                    category: 'Problem',
+                    status: 'open',
+                    priority: 'high'
+                },
+                {
+                    title: 'Upgrade auf Business Plan',
+                    body: 'Wir möchten gerne auf den Business Plan upgraden. Wie funktioniert das?',
+                    category: 'Frage',
+                    status: 'open',
+                    priority: 'normal'
+                }
+            ];
+
+            for (let i = 0; i < ticketTemplates.length; i++) {
+                const template = ticketTemplates[i];
+                const daysOld = randomInt(1, 20);
+
+                const ticketRef = await addDoc(collection(db, 'tickets'), {
+                    customerId: 'cust_test',
+                    title: template.title,
+                    body: template.body,
+                    category: template.category,
+                    status: template.status,
+                    priority: template.priority,
+                    files: [],
+                    lastAgent: template.status !== 'open' ? 'support@ml-vision.de' : null,
+                    createdAt: daysAgo(daysOld).toISOString(),
+                    updatedAt: daysAgo(Math.max(0, daysOld - randomInt(0, 5))).toISOString()
+                });
+
+                // Messages hinzufügen
+                const numMessages = randomInt(1, 3);
+                for (let j = 0; j < numMessages; j++) {
+                    const isSupport = j % 2 === 1;
+
+                    await addDoc(collection(db, 'tickets', ticketRef.id, 'messages'), {
+                        ticketId: ticketRef.id,
+                        author: isSupport ? 'support' : 'customer',
+                        authorId: isSupport ? 'admin_uid' : currentUser.uid,
+                        authorName: isSupport ? 'ML Vision Support' : 'Test User',
+                        text: isSupport
+                            ? 'Vielen Dank für Ihre Anfrage. Wir kümmern uns darum und melden uns in Kürze.'
+                            : 'Danke für die schnelle Antwort!',
+                        files: [],
+                        createdAt: daysAgo(Math.max(0, daysOld - j)).toISOString()
+                    });
+                }
+
+                log(`  ✅ Ticket ${i + 1}/8 created with ${numMessages} messages`, 'success');
+            }
+
+            log('✅ All tickets created', 'success');
+        }
+
+        // 4. Invoices erstellen
+        async function createInvoices() {
+            log('💰 Creating invoices...', 'info');
+
+            const invoiceTemplates = [
+                { month: 'Dezember 2024', amount: 7900, status: 'paid', daysAgo: 40 },
+                { month: 'Januar 2025', amount: 7900, status: 'paid', daysAgo: 10 },
+                { month: 'Februar 2025', amount: 7900, status: 'paid', daysAgo: 5 },
+                { month: 'März 2025', amount: 7900, status: 'open', daysAgo: 1 },
+                { month: 'Setup-Gebühr', amount: 19900, status: 'paid', daysAgo: 90 }
+            ];
+
+            for (let i = 0; i < invoiceTemplates.length; i++) {
+                const template = invoiceTemplates[i];
+                const invoiceNo = template.month === 'Setup-Gebühr'
+                    ? 'SETUP-2024-001'
+                    : `INV-2025-${String(i + 1).padStart(3, '0')}`;
+                const date = daysAgo(template.daysAgo);
+
+                await addDoc(collection(db, 'invoices'), {
+                    invoiceNo: invoiceNo,
+                    customerId: 'cust_test',
+                    date: date.toISOString(),
+                    description: template.month === 'Setup-Gebühr'
+                        ? 'Einmalige Setup-Gebühr'
+                        : `Professional Plan - ${template.month}`,
+                    amountGross: template.amount,
+                    currency: 'EUR',
+                    status: template.status,
+                    pdfPath: `invoices/cust_test/${invoiceNo}.pdf`,
+                    pdfUrl: null, // Would be filled by admin upload
+                    planName: 'Professional Plan',
+                    period: template.month,
+                    createdAt: date.toISOString(),
+                    updatedAt: date.toISOString()
+                });
+
+                log(`  ✅ Invoice ${invoiceNo} created`, 'success');
+            }
+
+            log('✅ All invoices created', 'success');
+            log('⚠️  PDFs müssen manuell hochgeladen werden (siehe Anleitung)', 'warning');
+        }
+
+        // Main Function
+        window.startSeeding = async function() {
+            if (!currentUser) {
+                alert('Bitte melden Sie sich zuerst als Admin an!');
+                return;
+            }
+
+            const btn = document.getElementById('startBtn');
+            btn.disabled = true;
+            btn.textContent = 'Wird erstellt...';
+
+            clearLog();
+            log('🚀 Starting test data seeding...', 'info');
+
+            try {
+                await createCustomer();
+                await createCalls();
+                await createTickets();
+                await createInvoices();
+
+                log('\n✅ Test data seeding completed!', 'success');
+                log('\n📊 Summary:', 'info');
+                log('  - Customer: cust_test (all modules enabled)', 'info');
+                log('  - Calls: 30-40 entries', 'info');
+                log('  - Tickets: 8 tickets with messages', 'info');
+                log('  - Invoices: 5 invoices', 'info');
+                log('\n🎯 Ready for testing!', 'success');
+
+                alert('Testdaten erfolgreich erstellt! Sie können jetzt testen.');
+            } catch (error) {
+                console.error('Error:', error);
+                log(`\n❌ Error: ${error.message}`, 'error');
+                alert('Fehler beim Erstellen der Testdaten. Siehe Log für Details.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Testdaten generieren';
+            }
+        }
+    </script>
+</body>
+</html>
