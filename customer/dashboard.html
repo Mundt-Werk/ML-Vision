@@ -379,6 +379,160 @@
             font-weight: bold;
         }
 
+        /* Invoice Widget */
+        .invoice-widget {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .invoice-widget h2 {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .invoice-widget-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .latest-invoice {
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            padding: 20px;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .latest-invoice h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0 0 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .invoice-details {
+            display: grid;
+            gap: 12px;
+        }
+
+        .invoice-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .invoice-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .invoice-detail-row strong {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .invoice-detail-row span {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .invoice-amount {
+            font-size: 28px !important;
+            color: #fff;
+        }
+
+        .invoice-status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .invoice-status-badge.paid {
+            background: rgba(16, 185, 129, 0.9);
+        }
+
+        .invoice-total-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .summary-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #04A9D4;
+        }
+
+        .summary-card h4 {
+            font-size: 13px;
+            color: #6b7280;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-card .amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .summary-card .description {
+            font-size: 13px;
+            color: #6b7280;
+            margin: 8px 0 0 0;
+        }
+
+        .view-all-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #04A9D4;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .view-all-link:hover {
+            gap: 12px;
+            color: #0390b8;
+        }
+
+        .view-all-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .invoice-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+
+        .invoice-empty svg {
+            width: 64px;
+            height: 64px;
+            fill: #d1d5db;
+            margin-bottom: 15px;
+        }
+
         /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
@@ -435,6 +589,10 @@
 
             .dashboard-header h1 {
                 font-size: 24px;
+            }
+
+            .invoice-widget-content {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -563,6 +721,70 @@
                 </div>
             </div>
 
+            <!-- Invoice Widget -->
+            <div class="invoice-widget" id="invoiceWidget" style="display: none;">
+                <h2>
+                    Rechnungen
+                    <a href="pages/rechnungen.html" class="view-all-link">
+                        Alle anzeigen
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                        </svg>
+                    </a>
+                </h2>
+                <div class="invoice-widget-content">
+                    <div class="latest-invoice" id="latestInvoiceCard">
+                        <h3>Letzte Rechnung</h3>
+                        <div class="invoice-details">
+                            <div class="invoice-detail-row">
+                                <strong>Rechnungs-Nr.</strong>
+                                <span id="invoiceNo">-</span>
+                            </div>
+                            <div class="invoice-detail-row">
+                                <strong>Datum</strong>
+                                <span id="invoiceDate">-</span>
+                            </div>
+                            <div class="invoice-detail-row">
+                                <strong>Beschreibung</strong>
+                                <span id="invoiceDescription">-</span>
+                            </div>
+                            <div class="invoice-detail-row">
+                                <strong>Status</strong>
+                                <span id="invoiceStatus">
+                                    <span class="invoice-status-badge">-</span>
+                                </span>
+                            </div>
+                            <div class="invoice-detail-row">
+                                <strong>Betrag</strong>
+                                <span class="invoice-amount" id="invoiceAmount">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="invoice-total-summary">
+                        <div class="summary-card">
+                            <h4>Gesamtsumme</h4>
+                            <p class="amount" id="totalInvoicesAmount">0,00 €</p>
+                            <p class="description">Summe aller Rechnungen</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Anzahl Rechnungen</h4>
+                            <p class="amount" id="totalInvoicesCount">0</p>
+                            <p class="description">Insgesamt erstellt</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-widget" id="invoiceEmptyState" style="display: none;">
+                <h2>Rechnungen</h2>
+                <div class="invoice-empty">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                    <p>Noch keine Rechnungen vorhanden</p>
+                </div>
+            </div>
+
             <!-- System Status & User Info -->
             <div class="status-section">
                 <div class="status-card">
@@ -679,7 +901,9 @@
         import { initCustomerSidebar } from '../assets/js/components/CustomerSidebar.js';
         import { auth, db } from '../assets/js/firebase-config.js';
         import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-        import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { doc, getDoc, collection, query, where, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+        let currentCustomerId = null;
 
         // Initialize customer dashboard with role check
         document.addEventListener('DOMContentLoaded', async () => {
@@ -692,16 +916,119 @@
                 // Get customerId
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 if (userDoc.exists()) {
-                    const customerId = userDoc.data().customerId;
+                    currentCustomerId = userDoc.data().customerId;
 
                     // Initialize sidebar with module flags
-                    await initCustomerSidebar(customerId, 'dashboard');
+                    await initCustomerSidebar(currentCustomerId, 'dashboard');
+
+                    // Load invoice widget
+                    await loadInvoiceWidget(currentCustomerId);
                 }
 
                 // Initialize dashboard
                 await initDashboard('customer');
             });
         });
+
+        // Load Invoice Widget
+        async function loadInvoiceWidget(customerId) {
+            try {
+                // Check if invoices module is enabled
+                const customerDoc = await getDoc(doc(db, 'customers', customerId));
+                if (!customerDoc.exists() || !customerDoc.data().modules?.invoices) {
+                    // Module not enabled, don't show widget
+                    return;
+                }
+
+                // Query invoices for this customer
+                const invoicesQuery = query(
+                    collection(db, 'invoices'),
+                    where('customerId', '==', customerId),
+                    orderBy('date', 'desc')
+                );
+
+                const invoicesSnapshot = await getDocs(invoicesQuery);
+                const invoices = invoicesSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                if (invoices.length === 0) {
+                    // Show empty state
+                    document.getElementById('invoiceEmptyState').style.display = 'block';
+                    return;
+                }
+
+                // Show widget with data
+                document.getElementById('invoiceWidget').style.display = 'block';
+
+                // Get latest invoice (first one due to orderBy desc)
+                const latestInvoice = invoices[0];
+
+                // Populate latest invoice card
+                document.getElementById('invoiceNo').textContent = latestInvoice.invoiceNo || '-';
+                document.getElementById('invoiceDate').textContent = formatDate(latestInvoice.date);
+                document.getElementById('invoiceDescription').textContent =
+                    latestInvoice.description || latestInvoice.planName || '-';
+
+                // Status badge
+                const statusBadge = document.querySelector('#invoiceStatus .invoice-status-badge');
+                statusBadge.textContent = getStatusText(latestInvoice.status);
+                statusBadge.className = 'invoice-status-badge ' + latestInvoice.status;
+
+                // Amount
+                document.getElementById('invoiceAmount').textContent =
+                    formatAmount(latestInvoice.amountGross, latestInvoice.currency);
+
+                // Calculate total sum and count
+                const totalAmount = invoices.reduce((sum, inv) => sum + (inv.amountGross || 0), 0);
+                document.getElementById('totalInvoicesAmount').textContent =
+                    formatAmount(totalAmount, invoices[0]?.currency || 'EUR');
+                document.getElementById('totalInvoicesCount').textContent = invoices.length;
+
+            } catch (error) {
+                console.error('Error loading invoice widget:', error);
+            }
+        }
+
+        // Format date
+        function formatDate(dateValue) {
+            if (!dateValue) return '-';
+
+            let date;
+            if (dateValue.toDate) {
+                date = dateValue.toDate();
+            } else if (dateValue.seconds) {
+                date = new Date(dateValue.seconds * 1000);
+            } else {
+                date = new Date(dateValue);
+            }
+
+            if (isNaN(date.getTime())) return '-';
+
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            return `${day}.${month}.${year}`;
+        }
+
+        // Format amount (cents to euros)
+        function formatAmount(amountCents, currency = 'EUR') {
+            const amount = (amountCents / 100).toFixed(2);
+            const formatted = amount.replace('.', ',');
+            return `${formatted} ${currency}`;
+        }
+
+        // Get status text
+        function getStatusText(status) {
+            const statusMap = {
+                'paid': 'Bezahlt',
+                'open': 'Offen',
+                'uncollectible': 'Unbezahlbar'
+            };
+            return statusMap[status] || status;
+        }
     </script>
 </body>
 </html>
