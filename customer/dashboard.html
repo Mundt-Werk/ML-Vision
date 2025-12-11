@@ -849,18 +849,29 @@
 
                 // Get customerId
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
-                if (userDoc.exists()) {
-                    currentCustomerId = userDoc.data().customerId;
-
-                    // Initialize sidebar with module flags
-                    await initCustomerSidebar(currentCustomerId, 'dashboard');
-
-                    // Load invoice widget
-                    await loadInvoiceWidget(currentCustomerId);
-
-                    // Load stats widgets
-                    await loadStatsWidgets(currentCustomerId);
+                if (!userDoc.exists()) {
+                    console.error('User document not found in Firestore');
+                    alert('Ihr Benutzerprofil wurde nicht gefunden. Bitte kontaktieren Sie den Administrator.');
+                    return;
                 }
+
+                const userData = userDoc.data();
+                if (!userData.customerId) {
+                    console.error('customerId not found in user document');
+                    alert('Ihre Kundennummer fehlt. Bitte kontaktieren Sie den Administrator.');
+                    return;
+                }
+
+                currentCustomerId = userData.customerId;
+
+                // Initialize sidebar with module flags
+                await initCustomerSidebar(currentCustomerId, 'dashboard');
+
+                // Load invoice widget
+                await loadInvoiceWidget(currentCustomerId);
+
+                // Load stats widgets
+                await loadStatsWidgets(currentCustomerId);
 
                 // Initialize dashboard
                 await initDashboard('customer');

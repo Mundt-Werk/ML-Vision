@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket-Verwaltung - ML Vision Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/base/variables.css">
+    <link rel="stylesheet" href="../../assets/css/base/reset.css">
+    <link rel="stylesheet" href="../../assets/css/base/typography.css">
+    <link rel="stylesheet" href="../../assets/css/components/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/components/modal.css">
+    <link rel="stylesheet" href="../../assets/css/components/buttons.css">
+    <link rel="stylesheet" href="../../assets/css/components/forms.css">
+    <link rel="stylesheet" href="../../assets/css/components/tables.css">
+    <link rel="stylesheet" href="../../assets/css/layouts/admin-layout.css">
+    <link rel="stylesheet" href="../../assets/css/utilities/responsive.css">
+    <style>
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: rgba(225, 232, 237, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(4, 169, 212, 0.5);
+        }
+
+        .chip.active {
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            color: white;
+            border-color: #04A9D4;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-open {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196f3;
+        }
+
+        .badge-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .badge-closed {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .badge-low {
+            background: rgba(158, 158, 158, 0.2);
+            color: #9e9e9e;
+        }
+
+        .badge-normal {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .badge-high {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        /* Ticket Detail Modal */
+        .ticket-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ticket-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .meta-label {
+            font-size: 12px;
+            color: rgba(225, 232, 237, 0.5);
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            color: rgba(225, 232, 237, 0.9);
+        }
+
+        /* Messages Thread */
+        .messages-thread {
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .message-customer {
+            background: rgba(33, 150, 243, 0.1);
+            border-left: 3px solid #2196f3;
+        }
+
+        .message-support {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 3px solid #4caf50;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: rgba(225, 232, 237, 0.9);
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: rgba(225, 232, 237, 0.5);
+        }
+
+        .message-body {
+            color: rgba(225, 232, 237, 0.8);
+            line-height: 1.5;
+        }
+
+        .message-files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .file-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            color: #04A9D4;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .file-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Reply Form */
+        .reply-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+
+        .reply-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Status Dropdown */
+        .status-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-control select {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: rgba(225, 232, 237, 0.9);
+            cursor: pointer;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(225, 232, 237, 0.6);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(225, 232, 237, 0.6);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: rgba(225, 232, 237, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision Logo">
+                <div class="admin-badge-sidebar">ADMIN</div>
+            </div>
+
+            <div class="sidebar-section-title">Verwaltung</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="../dashboard.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Benutzerverwaltung
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Kunden
+                    </a>
+                </li>
+                <li>
+                    <a href="tickets.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                        </svg>
+                        Support-Tickets
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Tools</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="leads-bot.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
+                        </svg>
+                        Leads Bot
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">System</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="settings.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Einstellungen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn" id="logoutBtn">Abmelden</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <h1>Support-Tickets</h1>
+                    <p>Verwalten Sie Kundenanfragen und Support-Tickets</p>
+                </div>
+            </div>
+
+            <!-- Filter Chips -->
+            <div class="filter-chips">
+                <div class="chip active" data-status="all">Alle</div>
+                <div class="chip" data-status="open">Offen</div>
+                <div class="chip" data-status="pending">In Bearbeitung</div>
+                <div class="chip" data-status="closed">Geschlossen</div>
+            </div>
+
+            <!-- Tickets Table -->
+            <div class="users-table-container">
+                <div id="loadingState" class="loading">
+                    Lade Tickets...
+                </div>
+
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <h3>Keine Tickets gefunden</h3>
+                    <p>Es gibt derzeit keine Support-Tickets.</p>
+                </div>
+
+                <table class="users-table" id="ticketsTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Ticket-ID</th>
+                            <th>Kunde</th>
+                            <th>Titel</th>
+                            <th>Kategorie</th>
+                            <th>Priorität</th>
+                            <th>Status</th>
+                            <th>Erstellt</th>
+                            <th>Aktualisiert</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticketsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div class="modal" id="ticketModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 id="ticketModalTitle">Ticket Details</h2>
+                <button type="button" class="modal-close" onclick="closeTicketModal()">&times;</button>
+            </div>
+            <div class="ticket-detail">
+                <!-- Ticket Header -->
+                <div class="ticket-header">
+                    <div>
+                        <h3 id="ticketTitle" style="margin-bottom: 5px;"></h3>
+                        <p id="ticketId" style="color: rgba(225, 232, 237, 0.5); font-size: 14px;"></p>
+                    </div>
+                    <div class="status-control">
+                        <label style="color: rgba(225, 232, 237, 0.7);">Status:</label>
+                        <select id="ticketStatus" onchange="updateTicketStatus()">
+                            <option value="open">Offen</option>
+                            <option value="pending">In Bearbeitung</option>
+                            <option value="closed">Geschlossen</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Ticket Meta -->
+                <div class="ticket-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Kunde</span>
+                        <span class="meta-value" id="ticketCustomer"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Kategorie</span>
+                        <span class="meta-value" id="ticketCategory"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Priorität</span>
+                        <span class="meta-value" id="ticketPriority"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Erstellt</span>
+                        <span class="meta-value" id="ticketCreated"></span>
+                    </div>
+                </div>
+
+                <!-- Messages Thread -->
+                <div>
+                    <h4 style="margin-bottom: 10px; color: rgba(225, 232, 237, 0.9);">Nachrichten</h4>
+                    <div class="messages-thread" id="messagesThread"></div>
+                </div>
+
+                <!-- Reply Form -->
+                <div class="reply-form">
+                    <h4 style="margin-bottom: 5px; color: rgba(225, 232, 237, 0.9);">Antworten</h4>
+                    <textarea id="replyMessage" placeholder="Ihre Antwort..." rows="4"></textarea>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="file" id="replyFile" style="flex: 1;">
+                        <button class="btn-submit" onclick="sendReply()">Antwort senden</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
+
+    <script type="module">
+        import { auth, db, storage } from '../../assets/js/firebase-config.js';
+        import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+        import { collection, query, orderBy, getDocs, doc, getDoc, updateDoc, addDoc, serverTimestamp, where } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
+
+        let allTickets = [];
+        let currentFilter = 'all';
+        let currentTicketId = null;
+        let customersMap = {}; // Cache für Kundennamen
+
+        // Check auth & role
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = '../../public/login.html';
+                return;
+            }
+
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+                alert('Zugriff verweigert. Nur Admins haben Zugriff.');
+                await signOut(auth);
+                window.location.href = '../../public/login.html';
+                return;
+            }
+
+            // Load data
+            await loadCustomers();
+            await loadTickets();
+
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await signOut(auth);
+                window.location.href = '../../public/login.html';
+            });
+
+            // Filter chips
+            document.querySelectorAll('.chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    currentFilter = chip.dataset.status;
+                    filterTickets();
+                });
+            });
+        }
+
+        // Load Customers (for mapping customerId to name)
+        async function loadCustomers() {
+            try {
+                const snapshot = await getDocs(collection(db, 'customers'));
+                snapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    customersMap[data.customerId] = data.name || data.email || data.customerId;
+                });
+            } catch (error) {
+                console.error('Error loading customers:', error);
+            }
+        }
+
+        // Load Tickets
+        async function loadTickets() {
+            try {
+                const q = query(collection(db, 'tickets'), orderBy('updatedAt', 'desc'));
+                const snapshot = await getDocs(q);
+
+                allTickets = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                console.log('Loaded tickets:', allTickets.length);
+                renderTickets(allTickets);
+
+            } catch (error) {
+                console.error('Error loading tickets:', error);
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+            }
+        }
+
+        // Filter Tickets
+        function filterTickets() {
+            if (currentFilter === 'all') {
+                renderTickets(allTickets);
+            } else {
+                const filtered = allTickets.filter(t => t.status === currentFilter);
+                renderTickets(filtered);
+            }
+        }
+
+        // Render Tickets
+        function renderTickets(tickets) {
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+            const table = document.getElementById('ticketsTable');
+            const tbody = document.getElementById('ticketsTableBody');
+
+            loadingState.style.display = 'none';
+
+            if (tickets.length === 0) {
+                emptyState.style.display = 'block';
+                table.style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            table.style.display = 'table';
+
+            tbody.innerHTML = tickets.map(ticket => {
+                const customerName = customersMap[ticket.customerId] || ticket.customerId;
+                const createdDate = ticket.createdAt ? toDate(ticket.createdAt).toLocaleDateString('de-DE') : '-';
+                const updatedDate = ticket.updatedAt ? toDate(ticket.updatedAt).toLocaleDateString('de-DE') : '-';
+
+                return `
+                    <tr onclick="openTicket('${ticket.id}')" style="cursor: pointer;">
+                        <td data-label="Ticket-ID"><strong>${ticket.id.substring(0, 8)}</strong></td>
+                        <td data-label="Kunde">${customerName}</td>
+                        <td data-label="Titel">${ticket.title}</td>
+                        <td data-label="Kategorie">${translateCategory(ticket.category)}</td>
+                        <td data-label="Priorität">
+                            <span class="badge badge-${ticket.priority}">${translatePriority(ticket.priority)}</span>
+                        </td>
+                        <td data-label="Status">
+                            <span class="badge badge-${ticket.status}">${translateStatus(ticket.status)}</span>
+                        </td>
+                        <td data-label="Erstellt">${createdDate}</td>
+                        <td data-label="Aktualisiert">${updatedDate}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Open Ticket Modal
+        window.openTicket = async function(ticketId) {
+            currentTicketId = ticketId;
+            const ticket = allTickets.find(t => t.id === ticketId);
+            if (!ticket) return;
+
+            // Set ticket data
+            document.getElementById('ticketModalTitle').textContent = 'Ticket #' + ticketId.substring(0, 8);
+            document.getElementById('ticketId').textContent = 'ID: ' + ticketId;
+            document.getElementById('ticketTitle').textContent = ticket.title;
+            document.getElementById('ticketCustomer').textContent = customersMap[ticket.customerId] || ticket.customerId;
+            document.getElementById('ticketCategory').textContent = translateCategory(ticket.category);
+            document.getElementById('ticketPriority').textContent = translatePriority(ticket.priority);
+            document.getElementById('ticketCreated').textContent = ticket.createdAt ? toDate(ticket.createdAt).toLocaleString('de-DE') : '-';
+            document.getElementById('ticketStatus').value = ticket.status;
+
+            // Load messages
+            await loadMessages(ticketId);
+
+            // Show modal
+            document.getElementById('ticketModal').classList.add('active');
+        };
+
+        // Close Ticket Modal
+        window.closeTicketModal = function() {
+            document.getElementById('ticketModal').classList.remove('active');
+            currentTicketId = null;
+            document.getElementById('replyMessage').value = '';
+            document.getElementById('replyFile').value = '';
+        };
+
+        // Load Messages
+        async function loadMessages(ticketId) {
+            try {
+                const messagesRef = collection(db, 'tickets', ticketId, 'messages');
+                const q = query(messagesRef, orderBy('createdAt', 'asc'));
+                const snapshot = await getDocs(q);
+
+                const messages = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                renderMessages(messages);
+
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+
+        // Render Messages
+        function renderMessages(messages) {
+            const container = document.getElementById('messagesThread');
+
+            if (messages.length === 0) {
+                container.innerHTML = '<p style="color: rgba(225, 232, 237, 0.5); text-align: center;">Noch keine Nachrichten</p>';
+                return;
+            }
+
+            container.innerHTML = messages.map(msg => {
+                const isSupport = msg.sender === 'support';
+                const time = msg.createdAt ? toDate(msg.createdAt).toLocaleString('de-DE') : '-';
+
+                let filesHtml = '';
+                if (msg.files && msg.files.length > 0) {
+                    filesHtml = `
+                        <div class="message-files">
+                            ${msg.files.map(file => `
+                                <a href="${file.fileUrl}" target="_blank" class="file-link">
+                                    📎 ${file.fileName}
+                                </a>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="message message-${isSupport ? 'support' : 'customer'}">
+                        <div class="message-header">
+                            <span class="message-sender">${isSupport ? '🛠️ Support' : '👤 Kunde'}</span>
+                            <span class="message-time">${time}</span>
+                        </div>
+                        <div class="message-body">${msg.message}</div>
+                        ${filesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Update Ticket Status
+        window.updateTicketStatus = async function() {
+            if (!currentTicketId) return;
+
+            const newStatus = document.getElementById('ticketStatus').value;
+
+            try {
+                await updateDoc(doc(db, 'tickets', currentTicketId), {
+                    status: newStatus,
+                    updatedAt: new Date().toISOString()
+                });
+
+                // Update local data
+                const ticket = allTickets.find(t => t.id === currentTicketId);
+                if (ticket) {
+                    ticket.status = newStatus;
+                    ticket.updatedAt = new Date().toISOString();
+                }
+
+                // Re-render table
+                filterTickets();
+
+                console.log('Status updated to:', newStatus);
+
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Fehler beim Aktualisieren des Status');
+            }
+        };
+
+        // Send Reply
+        window.sendReply = async function() {
+            if (!currentTicketId) return;
+
+            const messageText = document.getElementById('replyMessage').value.trim();
+            const fileInput = document.getElementById('replyFile');
+
+            if (!messageText) {
+                alert('Bitte geben Sie eine Nachricht ein.');
+                return;
+            }
+
+            try {
+                const ticket = allTickets.find(t => t.id === currentTicketId);
+
+                // Handle file upload
+                let files = [];
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+
+                    // Validate file size (10 MB)
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('Die Datei ist zu groß. Maximal 10 MB erlaubt.');
+                        return;
+                    }
+
+                    // Upload to storage
+                    const timestamp = Date.now();
+                    const storageRef = ref(storage, `tickets/${ticket.customerId}/${currentTicketId}/${timestamp}_${file.name}`);
+                    await uploadBytes(storageRef, file);
+                    const fileUrl = await getDownloadURL(storageRef);
+
+                    files.push({
+                        fileName: file.name,
+                        fileUrl: fileUrl,
+                        fileSize: file.size
+                    });
+                }
+
+                // Add message to subcollection
+                const messagesRef = collection(db, 'tickets', currentTicketId, 'messages');
+                await addDoc(messagesRef, {
+                    sender: 'support',
+                    message: messageText,
+                    files: files,
+                    createdAt: new Date().toISOString()
+                });
+
+                // Update ticket updatedAt & status to pending if it was open
+                const updateData = {
+                    updatedAt: new Date().toISOString()
+                };
+                if (ticket.status === 'open') {
+                    updateData.status = 'pending';
+                    ticket.status = 'pending';
+                    document.getElementById('ticketStatus').value = 'pending';
+                }
+
+                await updateDoc(doc(db, 'tickets', currentTicketId), updateData);
+
+                // Update local data
+                ticket.updatedAt = new Date().toISOString();
+
+                // Reload messages
+                await loadMessages(currentTicketId);
+
+                // Clear form
+                document.getElementById('replyMessage').value = '';
+                document.getElementById('replyFile').value = '';
+
+                // Re-render table
+                filterTickets();
+
+                console.log('Reply sent successfully');
+
+            } catch (error) {
+                console.error('Error sending reply:', error);
+                alert('Fehler beim Senden der Antwort');
+            }
+        };
+
+        // Helper: Convert Firestore timestamp or ISO string to Date
+        function toDate(timestamp) {
+            if (!timestamp) return null;
+            // Firestore Timestamp object has toDate() method
+            if (timestamp.toDate) {
+                return timestamp.toDate();
+            }
+            // ISO string or Date object
+            return new Date(timestamp);
+        }
+
+        // Translation helpers
+        function translateStatus(status) {
+            const map = {
+                'open': 'Offen',
+                'pending': 'In Bearbeitung',
+                'closed': 'Geschlossen'
+            };
+            return map[status] || status;
+        }
+
+        function translateCategory(category) {
+            const map = {
+                'question': 'Frage',
+                'problem': 'Problem',
+                'feature': 'Feature-Anfrage',
+                'other': 'Sonstiges'
+            };
+            return map[category] || category;
+        }
+
+        function translatePriority(priority) {
+            const map = {
+                'low': 'Niedrig',
+                'normal': 'Normal',
+                'high': 'Hoch'
+            };
+            return map[priority] || priority;
+        }
+    </script>
+</body>
+</html>

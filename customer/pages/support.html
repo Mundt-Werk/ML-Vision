@@ -157,9 +157,9 @@
                         <div class="form-group">
                             <label for="ticketCategory">Kategorie *</label>
                             <select id="ticketCategory" required>
-                                <option value="Frage">Frage</option>
-                                <option value="Problem">Problem</option>
-                                <option value="Feature-Request">Feature-Request</option>
+                                <option value="question">Frage</option>
+                                <option value="problem">Problem</option>
+                                <option value="feature">Feature-Request</option>
                             </select>
                         </div>
 
@@ -233,7 +233,7 @@
     <script type="module">
         import { auth, db, storage } from '../../assets/js/firebase-config.js';
         import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-        import { collection, query, where, orderBy, limit, getDocs, doc, getDoc, addDoc, serverTimestamp, startAfter } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { collection, query, where, orderBy, limit, getDocs, doc, getDoc, addDoc, updateDoc, serverTimestamp, startAfter } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
         import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
         import { initCustomerSidebar, checkModuleAccess } from '../../assets/js/components/CustomerSidebar.js';
 
@@ -256,34 +256,46 @@
                 try {
                     // Load customerId
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
-                    if (userDoc.exists()) {
-                        currentCustomerId = userDoc.data().customerId;
-
-                        // Check module access
-                        const hasAccess = await checkModuleAccess(currentCustomerId, 'support');
-                        if (!hasAccess) return;
-
-                        // Initialize sidebar
-                        await initCustomerSidebar(currentCustomerId, 'support');
-
-                        // Initialize logout
-                        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-                            e.preventDefault();
-                            try {
-                                await signOut(auth);
-                                window.location.href = '../../public/login.html';
-                            } catch (error) {
-                                console.error('Logout error:', error);
-                                alert('Fehler beim Abmelden.');
-                            }
-                        });
-
-                        // Load tickets
-                        await loadTickets();
-
-                        // Initialize event listeners
-                        initEventListeners();
+                    if (!userDoc.exists()) {
+                        console.error('User document not found in Firestore');
+                        alert('Ihr Benutzerprofil wurde nicht gefunden. Bitte kontaktieren Sie den Administrator.');
+                        return;
                     }
+
+                    const userData = userDoc.data();
+                    if (!userData.customerId) {
+                        console.error('customerId not found in user document');
+                        alert('Ihre Kundennummer fehlt. Bitte kontaktieren Sie den Administrator.');
+                        return;
+                    }
+
+                    currentCustomerId = userData.customerId;
+
+                    // Check module access
+                    const hasAccess = await checkModuleAccess(currentCustomerId, 'support');
+                    if (!hasAccess) return;
+
+                    // Initialize sidebar
+                    await initCustomerSidebar(currentCustomerId, 'support');
+
+                    // Initialize logout
+                    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        try {
+                            await signOut(auth);
+                            window.location.href = '../../public/login.html';
+                        } catch (error) {
+                            console.error('Logout error:', error);
+                            alert('Fehler beim Abmelden.');
+                        }
+                    });
+
+                    // Load tickets
+                    await loadTickets();
+
+                    // Initialize event listeners
+                    initEventListeners();
+
                 } catch (error) {
                     console.error('Error loading user data:', error);
                     window.location.href = '../../public/login.html';
@@ -393,7 +405,7 @@
                     </div>
                     <p class="ticket-body">${escapeHtml(ticket.body?.substring(0, 200))}${ticket.body?.length > 200 ? '...' : ''}</p>
                     <div class="ticket-meta">
-                        ${ticket.category || 'Allgemein'} • Erstellt: ${formatDate(ticket.createdAt)} • Aktualisiert: ${formatDate(ticket.updatedAt)}
+                        ${getCategoryText(ticket.category)} • Erstellt: ${formatDate(ticket.createdAt)} • Aktualisiert: ${formatDate(ticket.updatedAt)}
                     </div>
                 </div>
             `).join('');
@@ -440,36 +452,31 @@
                 }));
 
                 // Render messages
-                const initialMessage = {
-                    author: 'customer',
-                    authorName: 'Sie',
-                    text: ticket.body,
-                    createdAt: ticket.createdAt,
-                    files: ticket.files || []
-                };
+                const messagesHtml = messages.map(msg => {
+                    const isCustomer = msg.sender === 'customer';
+                    const authorName = isCustomer ? 'Sie' : '🛠️ Support';
 
-                const allMessages = [initialMessage, ...messages];
-
-                const messagesHtml = allMessages.map(msg => `
-                    <div class="message-item ${msg.author}">
-                        <div class="message-header">
-                            <span class="message-author">${escapeHtml(msg.authorName)}</span>
-                            <span class="message-time">${formatDate(msg.createdAt)}</span>
-                        </div>
-                        <div class="message-text">${escapeHtml(msg.text)}</div>
-                        ${msg.files && msg.files.length > 0 ? `
-                            <div class="message-files">
-                                ${msg.files.map(file => `
-                                    <a href="${file.fileUrl}" target="_blank" class="file-attachment">
-                                        📎 ${escapeHtml(file.fileName)}
-                                    </a>
-                                `).join('')}
+                    return `
+                        <div class="message-item ${msg.sender}">
+                            <div class="message-header">
+                                <span class="message-author">${escapeHtml(authorName)}</span>
+                                <span class="message-time">${formatDate(msg.createdAt)}</span>
                             </div>
-                        ` : ''}
-                    </div>
-                `).join('');
+                            <div class="message-text">${escapeHtml(msg.message || '')}</div>
+                            ${msg.files && msg.files.length > 0 ? `
+                                <div class="message-files">
+                                    ${msg.files.map(file => `
+                                        <a href="${file.fileUrl}" target="_blank" class="file-attachment">
+                                            📎 ${escapeHtml(file.fileName)}
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
 
-                document.getElementById('messagesThread').innerHTML = messagesHtml;
+                document.getElementById('messagesThread').innerHTML = messagesHtml || '<p style="text-align: center; color: #6b7280;">Noch keine Nachrichten</p>';
             } catch (error) {
                 console.error('Error loading ticket detail:', error);
                 document.getElementById('messagesThread').innerHTML = `
@@ -497,6 +504,7 @@
                 let files = [];
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
+                    console.log('File selected:', file.name, file.size, 'bytes');
 
                     // Check file size
                     if (file.size > 10 * 1024 * 1024) {
@@ -506,22 +514,39 @@
                         return;
                     }
 
-                    // Upload to storage
-                    const timestamp = Date.now();
-                    const storageRef = ref(storage, `tickets/${currentCustomerId}/temp_${timestamp}/${file.name}`);
-                    await uploadBytes(storageRef, file);
-                    const fileUrl = await getDownloadURL(storageRef);
+                    try {
+                        console.log('Starting file upload...');
+                        btn.textContent = 'Lade Datei hoch...';
 
-                    files.push({
-                        fileName: file.name,
-                        fileUrl: fileUrl,
-                        fileSize: file.size,
-                        mimeType: file.type,
-                        uploadedAt: new Date().toISOString()
-                    });
+                        // Upload to storage
+                        const timestamp = Date.now();
+                        const storageRef = ref(storage, `tickets/${currentCustomerId}/temp_${timestamp}/${file.name}`);
+                        console.log('Upload path:', storageRef.fullPath);
+
+                        await uploadBytes(storageRef, file);
+                        console.log('File uploaded, getting download URL...');
+
+                        const fileUrl = await getDownloadURL(storageRef);
+                        console.log('Download URL received:', fileUrl);
+
+                        files.push({
+                            fileName: file.name,
+                            fileUrl: fileUrl,
+                            fileSize: file.size,
+                            mimeType: file.type,
+                            uploadedAt: new Date().toISOString()
+                        });
+                    } catch (uploadError) {
+                        console.error('File upload failed:', uploadError);
+                        alert('Datei-Upload fehlgeschlagen: ' + uploadError.message + '\n\nTicket wird ohne Datei erstellt.');
+                        // Continue without file
+                    }
+
+                    btn.textContent = 'Erstelle Ticket...';
                 }
 
                 // Create ticket
+                const now = new Date().toISOString();
                 const ticketData = {
                     customerId: currentCustomerId,
                     title: title,
@@ -529,17 +554,21 @@
                     category: category,
                     priority: priority,
                     status: 'open',
-                    files: files,
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp()
+                    createdAt: now,
+                    updatedAt: now
                 };
 
                 const docRef = await addDoc(collection(db, 'tickets'), ticketData);
 
-                // Update file path with real ticketId
-                if (files.length > 0) {
-                    // Files will be moved by admin or left as-is
-                }
+                // Create first message in messages subcollection
+                const firstMessage = {
+                    sender: 'customer',
+                    message: body,
+                    files: files,
+                    createdAt: now
+                };
+
+                await addDoc(collection(db, 'tickets', docRef.id, 'messages'), firstMessage);
 
                 alert('Ticket erfolgreich erstellt!');
                 document.getElementById('createTicketForm').reset();
@@ -592,16 +621,18 @@
 
                 // Create message
                 const messageData = {
-                    ticketId: currentTicketId,
-                    author: 'customer',
-                    authorId: currentUser.uid,
-                    authorName: currentUser.displayName || currentUser.email || 'Sie',
-                    text: text,
+                    sender: 'customer',
+                    message: text,
                     files: files,
-                    createdAt: serverTimestamp()
+                    createdAt: new Date().toISOString()
                 };
 
                 await addDoc(collection(db, 'tickets', currentTicketId, 'messages'), messageData);
+
+                // Update ticket updatedAt
+                await updateDoc(doc(db, 'tickets', currentTicketId), {
+                    updatedAt: new Date().toISOString()
+                });
 
                 document.getElementById('replyForm').reset();
                 await loadTicketDetail(currentTicketId);
@@ -623,6 +654,16 @@
                 'closed': 'Geschlossen'
             };
             return statusMap[status] || status;
+        }
+
+        function getCategoryText(category) {
+            const categoryMap = {
+                'question': 'Frage',
+                'problem': 'Problem',
+                'feature': 'Feature-Request',
+                'other': 'Sonstiges'
+            };
+            return categoryMap[category] || category;
         }
 
         function formatDate(timestamp) {

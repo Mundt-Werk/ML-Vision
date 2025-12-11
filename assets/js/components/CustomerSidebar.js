@@ -23,6 +23,11 @@ export class CustomerSidebar {
      */
     async loadModuleFlags() {
         try {
+            if (!this.customerId) {
+                console.error('CustomerSidebar: customerId is undefined');
+                throw new Error('customerId is required');
+            }
+
             const customerDoc = await getDoc(doc(db, 'customers', this.customerId));
             if (customerDoc.exists()) {
                 const data = customerDoc.data();
@@ -103,8 +108,15 @@ export class CustomerSidebar {
             const isActive = this.currentPage === module.id;
             const activeClass = isActive ? ' class="active"' : '';
 
-            // URL-Anpassung für Dashboard (ein Level höher)
-            const url = module.id === 'dashboard' ? module.url : `pages/${module.url}`;
+            // URL-Anpassung basierend auf aktueller Seite
+            let url;
+            if (this.currentPage === 'dashboard') {
+                // Vom Dashboard aus: Unterseiten brauchen pages/ prefix
+                url = module.id === 'dashboard' ? module.url : `pages/${module.url}`;
+            } else {
+                // Von Unterseite aus: Dashboard eine Ebene höher, andere Seiten direkt
+                url = module.id === 'dashboard' ? module.url : module.url;
+            }
 
             return `
                 <li>

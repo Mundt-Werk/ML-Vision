@@ -61,6 +61,14 @@
                         Kunden
                     </a>
                 </li>
+                <li>
+                    <a href="tickets.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                        </svg>
+                        Support-Tickets
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-section-title">Tools</div>
@@ -205,6 +213,14 @@
                         <option value="admin">Administrator</option>
                         <option value="customer">Kunde (Login-Account)</option>
                     </select>
+                </div>
+
+                <div class="form-group" id="customerIdGroup" style="display: none;">
+                    <label for="userCustomerId">Customer-ID *</label>
+                    <input type="text" id="userCustomerId" placeholder="z.B. cust_test">
+                    <small style="color: rgba(225, 232, 237, 0.6); font-size: 12px; display: block; margin-top: 5px;">
+                        Die Customer-ID aus der customers-Collection (z.B. cust_test)
+                    </small>
                 </div>
 
                 <div class="form-actions">
@@ -469,6 +485,21 @@
             return tr;
         }
 
+        // Show/hide customerId field based on role
+        document.getElementById('userRole').addEventListener('change', function() {
+            const customerIdGroup = document.getElementById('customerIdGroup');
+            const customerIdInput = document.getElementById('userCustomerId');
+
+            if (this.value === 'customer') {
+                customerIdGroup.style.display = 'block';
+                customerIdInput.required = true;
+            } else {
+                customerIdGroup.style.display = 'none';
+                customerIdInput.required = false;
+                customerIdInput.value = '';
+            }
+        });
+
         // Open modal for adding user
         window.openAddUserModal = function() {
             currentEditId = null;
@@ -477,6 +508,7 @@
             document.getElementById('userForm').reset();
             document.getElementById('userId').value = '';
             document.getElementById('userPassword').required = true;
+            document.getElementById('customerIdGroup').style.display = 'none';
             document.getElementById('userModal').classList.add('active');
         };
 
@@ -494,6 +526,19 @@
             document.getElementById('userRole').value = user.role || '';
             document.getElementById('userPassword').value = '';
             document.getElementById('userPassword').required = false;
+
+            // Show/hide and populate customerId field
+            const customerIdGroup = document.getElementById('customerIdGroup');
+            const customerIdInput = document.getElementById('userCustomerId');
+            if (user.role === 'customer') {
+                customerIdGroup.style.display = 'block';
+                customerIdInput.value = user.customerId || '';
+                customerIdInput.required = true;
+            } else {
+                customerIdGroup.style.display = 'none';
+                customerIdInput.value = '';
+                customerIdInput.required = false;
+            }
 
             document.getElementById('userModal').classList.add('active');
         };
@@ -517,7 +562,8 @@
                 name: document.getElementById('userName').value,
                 email: document.getElementById('userEmail').value,
                 role: document.getElementById('userRole').value,
-                password: document.getElementById('userPassword').value
+                password: document.getElementById('userPassword').value,
+                customerId: document.getElementById('userCustomerId').value
             };
 
             try {
@@ -525,12 +571,19 @@
                     // Update existing user in Firestore
                     const userRef = doc(db, 'users', currentEditId);
 
-                    await updateDoc(userRef, {
+                    const updateData = {
                         name: formData.name,
                         email: formData.email,
                         role: formData.role,
                         updatedAt: new Date().toISOString()
-                    });
+                    };
+
+                    // Add customerId only if role is customer
+                    if (formData.role === 'customer' && formData.customerId) {
+                        updateData.customerId = formData.customerId;
+                    }
+
+                    await updateDoc(userRef, updateData);
 
                     showAlert('Benutzer erfolgreich aktualisiert!', 'Erfolg');
                 } else {
@@ -554,12 +607,19 @@
                     const user = userCredential.user;
 
                     // Create user document in Firestore (using main db instance)
-                    await setDoc(doc(db, 'users', user.uid), {
+                    const userData = {
                         name: formData.name,
                         email: formData.email,
                         role: formData.role,
                         createdAt: new Date().toISOString()
-                    });
+                    };
+
+                    // Add customerId if role is customer
+                    if (formData.role === 'customer' && formData.customerId) {
+                        userData.customerId = formData.customerId;
+                    }
+
+                    await setDoc(doc(db, 'users', user.uid), userData);
 
                     // Sign out from secondary auth instance
                     await signOut(secondaryAuth);

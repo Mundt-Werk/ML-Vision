@@ -868,12 +868,21 @@
 
             // Get customerId from users collection
             const userDoc = await getDoc(doc(db, 'users', user.uid));
-            if (userDoc.exists()) {
-                currentCustomerId = userDoc.data().customerId;
-                await loadCalls();
-            } else {
-                console.error('User document not found');
+            if (!userDoc.exists()) {
+                console.error('User document not found in Firestore');
+                alert('Ihr Benutzerprofil wurde nicht gefunden. Bitte kontaktieren Sie den Administrator.');
+                return;
             }
+
+            const userData = userDoc.data();
+            if (!userData.customerId) {
+                console.error('customerId not found in user document');
+                alert('Ihre Kundennummer fehlt. Bitte kontaktieren Sie den Administrator.');
+                return;
+            }
+
+            currentCustomerId = userData.customerId;
+            await loadCalls();
         });
 
         // ========================================================================

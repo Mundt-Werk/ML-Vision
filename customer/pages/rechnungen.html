@@ -193,33 +193,45 @@
 
                 try {
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
-                    if (userDoc.exists()) {
-                        currentCustomerId = userDoc.data().customerId;
-
-                        // Check module access
-                        const hasAccess = await checkModuleAccess(currentCustomerId, 'invoices');
-                        if (!hasAccess) return;
-
-                        // Initialize sidebar
-                        await initCustomerSidebar(currentCustomerId, 'invoices');
-
-                        // Initialize logout
-                        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-                            e.preventDefault();
-                            try {
-                                await signOut(auth);
-                                window.location.href = '../../public/login.html';
-                            } catch (error) {
-                                console.error('Logout error:', error);
-                                alert('Fehler beim Abmelden.');
-                            }
-                        });
-
-                        // Load data
-                        await loadPlanCard();
-                        await loadInvoices();
-                        initEventListeners();
+                    if (!userDoc.exists()) {
+                        console.error('User document not found in Firestore');
+                        alert('Ihr Benutzerprofil wurde nicht gefunden. Bitte kontaktieren Sie den Administrator.');
+                        return;
                     }
+
+                    const userData = userDoc.data();
+                    if (!userData.customerId) {
+                        console.error('customerId not found in user document');
+                        alert('Ihre Kundennummer fehlt. Bitte kontaktieren Sie den Administrator.');
+                        return;
+                    }
+
+                    currentCustomerId = userData.customerId;
+
+                    // Check module access
+                    const hasAccess = await checkModuleAccess(currentCustomerId, 'invoices');
+                    if (!hasAccess) return;
+
+                    // Initialize sidebar
+                    await initCustomerSidebar(currentCustomerId, 'invoices');
+
+                    // Initialize logout
+                    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        try {
+                            await signOut(auth);
+                            window.location.href = '../../public/login.html';
+                        } catch (error) {
+                            console.error('Logout error:', error);
+                            alert('Fehler beim Abmelden.');
+                        }
+                    });
+
+                    // Load data
+                    await loadPlanCard();
+                    await loadInvoices();
+                    initEventListeners();
+
                 } catch (error) {
                     console.error('Error loading user data:', error);
                     window.location.href = '../../public/login.html';

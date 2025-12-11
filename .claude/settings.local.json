@@ -36,7 +36,8 @@
       "Bash(\"D:\\Projekte\\Kunden\\ML_Vision\\Brand\\Webdesign\\public\\login_temp.html\" <<'EOF'\n    <!-- Refactored CSS -->\n    <link rel=\"stylesheet\" href=\"../assets/css/base/variables.css\">\n    <link rel=\"stylesheet\" href=\"../assets/css/base/reset.css\">\n    <link rel=\"stylesheet\" href=\"../assets/css/base/typography.css\">\n    <link rel=\"stylesheet\" href=\"../assets/css/components/buttons.css\">\n    <link rel=\"stylesheet\" href=\"../assets/css/components/forms.css\">\n    <link rel=\"stylesheet\" href=\"../assets/css/pages/login.css\">\nEOF)",
       "Bash(git tag:*)",
       "Bash(wc:*)",
-      "Bash(del \"D:\\Projekte\\Kunden\\ML_Vision\\Brand\\Webdesign\\customer\\pages\\benutzer.html\")"
+      "Bash(del \"D:\\Projekte\\Kunden\\ML_Vision\\Brand\\Webdesign\\customer\\pages\\benutzer.html\")",
+      "Bash(del \"D:\\Projekte\\Kunden\\ML_Vision\\Brand\\Webdesign\\SESSION_NOTES.md\")"
     ],
     "deny": [],
     "ask": []

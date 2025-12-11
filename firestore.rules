@@ -56,10 +56,13 @@ service cloud.firestore {
     // ========================================================================
     match /calls/{callId} {
       // Lesen: Kunde darf nur eigene Calls lesen UND voice-Modul muss aktiv sein
-      allow read: if isAuthenticated() &&
-                     (isOwner(resource.data.customerId) &&
+      // Für List-Queries: Prüfe ob User eine customerId hat
+      allow read: if isAuthenticated() && (
+                     (isAdmin()) ||
+                     (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.customerId == resource.data.customerId &&
                       hasModuleEnabled(resource.data.customerId, 'voice'))
-                     || isAdmin();
+                   );
 
       // Schreiben: Admin oder Cloud Functions (für Testing/Seeding)
       allow write: if isAdmin();
@@ -70,22 +73,27 @@ service cloud.firestore {
     // ========================================================================
     match /tickets/{ticketId} {
       // Lesen: Kunde darf eigene Tickets lesen UND support-Modul muss aktiv sein
-      allow read: if isAuthenticated() &&
-                     ((isOwner(resource.data.customerId) &&
-                       hasModuleEnabled(resource.data.customerId, 'support'))
-                      || isAdmin());
+      allow read: if isAuthenticated() && (
+                     (isAdmin()) ||
+                     (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.customerId == resource.data.customerId &&
+                      hasModuleEnabled(resource.data.customerId, 'support'))
+                   );
 
       // Erstellen: Kunde darf eigene Tickets erstellen (wenn support-Modul aktiv)
       allow create: if isAuthenticated() &&
-                       isOwner(request.resource.data.customerId) &&
+                       exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.customerId == request.resource.data.customerId &&
                        hasModuleEnabled(request.resource.data.customerId, 'support') &&
                        request.resource.data.status == 'open';
 
       // Update: Kunde darf eigene Tickets aktualisieren (updatedAt), Admin alle
-      allow update: if isAuthenticated() &&
-                       ((isOwner(resource.data.customerId) &&
-                         hasModuleEnabled(resource.data.customerId, 'support'))
-                        || isAdmin());
+      allow update: if isAuthenticated() && (
+                       (isAdmin()) ||
+                       (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.customerId == resource.data.customerId &&
+                        hasModuleEnabled(resource.data.customerId, 'support'))
+                     );
 
       // Löschen: Nur Admin
       allow delete: if isAdmin();
@@ -93,12 +101,18 @@ service cloud.firestore {
       // Subcollection: messages
       match /messages/{messageId} {
         // Lesen: Kunde darf Nachrichten eigener Tickets lesen
-        allow read: if isAuthenticated() &&
-                       (isOwner(get(/databases/$(database)/documents/tickets/$(ticketId)).data.customerId) || isAdmin());
+        allow read: if isAuthenticated() && (
+                       (isAdmin()) ||
+                       (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.customerId == get(/databases/$(database)/documents/tickets/$(ticketId)).data.customerId)
+                     );
 
         // Erstellen: Kunde & Admin dürfen Nachrichten hinzufügen
-        allow create: if isAuthenticated() &&
-                         (isOwner(get(/databases/$(database)/documents/tickets/$(ticketId)).data.customerId) || isAdmin());
+        allow create: if isAuthenticated() && (
+                         (isAdmin()) ||
+                         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.customerId == get(/databases/$(database)/documents/tickets/$(ticketId)).data.customerId)
+                       );
 
         // Update/Delete: Nur Admin
         allow update, delete: if isAdmin();
@@ -110,10 +124,12 @@ service cloud.firestore {
     // ========================================================================
     match /invoices/{invoiceId} {
       // Lesen: Kunde darf nur eigene Rechnungen lesen UND invoices-Modul muss aktiv sein
-      allow read: if isAuthenticated() &&
-                     ((isOwner(resource.data.customerId) &&
-                       hasModuleEnabled(resource.data.customerId, 'invoices'))
-                      || isAdmin());
+      allow read: if isAuthenticated() && (
+                     (isAdmin()) ||
+                     (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.customerId == resource.data.customerId &&
+                      hasModuleEnabled(resource.data.customerId, 'invoices'))
+                   );
 
       // Erstellen/Ändern: Nur Admin darf Rechnungen verwalten
       allow create, update: if isAdmin();
