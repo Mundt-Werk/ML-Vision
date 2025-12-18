@@ -1,8 +1,8 @@
-import { auth, db, storage } from '../../assets/js/firebase-config.js';
+import { auth, db, storage } from './firebase-config.js';
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 import { collection, query, where, orderBy, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 import { ref, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
-import { initCustomerSidebar, checkModuleAccess } from '../../assets/js/components/CustomerSidebar.js';
+import { initCustomerSidebar, checkModuleAccess } from './components/CustomerSidebar.js';
 
 let currentCustomerId = null;
 let allInvoices = [];

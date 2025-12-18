@@ -1,6 +1,6 @@
-import { initDashboard } from '../assets/js/dashboard.js';
-import { initCustomerSidebar } from '../assets/js/components/CustomerSidebar.js';
-import { auth, db } from '../assets/js/firebase-config.js';
+import { initDashboard } from './dashboard.js';
+import { initCustomerSidebar } from './components/CustomerSidebar.js';
+import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 import { doc, getDoc, collection, query, where, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 

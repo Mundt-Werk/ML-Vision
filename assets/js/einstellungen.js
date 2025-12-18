@@ -1,5 +1,5 @@
-import { initCustomerSidebar } from '../../assets/js/components/CustomerSidebar.js';
-import { auth, db } from '../../assets/js/firebase-config.js';
+import { initCustomerSidebar } from './components/CustomerSidebar.js';
+import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
