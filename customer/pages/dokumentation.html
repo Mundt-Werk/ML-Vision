@@ -10,55 +10,10 @@
     <link rel="icon" type="image/png" sizes="96x96" href="../../assets/img/favicon-96x96.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/apple-touch-icon.png">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <style>
-        * {box-sizing: border-box;}
-        body {margin: 0; padding: 0; font-family: 'Futura Book', Arial, sans-serif; background: #f5f7fa;}
-        .dashboard-container {display: flex; min-height: 100vh;}
-        .sidebar {width: 280px; background: linear-gradient(180deg, #051d3a 0%, #0a2847 100%); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1); z-index: 1000;}
-        .sidebar-logo {padding: 0 20px 30px 20px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);}
-        .sidebar-logo img {height: 60px;}
-        .sidebar-menu {list-style: none; padding: 20px 0; margin: 0;}
-        .sidebar-menu li {margin: 5px 0;}
-        .sidebar-menu a {display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; position: relative;}
-        .sidebar-menu a::before {content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #04A9D4; transform: scaleY(0); transition: transform 0.3s;}
-        .sidebar-menu a:hover, .sidebar-menu a.active {color: #fff; background: rgba(4, 169, 212, 0.1);}
-        .sidebar-menu a.active::before {transform: scaleY(1);}
-        .sidebar-menu svg {width: 20px; height: 20px; fill: currentColor;}
-        .sidebar-footer {padding: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 20px;}
-        .sidebar-footer a {display: block; padding: 10px; color: #ff4757; text-decoration: none; text-align: center; border: 2px solid #ff4757; border-radius: 8px; transition: all 0.3s;}
-        .sidebar-footer a:hover {background: #ff4757; color: #fff;}
-        .main-content {flex: 1; margin-left: 280px; padding: 30px;}
-        .dashboard-header {margin-bottom: 30px;}
-        .dashboard-header h1 {font-size: 32px; color: #1a1a1a; margin: 0 0 10px 0;}
-        .dashboard-header p {color: #6b7280; margin: 0;}
-
-        .docs-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;}
-        .doc-category {background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); transition: all 0.3s;}
-        .doc-category:hover {transform: translateY(-4px); box-shadow: 0 4px 16px rgba(4, 169, 212, 0.2);}
-        .doc-icon {width: 50px; height: 50px; background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;}
-        .doc-icon svg {width: 24px; height: 24px; fill: #fff;}
-        .doc-category h3 {margin: 0 0 10px 0; font-size: 20px; color: #1a1a1a;}
-        .doc-category p {margin: 0 0 15px 0; font-size: 14px; color: #6b7280; line-height: 1.6;}
-        .doc-list {list-style: none; padding: 0; margin: 0;}
-        .doc-list li {padding: 8px 0; border-bottom: 1px solid #f3f4f6;}
-        .doc-list li:last-child {border-bottom: none;}
-        .doc-list a {color: #04A9D4; text-decoration: none; font-size: 14px; transition: all 0.3s;}
-        .doc-list a:hover {color: #0390b8; text-decoration: underline;}
-
-        .mobile-menu-toggle {display: none; position: fixed; top: 20px; left: 20px; z-index: 2000; background: #04A9D4; border: none; border-radius: 8px; width: 50px; height: 50px; cursor: pointer;}
-        .mobile-menu-toggle span {display: block; width: 24px; height: 3px; background: #fff; margin: 5px auto; border-radius: 2px;}
-
-        @media (max-width: 768px) {
-            .sidebar {transform: translateX(-100%); transition: transform 0.3s;}
-            .sidebar.active {transform: translateX(0);}
-            .main-content {margin-left: 0; padding: 80px 15px 20px 15px;}
-            .mobile-menu-toggle {display: block;}
-            .docs-grid {grid-template-columns: 1fr;}
-        }
-    </style>
+    <link rel="stylesheet" href="../../assets/css/pages/dokumentation.css">
 </head>
 <body>
-    <button class="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('active')">
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
         <span></span><span></span><span></span>
     </button>
 
@@ -173,5 +128,25 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // Toggle sidebar for mobile
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        };
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
