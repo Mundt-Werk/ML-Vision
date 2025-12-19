@@ -2,8 +2,10 @@
 let turnstileToken = null;
 
 // Callback function for successful Turnstile validation
-function onTurnstileSuccess(token) {
+// WICHTIG: Muss als globale Funktion definiert sein für Turnstile API
+window.onTurnstileSuccess = function(token) {
     turnstileToken = token;
+    console.log('Turnstile erfolgreich validiert');
 }
 
 // Message Modal System
@@ -325,7 +327,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Validate Turnstile (required)
             if (!turnstileToken) {
                 isValid = false;
-                errorMessage += 'Bitte bestätigen Sie, dass Sie ein Mensch sind (Turnstile-Verifizierung).\n';
+                errorMessage += 'Bitte warten Sie, bis die Sicherheitsprüfung abgeschlossen ist, und versuchen Sie es erneut.\n';
+                console.error('Turnstile Token fehlt. Widget geladen?', window.turnstile);
             }
 
             // Show error or submit
@@ -354,6 +357,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     showMessage('success', data.message);
                     contactForm.reset();
+                    turnstileToken = null; // Reset Token für nächste Verwendung
+
+                    // Turnstile Widget zurücksetzen, falls verfügbar
+                    if (window.turnstile) {
+                        turnstile.reset();
+                    }
                 } else {
                     showMessage('error', data.message);
                 }
