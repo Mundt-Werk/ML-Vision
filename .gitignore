@@ -32,6 +32,9 @@ logs/
 *.temp
 .cache/
 
+# Archive files
+*.zip
+
 # Build outputs
 dist/
 build/
