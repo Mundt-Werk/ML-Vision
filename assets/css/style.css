@@ -2591,3 +2591,16 @@ img {
     color: #04A9D4;
     margin-top: 0;
 }
+
+/* Code Block */
+.code-block {
+    background: #f8f9fa;
+    padding: 20px;
+    border-left: 4px solid #04A9D4;
+    margin: 20px 0;
+}
+
+.code-block p {
+    font-family: monospace;
+    margin: 0;
+}
