@@ -110,6 +110,7 @@ try {
     $nachname = isset($_POST['nachname']) ? trim(htmlspecialchars($_POST['nachname'], ENT_QUOTES, 'UTF-8')) : '';
     $email = isset($_POST['email']) ? trim(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL)) : '';
     $telefon = isset($_POST['telefon']) ? trim(htmlspecialchars($_POST['telefon'], ENT_QUOTES, 'UTF-8')) : '';
+    $herkunft = isset($_POST['herkunft']) ? trim(htmlspecialchars($_POST['herkunft'], ENT_QUOTES, 'UTF-8')) : '';
     $nachricht = isset($_POST['nachricht']) ? trim(htmlspecialchars($_POST['nachricht'], ENT_QUOTES, 'UTF-8')) : '';
     $datenschutz = isset($_POST['datenschutz']) ? $_POST['datenschutz'] : '';
 
@@ -278,6 +279,11 @@ try {
                 <div class="value">' . ($telefon ?: '-') . '</div>
             </div>
 
+            <div class="field">
+                <div class="label">Wie auf uns aufmerksam geworden?</div>
+                <div class="value">' . ($herkunft ?: '-') . '</div>
+            </div>
+
             <div class="section-title" style="margin-top:25px;">Nachricht</div>
 
             <div class="field">
@@ -304,7 +310,8 @@ try {
                      "Vorname: $vorname\n" .
                      "Nachname: " . ($nachname ?: '-') . "\n" .
                      "E-Mail: $email\n" .
-                     "Telefon: " . ($telefon ?: '-') . "\n\n" .
+                     "Telefon: " . ($telefon ?: '-') . "\n" .
+                     "Wie auf uns aufmerksam geworden?: " . ($herkunft ?: '-') . "\n\n" .
                      "Nachricht:\n$nachricht\n\n" .
                      "Gesendet am: " . date('d.m.Y H:i:s');
 

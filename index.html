@@ -1,4 +1,4 @@
-claude<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -314,7 +314,7 @@ claude<!DOCTYPE html>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <input type="text" id="vorname" name="vorname" placeholder="Vorname" required aria-required="true" aria-label="Vorname">
+                        <input type="text" id="vorname" name="vorname" placeholder="Vorname *" required aria-required="true" aria-label="Vorname">
                     </div>
                     <div class="form-group">
                         <input type="text" id="nachname" name="nachname" placeholder="Nachname" aria-label="Nachname">
@@ -323,7 +323,7 @@ claude<!DOCTYPE html>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder="Email" required aria-required="true" aria-label="E-Mail-Adresse">
+                        <input type="email" id="email" name="email" placeholder="Email *" required aria-required="true" aria-label="E-Mail-Adresse">
                     </div>
                     <div class="form-group">
                         <input type="tel" id="telefon" name="telefon" placeholder="Telefon" aria-label="Telefonnummer">
@@ -331,8 +331,22 @@ claude<!DOCTYPE html>
                 </div>
 
                 <div class="form-group full-width">
-                    <textarea id="nachricht" name="nachricht" rows="6" placeholder="Ihre Nachricht …" required aria-required="true" aria-label="Ihre Nachricht"></textarea>
+                    <select id="herkunft" name="herkunft" aria-label="Wie sind Sie auf uns aufmerksam geworden?">
+                        <option value="">Wie sind Sie auf uns aufmerksam geworden?</option>
+                        <option value="Google / Suchmaschine">Google / Suchmaschine</option>
+                        <option value="Social Media (LinkedIn, Instagram, etc.)">Social Media (LinkedIn, Instagram, etc.)</option>
+                        <option value="Empfehlung">Empfehlung</option>
+                        <option value="Bestandskunde">Bestandskunde</option>
+                        <option value="Veranstaltung / Messe">Veranstaltung / Messe</option>
+                        <option value="Andere">Andere</option>
+                    </select>
                 </div>
+
+                <div class="form-group full-width">
+                    <textarea id="nachricht" name="nachricht" rows="6" placeholder="Ihre Nachricht … *" required aria-required="true" aria-label="Ihre Nachricht"></textarea>
+                </div>
+
+                <p class="form-required-note">* Pflichtfeld</p>
 
                 <div class="form-checkbox">
                     <input type="checkbox" id="datenschutz" name="datenschutz" required>

@@ -277,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const vorname = document.getElementById('vorname');
             const email = document.getElementById('email');
             const nachricht = document.getElementById('nachricht');
+            const herkunft = document.getElementById('herkunft');
             const datenschutz = document.getElementById('datenschutz');
             const submitButton = contactForm.querySelector('.submit-button');
 
