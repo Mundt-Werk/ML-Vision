@@ -2618,3 +2618,84 @@ img {
     padding: 20px;
     border-radius: 8px;
 }
+
+/* Admin Modal Styles */
+.modal-content-alert {
+    max-width: 400px;
+}
+
+.modal-body {
+    padding: 20px 0;
+}
+
+.alert-message {
+    color: rgba(225, 232, 237, 0.8);
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.form-actions-centered {
+    margin-top: 20px;
+}
+
+.btn-full-width {
+    width: 100%;
+}
+
+.modal-header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Admin Modal Sizes */
+.modal-content-large {
+    max-width: 600px;
+}
+
+.modal-content-medium {
+    max-width: 500px;
+}
+
+/* Confirm/Info Messages */
+.confirm-message {
+    color: rgba(225, 232, 237, 0.8);
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+/* Disabled Input */
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background: #2a3f5f;
+    color: rgba(225, 232, 237, 0.6);
+    cursor: not-allowed;
+}
+
+/* Hidden State (JavaScript controlled) */
+.hidden {
+    display: none;
+}
