@@ -696,149 +696,85 @@
         </div>
     </div>
 
-    <!-- Logic with Static Data -->
+    <!-- Firebase Setup -->
+    <script type="module">
+        // Firebase Imports - Wird global verfügbar gemacht
+        import { db } from '../../assets/js/firebase-config.js';
+        import {
+            collection,
+            doc,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            getDocs,
+            query,
+            orderBy
+        } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+        // Global verfügbar machen für das Haupt-Script
+        window.firebaseDB = {
+            db,
+            collection,
+            doc,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            getDocs,
+            query,
+            orderBy
+        };
+    </script>
+
+    <!-- Main Logic -->
     <script>
-        // Static customer data (später durch Firebase ersetzt)
-        let customers = [
-            {
-                id: 'C-001',
-                customerNumber: 'K-20241201',
-                companyName: 'Meier Handwerk GmbH',
-                contactFirstName: 'Hans',
-                contactLastName: 'Meier',
-                contactRole: 'Geschäftsführer',
-                email: 'hans.meier@meier-handwerk.de',
-                phone: '+49 123 456789',
-                website: 'https://meier-handwerk.de',
-                industry: 'Handwerk',
-                employeeCount: 15,
-                mainProblem: 'Zu viele verpasste Anrufe außerhalb der Geschäftszeiten',
-                urgency: 4,
-                currentSolution: 'Anrufbeantworter, Rückrufe am nächsten Tag',
-                timeLost: 10,
-                monthlyCost: 2000,
-                incomingChannels: ['Telefon', 'E-Mail', 'Website'],
-                responseTime: '2-4 Std',
-                requestHandler: 'Sekretariat',
-                processErrors: 'Kunden warten zu lange auf Rückmeldung',
-                peakTimes: 'Morgens 8-10 Uhr',
-                idealProcess: '24/7 Telefon-Assistent zur Aufnahme von Anfragen',
-                desiredSolutions: ['Telefon-Assistent', 'Terminvereinbarung'],
-                expectedResults: 'Keine verpassten Anrufe mehr, bessere Kundenzufriedenheit',
-                domainProvider: 'Strato',
-                websiteSystem: 'WordPress',
-                emailSystem: 'Google Workspace',
-                crmSystem: '',
-                projectTool: '',
-                cloudStorage: 'Google Drive',
-                phoneSystem: 'Telekom',
-                phoneNumberType: 'Festnetz',
-                apiAccess: '',
-                customerDataStored: 'Ja',
-                dataTypes: 'Name, Telefon, E-Mail, Adresse',
-                avContract: 'Benötigt',
-                euDataRequired: 'Ja',
-                criticalIndustry: 'Nein',
-                budgetRange: '1.000€ - 5.000€',
-                decisionMaker: 'Hans Meier, Geschäftsführer',
-                projectStart: 'Innerhalb 1 Monat',
-                deadline: '',
-                shortDescription: 'Handwerksbetrieb braucht Telefon-Assistenten',
-                challenges: 'Technische Anbindung an alte Telefonanlage',
-                insights: 'Sehr motiviert, schnelle Umsetzung gewünscht',
-                nextSteps: 'Angebot erstellen, Telefonanlage prüfen',
-                createdAt: '2024-12-01T10:30:00'
-            },
-            {
-                id: 'C-002',
-                customerNumber: 'K-20241202',
-                companyName: 'TechStart Solutions',
-                contactFirstName: 'Laura',
-                contactLastName: 'Schmidt',
-                contactRole: 'Marketing-Leiterin',
-                email: 'l.schmidt@techstart.de',
-                phone: '+49 987 654321',
-                website: 'https://techstart-solutions.de',
-                industry: 'IT / Software',
-                employeeCount: 25,
-                mainProblem: 'Lead-Generierung über Website nicht automatisiert',
-                urgency: 3,
-                currentSolution: 'Kontaktformular, manuelle Bearbeitung',
-                timeLost: 15,
-                monthlyCost: 3500,
-                incomingChannels: ['E-Mail', 'Website', 'Social Media'],
-                responseTime: '1-2 Std',
-                requestHandler: 'Marketing-Team',
-                processErrors: 'Leads werden zu spät qualifiziert',
-                peakTimes: 'Nachmittags 14-17 Uhr',
-                idealProcess: 'Automatische Lead-Qualifizierung und Chatbot',
-                desiredSolutions: ['Chatbot', 'E-Mail-Sortierung', 'Wissensdatenbank'],
-                expectedResults: 'Schnellere Lead-Bearbeitung, höhere Conversion',
-                domainProvider: 'Ionos',
-                websiteSystem: 'Custom React',
-                emailSystem: 'MS Exchange',
-                crmSystem: 'HubSpot',
-                projectTool: 'Monday',
-                cloudStorage: 'OneDrive',
-                phoneSystem: 'Sipgate',
-                phoneNumberType: 'SIP',
-                apiAccess: 'Website API, HubSpot API verfügbar',
-                customerDataStored: 'Ja',
-                dataTypes: 'Firmendaten, Kontaktdaten, Interaktionshistorie',
-                avContract: 'Ja',
-                euDataRequired: 'Ja',
-                criticalIndustry: 'Nein',
-                budgetRange: '5.000€ - 10.000€',
-                decisionMaker: 'Michael Berg, CEO',
-                projectStart: '1-3 Monate',
-                deadline: 'Q1 2025',
-                shortDescription: 'Software-Firma will Lead-Prozess automatisieren',
-                challenges: 'Integration in bestehendes HubSpot CRM',
-                insights: 'Haben bereits Erfahrung mit Automatisierung',
-                nextSteps: 'Demo-Termin vereinbaren, API-Dokumentation prüfen',
-                createdAt: '2024-12-02T14:15:00'
-            }
-        ];
-
-        // Current customer number counter (für automatische Generierung)
-        let customerNumberCounter = 20241203;
-
         // Global variables
+        let customers = []; // Wird aus Firebase geladen
         let currentEditId = null;
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
-            loadCustomers();
+            // Warte kurz bis Firebase geladen ist
+            setTimeout(loadCustomers, 100);
         });
 
-        // Generate next customer number
+        // Generate customer number (timestamp-basiert)
         function generateCustomerNumber() {
-            const number = 'K-' + customerNumberCounter;
-            customerNumberCounter++;
-            return number;
+            return `K-${Date.now()}`;
         }
 
-        // Load all customers
-        function loadCustomers() {
+        // Load all customers from Firebase
+        async function loadCustomers() {
             const loadingState = document.getElementById('loadingState');
             const emptyState = document.getElementById('emptyState');
             const table = document.getElementById('customersTable');
             const tbody = document.getElementById('customersTableBody');
 
-            // Simulate loading
             loadingState.style.display = 'block';
             emptyState.style.display = 'none';
             table.style.display = 'none';
 
-            setTimeout(() => {
-                if (customers.length === 0) {
+            try {
+                const { db, collection, query, orderBy, getDocs } = window.firebaseDB;
+
+                // Aus Firebase laden
+                const q = query(collection(db, 'sales_leads'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
                     loadingState.style.display = 'none';
                     emptyState.style.display = 'block';
                     return;
                 }
 
-                tbody.innerHTML = '';
+                customers = [];
+                snapshot.forEach((docSnapshot) => {
+                    customers.push({
+                        id: docSnapshot.id,
+                        ...docSnapshot.data()
+                    });
+                });
 
+                tbody.innerHTML = '';
                 customers.forEach((customer) => {
                     const row = createCustomerRow(customer);
                     tbody.appendChild(row);
@@ -846,7 +782,12 @@
 
                 loadingState.style.display = 'none';
                 table.style.display = 'table';
-            }, 500);
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                showAlert('Fehler beim Laden: ' + error.message, 'Fehler');
+                loadingState.style.display = 'none';
+                emptyState.style.display = 'block';
+            }
         }
 
         // Create table row for customer
@@ -1092,8 +1033,8 @@
             document.getElementById('customerDetailModal').classList.add('active');
         };
 
-        // Handle form submit
-        document.getElementById('customerForm').addEventListener('submit', (e) => {
+        // Handle form submit - Firebase Integration
+        document.getElementById('customerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
@@ -1108,7 +1049,7 @@
                 contactFirstName: document.getElementById('contactFirstName').value,
                 contactLastName: document.getElementById('contactLastName').value,
                 contactRole: document.getElementById('contactRole').value,
-                employeeCount: document.getElementById('employeeCount').value,
+                employeeCount: parseInt(document.getElementById('employeeCount').value) || null,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 website: document.getElementById('website').value,
@@ -1116,8 +1057,8 @@
                 mainProblem: document.getElementById('mainProblem').value,
                 urgency: parseInt(document.getElementById('urgency').value),
                 currentSolution: document.getElementById('currentSolution').value,
-                timeLost: document.getElementById('timeLost').value,
-                monthlyCost: document.getElementById('monthlyCost').value,
+                timeLost: parseInt(document.getElementById('timeLost').value) || null,
+                monthlyCost: parseInt(document.getElementById('monthlyCost').value) || null,
 
                 incomingChannels: Array.from(document.querySelectorAll('input[name="incoming"]:checked'))
                     .map(cb => cb.nextElementSibling.textContent),
@@ -1158,52 +1099,61 @@
                 nextSteps: document.getElementById('nextSteps').value
             };
 
-            setTimeout(() => {
+            try {
+                const { db, collection, doc, addDoc, updateDoc } = window.firebaseDB;
+
                 if (currentEditId) {
-                    // Update existing customer
-                    const index = customers.findIndex(c => c.id === currentEditId);
-                    if (index !== -1) {
-                        customers[index] = {
-                            ...customers[index],
-                            ...formData,
-                            updatedAt: new Date().toISOString()
-                        };
-                    }
-                    showAlert('Kunde erfolgreich aktualisiert!', 'Erfolg');
-                } else {
-                    // Create new customer
-                    const newCustomer = {
-                        id: 'C-' + String(customers.length + 1).padStart(3, '0'),
-                        customerNumber: generateCustomerNumber(),
+                    // UPDATE
+                    const docRef = doc(db, 'sales_leads', currentEditId);
+                    await updateDoc(docRef, {
                         ...formData,
-                        createdAt: new Date().toISOString()
-                    };
-                    customers.unshift(newCustomer);
-                    showAlert(`Kunde erfolgreich angelegt!\nKundennummer: ${newCustomer.customerNumber}`, 'Erfolg');
+                        updatedAt: new Date().toISOString()
+                    });
+                    showAlert('Lead erfolgreich aktualisiert!', 'Erfolg');
+                } else {
+                    // CREATE
+                    const customerNumber = generateCustomerNumber();
+                    await addDoc(collection(db, 'sales_leads'), {
+                        customerNumber: customerNumber,
+                        ...formData,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    });
+                    showAlert(`Lead erfolgreich angelegt!\nKundennummer: ${customerNumber}`, 'Erfolg');
                 }
 
                 closeCustomerModal();
-                loadCustomers();
+                await loadCustomers();
+            } catch (error) {
+                console.error('Error saving:', error);
+                showAlert('Fehler beim Speichern: ' + error.message, 'Fehler');
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
-            }, 500);
+            }
         });
 
-        // Delete customer
+        // Delete customer - Firebase Integration
         window.deleteCustomer = async function(customerId) {
             const customer = customers.find(c => c.id === customerId);
             if (!customer) return;
 
             const confirmed = await showConfirm(
-                `Möchten Sie diesen Kunden wirklich löschen?\n\nFirma: ${customer.companyName}\nKundennummer: ${customer.customerNumber}\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`,
-                'Kunde löschen'
+                `Möchten Sie diesen Lead wirklich löschen?\n\nFirma: ${customer.companyName}\nKundennummer: ${customer.customerNumber}\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`,
+                'Lead löschen'
             );
 
             if (!confirmed) return;
 
-            customers = customers.filter(c => c.id !== customerId);
-            showAlert('Kunde erfolgreich gelöscht!', 'Erfolg');
-            loadCustomers();
+            try {
+                const { db, doc, deleteDoc } = window.firebaseDB;
+                await deleteDoc(doc(db, 'sales_leads', customerId));
+                showAlert('Lead erfolgreich gelöscht!', 'Erfolg');
+                await loadCustomers();
+            } catch (error) {
+                console.error('Error deleting:', error);
+                showAlert('Fehler beim Löschen: ' + error.message, 'Fehler');
+            }
         };
 
         // Custom Alert Modal
