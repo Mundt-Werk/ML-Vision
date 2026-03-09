@@ -1,20 +1,13 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impressum – ML Vision</title>
-    <meta name="description" content="Impressum der ML Vision GbR – Anbieter, Kontaktdaten und rechtliche Angaben gemäß § 5 TMG.">
-    <meta name="robots" content="noindex, follow">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
-    <link rel="icon" type="image/png" sizes="96x96" href="../assets/img/favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="../assets/js/script.js" defer></script>
-</head>
-<body>
+# Wiederverwendbare HTML-Komponenten für `public/`-Unterseiten
 
+> Pfade sind auf `public/`-Ebene ausgelegt (`../assets/`, `../index.html`).
+> Einfach kopieren und einfügen – keine weiteren Anpassungen nötig.
+
+---
+
+## Navigation (für alle `public/`-Seiten)
+
+```html
 <nav class="nav" id="mainNav">
     <div class="nav-inner">
         <a href="../index.html" class="nav-logo">
@@ -43,82 +36,13 @@
         </button>
     </div>
 </nav>
+```
 
-<section class="legal-section">
-    <div class="legal-container">
-        <h1>Impressum</h1>
+---
 
-        <div class="legal-content">
-            <h2>Angaben gemäß § 5 TMG</h2>
-            <p>
-                <strong>Schauerte & Mundt GbR (ML Vision)</strong><br>
-                In der Lohe 14<br>
-                52399 Merzenich<br>
-                Deutschland
-            </p>
+## Footer (für alle `public/`-Seiten)
 
-            <h2>Vertreten durch</h2>
-            <p>
-                Marco Mundt<br>
-                Leon Schauerte
-            </p>
-
-            <h2>Kontakt</h2>
-            <p>
-                E-Mail: <a href="mailto:info@vision-ml.de">info@vision-ml.de</a>
-            </p>
-
-            <h2>Rechtsform</h2>
-            <p>Gesellschaft bürgerlichen Rechts (GbR)</p>
-
-            <h2>Umsatzsteuer-ID</h2>
-            <p>Noch nicht vergeben.</p>
-            <p class="note">(Hinweis: Sobald eine Umsatzsteuer-ID vergeben wird, wird sie hier eingetragen.)</p>
-
-            <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
-            <p>
-                Marco Mundt & Leon Schauerte<br>
-                In der Lohe 14<br>
-                52399 Merzenich
-            </p>
-
-            <h2>Haftung für Inhalte</h2>
-            <p>
-                Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten verantwortlich.
-                Nach §§ 8 bis 10 TMG sind wir jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
-            </p>
-            <p>
-                Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt.
-                Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden entsprechender Rechtsverletzungen entfernen wir diese Inhalte umgehend.
-            </p>
-
-            <h2>Haftung für Links</h2>
-            <p>
-                Unsere Website enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben.
-                Deshalb können wir für diese Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich.
-            </p>
-            <p>
-                Bei Bekanntwerden von Rechtsverletzungen entfernen wir derartige Links umgehend.
-            </p>
-
-            <h2>Urheberrecht</h2>
-            <p>
-                Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht.
-                Die Vervielfältigung, Bearbeitung, Verbreitung und Verwertung außerhalb der Grenzen des Urheberrechts bedarf der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-            </p>
-            <p>
-                Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
-            </p>
-        </div>
-    </div>
-</section>
-
-<button id="scrollToTop" class="scroll-to-top" aria-label="Nach oben scrollen">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 4l-8 8h5v8h6v-8h5z"/>
-    </svg>
-</button>
-
+```html
 <footer class="footer">
     <div class="footer-top">
         <div class="footer-brand">
@@ -169,9 +93,37 @@
         <p>&copy; 2024–2026 ML Vision – Alle Rechte vorbehalten.</p>
     </div>
 </footer>
+```
 
-<elevenlabs-convai agent-id="agent_3801kaeks87sfv0bfj0an3vxwpmd"></elevenlabs-convai>
-<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+---
 
-</body>
-</html>
+## Head-Snippet (CSS + Favicon für `public/`-Seiten)
+
+```html
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="icon" type="image/png" href="../assets/img/favicon.ico">
+```
+
+---
+
+## Script-Snippet (JS für `public/`-Seiten)
+
+```html
+<script src="../assets/js/script.js"></script>
+```
+
+---
+
+## Änderungen gegenüber Root `index.html`
+
+| Element | Root (`index.html`) | Unterseiten (`public/`) |
+|---|---|---|
+| Logo `src` | `assets/img/...` | `../assets/img/...` |
+| CSS `href` | `assets/css/style.css` | `../assets/css/style.css` |
+| JS `src` | `assets/js/script.js` | `../assets/js/script.js` |
+| Nav-Links | `#leistungen` etc. | `../index.html#leistungen` etc. |
+| Login-Link | `public/login.html` | `login.html` |
+| Impressum | `public/impressum.html` | `impressum.html` |
+| Datenschutz | `public/datenschutz.html` | `datenschutz.html` |
+| Blog | `public/blog.html` | `blog.html` |
+| KI-Düren | `public/ki-automatisierung-dueren.html` | `ki-automatisierung-dueren.html` |
