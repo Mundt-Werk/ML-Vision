@@ -1,0 +1,6 @@
+# Direktzugriff auf .html-Dateien erlauben, PHP-Execution deaktivieren für HTML
+Options -Indexes
+<Files "*.php">
+  Order allow,deny
+  Allow from all
+</Files>

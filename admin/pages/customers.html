@@ -81,6 +81,14 @@
                         Leads Bot
                     </a>
                 </li>
+                <li>
+                    <a href="pricing-calculator.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                        Pricing Kalkulator
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-section-title">System</div>
@@ -236,10 +244,14 @@
                         </div>
                     </div>
 
-                    <div class="form-row single">
+                    <div class="form-row">
                         <div class="form-group">
                             <label for="website">Website</label>
                             <input type="url" id="website" placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Stadt / Standort</label>
+                            <input type="text" id="city" placeholder="z.B. Leipzig, München, Berlin">
                         </div>
                     </div>
                 </div>
@@ -606,15 +618,9 @@
         </div>
     </div>
 
-    <!-- Invoice Upload Modal -->
-    <div class="modal" id="invoiceUploadModal">
-        <div class="modal-content modal-content-large">
-            <div class="modal-header">
-                <h2>Rechnung hochladen</h2>
-                <button class="modal-close" onclick="closeInvoiceUploadModal()">&times;</button>
-            </div>
-
-            <form id="invoiceUploadForm">
+    <!-- Invoice Upload Modal (entfernt — Rechnungen über Sevdesk) -->
+    <div class="modal" id="invoiceUploadModal" style="display:none;">
+        <form id="invoiceUploadForm">
                 <input type="hidden" id="invoiceCustomerId">
                 <input type="hidden" id="invoiceCustomerName">
 
@@ -710,6 +716,7 @@
             query,
             orderBy
         } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { logAction } from '../../assets/js/audit.js';
 
         // Global verfügbar machen für das Haupt-Script
         window.firebaseDB = {
@@ -723,6 +730,7 @@
             query,
             orderBy
         };
+        window.logAction = logAction;
     </script>
 
     <!-- Main Logic -->
@@ -849,6 +857,7 @@
             document.getElementById('email').value = customer.email || '';
             document.getElementById('phone').value = customer.phone || '';
             document.getElementById('website').value = customer.website || '';
+            document.getElementById('city').value = customer.city || '';
 
             document.getElementById('mainProblem').value = customer.mainProblem || '';
             document.getElementById('urgency').value = customer.urgency || 3;
@@ -950,6 +959,7 @@
                             <p><strong>E-Mail:</strong> ${customer.email}</p>
                             <p><strong>Telefon:</strong> ${customer.phone}</p>
                             <p><strong>Website:</strong> ${customer.website ? `<a href="${customer.website}" target="_blank">${customer.website}</a>` : '-'}</p>
+                            <p><strong>Standort:</strong> ${customer.city || '-'}</p>
                             <p><strong>Branche:</strong> ${customer.industry || '-'}</p>
                             <p><strong>Mitarbeiter:</strong> ${customer.employeeCount || '-'}</p>
                         </div>
@@ -1024,13 +1034,43 @@
 
                 <div class="detail-actions">
                     <button class="btn-submit" onclick="editCustomer('${customer.id}'); closeDetailModal();">Bearbeiten</button>
-                    <button class="btn-submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="openInvoiceUploadModal('${customer.id}', '${customer.companyName}'); closeDetailModal();">
-                        Rechnung hochladen
+                    <button id="btnKvaAction" class="btn-submit"
+                        style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);"
+                        data-customer-id="${customer.id}"
+                        data-company="${customer.companyName}"
+                        data-contact="${customer.contactFirstName} ${customer.contactLastName}"
+                        data-email="${customer.email}"
+                        data-phone="${customer.phone}"
+                        data-website="${customer.website || ''}"
+                        data-industry="${customer.industry || ''}"
+                        data-city="${customer.city || ''}"
+                        onclick="openKvaForm(this.dataset.customerId, this.dataset.company, this.dataset.contact, this.dataset.email, this.dataset.phone, this.dataset.website, this.dataset.industry, this.dataset.city); closeDetailModal();">
+                        📄 KVA erstellen
                     </button>
                 </div>
             `;
 
             document.getElementById('customerDetailModal').classList.add('active');
+
+            // Async: check if KVAs exist for this customer and update button
+            if (typeof window._checkKvaForCustomer === 'function') {
+                window._checkKvaForCustomer(customer.id);
+            }
+        };
+
+        // Open KVA form with customer data
+        window.openKvaForm = function(id, company, contact, email, phone, website, industry, city) {
+            const params = new URLSearchParams({
+                customerId: id,
+                companyName: company,
+                contactName: contact,
+                email: email,
+                phone: phone,
+                website: website,
+                industry: industry,
+                city: city
+            });
+            window.location.href = `../angebote/kva-form.html?${params.toString()}`;
         };
 
         // Handle form submit - Firebase Integration
@@ -1053,6 +1093,7 @@
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 website: document.getElementById('website').value,
+                city: document.getElementById('city').value,
 
                 mainProblem: document.getElementById('mainProblem').value,
                 urgency: parseInt(document.getElementById('urgency').value),
@@ -1109,16 +1150,31 @@
                         ...formData,
                         updatedAt: new Date().toISOString()
                     });
+                    if (window.logAction) await window.logAction('customer_updated', 'customer', currentEditId, { companyName: formData.companyName, contactName: formData.contactName });
                     showAlert('Lead erfolgreich aktualisiert!', 'Erfolg');
                 } else {
                     // CREATE
                     const customerNumber = generateCustomerNumber();
-                    await addDoc(collection(db, 'sales_leads'), {
+                    const newDoc = await addDoc(collection(db, 'sales_leads'), {
                         customerNumber: customerNumber,
                         ...formData,
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     });
+                    if (window.logAction) await window.logAction('customer_created', 'customer', newDoc.id, { companyName: formData.companyName, customerNumber });
+                    // n8n: Neuer Kunde → Brevo (fire-and-forget)
+                    fetch('https://n8n.vision-ml.de/webhook/mlv-kunde-to-brevo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email:      formData.email,
+                            name:       `${formData.contactFirstName} ${formData.contactLastName}`.trim(),
+                            company:    formData.companyName,
+                            phone:      formData.phone,
+                            firestoreId: newDoc.id,
+                            createdAt:  new Date().toISOString()
+                        })
+                    }).catch(() => {});
                     showAlert(`Lead erfolgreich angelegt!\nKundennummer: ${customerNumber}`, 'Erfolg');
                 }
 
@@ -1148,6 +1204,7 @@
             try {
                 const { db, doc, deleteDoc } = window.firebaseDB;
                 await deleteDoc(doc(db, 'sales_leads', customerId));
+                if (window.logAction) await window.logAction('customer_deleted', 'customer', customerId, { companyName: customer.companyName, customerNumber: customer.customerNumber });
                 showAlert('Lead erfolgreich gelöscht!', 'Erfolg');
                 await loadCustomers();
             } catch (error) {
@@ -1196,11 +1253,8 @@
 
         // Close modals on outside click (clicking on overlay background)
         document.addEventListener('click', function(event) {
-            // Customer Modal - check if click is directly on the modal overlay
-            const customerModal = document.getElementById('customerModal');
-            if (event.target === customerModal) {
-                closeCustomerModal();
-            }
+            // Customer Modal - DISABLED: Must be closed via buttons only to prevent accidental data loss
+            // Users must explicitly click "Abbrechen" or "Kunde anlegen" to close this modal
 
             // Customer Detail Modal
             const detailModal = document.getElementById('customerDetailModal');
@@ -1239,136 +1293,76 @@
         });
     </script>
 
-    <!-- Firebase Invoice Upload -->
+    <!-- Firebase Invoice Upload (entfernt — Rechnungen über Sevdesk) -->
     <script type="module">
-        import { auth, db, storage } from '../../assets/js/firebase-config.js';
-        import { collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
-        import { ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
+        // Rechnungen laufen über Sevdesk, nicht hier
+        window.openInvoiceUploadModal = function() {};
+        window.closeInvoiceUploadModal = function() {};
+    </script>
 
-        // Open invoice upload modal
-        window.openInvoiceUploadModal = function(customerId, customerName) {
-            document.getElementById('invoiceCustomerId').value = customerId;
-            document.getElementById('invoiceCustomerName').value = customerName;
-            document.getElementById('displayCustomerName').value = customerName;
+    <!-- KVA Check: prüft ob Kunde schon einen KVA hat -->
+    <script type="module">
+        import { db } from '../../assets/js/firebase-config.js';
+        import { collection, query, where, getDocs }
+            from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-            // Reset form
-            document.getElementById('invoiceUploadForm').reset();
-            document.getElementById('displayCustomerName').value = customerName;
-
-            // Set default date to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('invoiceDate').value = today;
-
-            // Show modal
-            document.getElementById('invoiceUploadModal').classList.add('active');
-        };
-
-        // Close invoice upload modal
-        window.closeInvoiceUploadModal = function() {
-            document.getElementById('invoiceUploadModal').classList.remove('active');
-            document.getElementById('uploadProgress').style.display = 'none';
-        };
-
-        // Handle invoice upload form submit
-        document.getElementById('invoiceUploadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const customerId = document.getElementById('invoiceCustomerId').value;
-            const invoiceNo = document.getElementById('invoiceNo').value;
-            const invoiceDate = document.getElementById('invoiceDate').value;
-            const description = document.getElementById('invoiceDescription').value;
-            const amountGross = parseInt(document.getElementById('invoiceAmount').value);
-            const currency = document.getElementById('invoiceCurrency').value;
-            const status = document.getElementById('invoiceStatus').value;
-            const pdfFile = document.getElementById('invoicePDF').files[0];
-
-            // Validate
-            if (!pdfFile) {
-                alert('Bitte wählen Sie eine PDF-Datei aus.');
-                return;
-            }
-
-            if (pdfFile.type !== 'application/pdf') {
-                alert('Nur PDF-Dateien sind erlaubt.');
-                return;
-            }
-
-            if (pdfFile.size > 10 * 1024 * 1024) {
-                alert('Die Datei ist zu groß (max. 10 MB).');
-                return;
-            }
+        window._checkKvaForCustomer = async function(customerId) {
+            const btn = document.getElementById('btnKvaAction');
+            if (!btn) return;
 
             try {
-                // Disable submit button
-                const submitBtn = e.target.querySelector('.btn-submit');
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Wird hochgeladen...';
-
-                // Show progress
-                document.getElementById('uploadProgress').style.display = 'block';
-
-                // Upload PDF to Firebase Storage
-                const storagePath = `invoices/${customerId}/${invoiceNo}.pdf`;
-                const storageRef = ref(storage, storagePath);
-                const uploadTask = uploadBytesResumable(storageRef, pdfFile);
-
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        // Update progress bar
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        document.getElementById('uploadProgressBar').style.width = progress + '%';
-                        document.getElementById('uploadProgressText').textContent = Math.round(progress) + '%';
-                    },
-                    (error) => {
-                        console.error('Upload error:', error);
-                        alert('Fehler beim Hochladen der PDF: ' + error.message);
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Hochladen';
-                        document.getElementById('uploadProgress').style.display = 'none';
-                    },
-                    async () => {
-                        // Upload complete, get download URL
-                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-                        // Create invoice document in Firestore
-                        const invoiceData = {
-                            customerId: customerId,
-                            invoiceNo: invoiceNo,
-                            date: new Date(invoiceDate).toISOString(),
-                            description: description || null,
-                            amountGross: amountGross,
-                            currency: currency,
-                            status: status,
-                            pdfPath: storagePath,
-                            pdfUrl: downloadURL,
-                            createdAt: serverTimestamp(),
-                            updatedAt: serverTimestamp()
-                        };
-
-                        await addDoc(collection(db, 'invoices'), invoiceData);
-
-                        // Success
-                        alert('Rechnung erfolgreich hochgeladen!');
-                        closeInvoiceUploadModal();
-
-                        // Reset form
-                        document.getElementById('invoiceUploadForm').reset();
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Hochladen';
-                        document.getElementById('uploadProgress').style.display = 'none';
-                    }
+                const q = query(
+                    collection(db, 'quotes'),
+                    where('customer.id', '==', customerId)
                 );
+                const snap = await getDocs(q);
 
-            } catch (error) {
-                console.error('Error uploading invoice:', error);
-                alert('Fehler: ' + error.message);
+                if (snap.empty) return; // kein KVA → Button bleibt "KVA erstellen"
 
-                const submitBtn = e.target.querySelector('.btn-submit');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Hochladen';
-                document.getElementById('uploadProgress').style.display = 'none';
+                // Neuestes KVA per JS sortieren (kein Composite Index nötig)
+                const sorted = snap.docs.sort((a, b) => {
+                    const ta = a.data().createdAt?.toMillis?.() || 0;
+                    const tb = b.data().createdAt?.toMillis?.() || 0;
+                    return tb - ta;
+                });
+                const docSnap = sorted[0];
+                const kva     = docSnap.data();
+                const docId   = docSnap.id;
+                const status  = kva.status || 'draft';
+
+                if (status === 'vertrag') {
+                    // Hat bereits Vertrag → Dokument-Hub öffnen
+                    btn.textContent = '📋 Dokument-Hub öffnen';
+                    btn.style.background = 'linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%)';
+                    btn.onclick = function() {
+                        const opt = kva.selectedOption || 2;
+                        window.open(`../angebote/dokument-hub.html?docId=${docId}&option=${opt}`, '_blank');
+                        window.closeDetailModal();
+                    };
+                } else {
+                    // Hat KVA-Entwurf → direkt laden
+                    btn.textContent = '📄 KVA bearbeiten';
+                    btn.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+                    btn.onclick = function() {
+                        const d = btn.dataset;
+                        const params = new URLSearchParams({
+                            customerId: d.customerId,
+                            companyName: d.company,
+                            contactName: d.contact,
+                            email: d.email,
+                            phone: d.phone,
+                            website: d.website,
+                            industry: d.industry,
+                            city: d.city,
+                            loadDocId: docId
+                        });
+                        window.location.href = `../angebote/kva-form.html?${params.toString()}`;
+                    };
+                }
+            } catch(e) {
+                console.warn('KVA-Check fehlgeschlagen:', e);
             }
-        });
+        };
     </script>
 </body>
 </html>

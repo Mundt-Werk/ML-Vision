@@ -32,6 +32,26 @@
     <link rel="stylesheet" href="assets/css/style.css">
 
     <script>
+    window.analyticsConfig = {
+        hotjarId: 'YOUR_HOTJAR_ID',        // e.g. 1234567
+        hotjarSv: 6,                       // leave default unless Hotjar says otherwise
+        gtagId: 'G-XXXXXXXXXX',            // Google Analytics 4 or Google Ads tag
+        metaPixelId: 'XXXXXXXXXXXXXXXX'    // Meta (Facebook) Pixel
+    };
+    </script>
+    <script src="assets/js/analytics.js" defer></script>
+
+    <!-- Microsoft Clarity — Heatmaps & Session Recordings -->
+    <!-- TODO: YOUR_CLARITY_ID ersetzen → clarity.microsoft.com → Projekt → Setup -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
+    </script>
+
+    <script>
     window.turnstileToken = null;
     window.onTurnstileSuccess = function(token) {
         window.turnstileToken = token;
@@ -66,7 +86,7 @@
     }
     </script>
 </head>
-<body>
+<body class="no-js">
 
 <!-- ═══════════════════════════════════════════════
      NAVIGATION
@@ -192,13 +212,13 @@
         <div class="svc-header scroll-reveal">
             <span class="eyebrow eyebrow-light">Was wir tun</span>
             <h2>Unsere <span class="svc-headline-accent">Leistungen</span></h2>
-            <p>Maßgeschneiderte KI-Lösungen für Ihren Geschäftserfolg</p>
+            <p>Maßgeschneiderte KI-Lösungen für Ihren Geschäftsalltag</p>
         </div>
 
         <div class="svc-grid">
 
             <!-- Card 1: Workflow -->
-            <div class="svc-card scroll-reveal">
+            <div class="svc-card scroll-reveal apple-glow">
                 <div class="svc-card-glow"></div>
                 <div class="svc-card-top">
                     <div class="svc-icon">
@@ -217,7 +237,7 @@
             </div>
 
             <!-- Card 2: Voice Agents -->
-            <div class="svc-card svc-card--accent scroll-reveal">
+            <div class="svc-card svc-card--accent scroll-reveal apple-glow">
                 <div class="svc-card-glow"></div>
                 <div class="svc-card-top">
                     <div class="svc-icon">
@@ -236,7 +256,7 @@
             </div>
 
             <!-- Card 3: Beratung -->
-            <div class="svc-card scroll-reveal">
+            <div class="svc-card scroll-reveal apple-glow">
                 <div class="svc-card-glow"></div>
                 <div class="svc-card-top">
                     <div class="svc-icon">
@@ -453,42 +473,42 @@
         <h2>Ihr Vorteil mit uns</h2>
     </div>
     <div class="features-grid">
-        <div class="feature-card scroll-reveal">
+        <div class="feature-card scroll-reveal apple-glow">
             <div class="feat-icon">
                 <i data-lucide="zap"></i>
             </div>
             <h3>In 30 Tagen live</h3>
             <p>Von der ersten Analyse bis zum laufenden System – schneller als jede Agentur in der Region.</p>
         </div>
-        <div class="feature-card scroll-reveal">
+        <div class="feature-card scroll-reveal apple-glow">
             <div class="feat-icon">
                 <i data-lucide="shield-check"></i>
             </div>
             <h3>100% DSGVO-konform</h3>
             <p>Alle Lösungen auf europäischen Servern. Datenschutz ist kein Kompromiss, sondern Standard.</p>
         </div>
-        <div class="feature-card scroll-reveal">
+        <div class="feature-card scroll-reveal apple-glow">
             <div class="feat-icon">
                 <i data-lucide="users"></i>
             </div>
             <h3>Keine Vorkenntnisse nötig</h3>
             <p>Wir übernehmen die komplette technische Umsetzung und schulen Ihr Team. Kein Code, keine Komplexität.</p>
         </div>
-        <div class="feature-card scroll-reveal">
+        <div class="feature-card scroll-reveal apple-glow">
             <div class="feat-icon">
                 <i data-lucide="layers"></i>
             </div>
             <h3>Skalierbar &amp; modular</h3>
             <p>Starten Sie klein, wachsen Sie nach Bedarf. Unsere Systeme sind für Ihr Wachstum gebaut.</p>
         </div>
-        <div class="feature-card scroll-reveal">
+        <div class="feature-card scroll-reveal apple-glow">
             <div class="feat-icon">
                 <i data-lucide="headphones"></i>
             </div>
             <h3>24/7 Support &amp; Monitoring</h3>
             <p>Ihre Systeme laufen rund um die Uhr. Bei Problemen sind wir da – bevor Sie es bemerken.</p>
         </div>
-        <div class="feature-card scroll-reveal">
+        <div class="feature-card scroll-reveal apple-glow">
             <div class="feat-icon">
                 <i data-lucide="map-pin"></i>
             </div>
@@ -532,7 +552,7 @@
     </div>
 
     <div class="testimonials-grid">
-        <div class="testi-card scroll-reveal">
+        <div class="testi-card scroll-reveal apple-glow">
             <div class="testi-stars">★★★★★</div>
             <blockquote>"Unsere Service-Queue ist von täglich 180 Tickets auf unter 40 gefallen. 70% davon löst der Bot vollautomatisch – Kundenzufriedenheit +18 Punkte."</blockquote>
             <div class="testi-author">
@@ -543,7 +563,7 @@
                 </div>
             </div>
         </div>
-        <div class="testi-card scroll-reveal">
+        <div class="testi-card scroll-reveal apple-glow">
             <div class="testi-stars">★★★★★</div>
             <blockquote>"Onboarding lief in zwei Wochen. Seitdem sparen wir pro Auftrag 9 Minuten manuelle Dateneingabe und haben Fehlerquoten halbiert."</blockquote>
             <div class="testi-author">
@@ -554,7 +574,7 @@
                 </div>
             </div>
         </div>
-        <div class="testi-card scroll-reveal">
+        <div class="testi-card scroll-reveal apple-glow">
             <div class="testi-stars">★★★★★</div>
             <blockquote>"Unsere Hotline ist jetzt 24/7 erreichbar – 42% der Anrufe werden direkt vom Voice Agent gelöst. Das Team hat endlich Zeit für komplexe Fälle."</blockquote>
             <div class="testi-author">
@@ -716,7 +736,92 @@
     <div class="cta-content">
         <h2>Bereit, Zeit zurückzugewinnen?</h2>
         <p>In 30 Tagen automatisiert – von der Analyse bis zum laufenden System.</p>
-        <a href="#kontakt" class="btn-white">Kostenlose Prozessanalyse starten</a>
+        <button id="ctaAnalyseBtn" class="btn-white cta-analyse-btn">
+            <span id="ctaBtnText">Kostenlose Prozessanalyse starten</span>
+            <i data-lucide="chevron-down" class="gamma-chevron"></i>
+        </button>
+
+        <!-- GAMMA ANALYSE FORM -->
+        <div class="gamma-form-wrapper" id="gammaFormWrapper" aria-hidden="true">
+            <form id="gammaForm" class="gamma-form" novalidate>
+                <div class="gamma-form-divider"></div>
+
+                <div class="gamma-form-grid">
+                    <div class="gamma-field">
+                        <label for="gf-vorname">Vorname *</label>
+                        <input type="text" id="gf-vorname" name="vorname" placeholder="Ihr Vorname" required autocomplete="given-name">
+                    </div>
+                    <div class="gamma-field">
+                        <label for="gf-email">E-Mail *</label>
+                        <input type="email" id="gf-email" name="email" placeholder="ihre@email.de" required autocomplete="email">
+                    </div>
+                    <div class="gamma-field">
+                        <label for="gf-branche">Branche *</label>
+                        <select id="gf-branche" name="branche" required>
+                            <option value="">Bitte wählen …</option>
+                            <option value="Handwerk">Handwerk (Elektriker, Sanitär, Maler …)</option>
+                            <option value="Gastronomie">Gastronomie &amp; Hotellerie</option>
+                            <option value="Einzelhandel">Einzelhandel &amp; E-Commerce</option>
+                            <option value="Beratung">Beratung &amp; Dienstleistung</option>
+                            <option value="Gesundheit">Gesundheit &amp; Praxis</option>
+                            <option value="Immobilien">Immobilien</option>
+                            <option value="Sonstige">Sonstige</option>
+                        </select>
+                    </div>
+                    <div class="gamma-field">
+                        <label for="gf-groesse">Unternehmensgröße *</label>
+                        <select id="gf-groesse" name="groesse" required>
+                            <option value="">Bitte wählen …</option>
+                            <option value="Solo">Solo / 1 Person</option>
+                            <option value="2-5">2–5 Mitarbeiter</option>
+                            <option value="6-20">6–20 Mitarbeiter</option>
+                            <option value="21-50">21–50 Mitarbeiter</option>
+                            <option value="50+">50+ Mitarbeiter</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="gamma-field gamma-field--full">
+                    <label>Größte Zeitfresser * <span class="gamma-label-hint">(Mehrfachauswahl möglich)</span></label>
+                    <div class="gamma-checkboxes">
+                        <label class="gamma-cb"><input type="checkbox" name="zeitfresser" value="Terminplanung"><span>Terminplanung &amp; Kalender</span></label>
+                        <label class="gamma-cb"><input type="checkbox" name="zeitfresser" value="Kundenanfragen"><span>Kundenanfragen &amp; Support</span></label>
+                        <label class="gamma-cb"><input type="checkbox" name="zeitfresser" value="Angebote"><span>Angebote &amp; Rechnungen</span></label>
+                        <label class="gamma-cb"><input type="checkbox" name="zeitfresser" value="Lead-Nachverfolgung"><span>Lead-Nachverfolgung</span></label>
+                        <label class="gamma-cb"><input type="checkbox" name="zeitfresser" value="Social Media"><span>Social Media &amp; Content</span></label>
+                        <label class="gamma-cb"><input type="checkbox" name="zeitfresser" value="Buchhaltung"><span>Buchhaltung &amp; Controlling</span></label>
+                        <label class="gamma-cb"><input type="checkbox" name="zeitfresser" value="Bestellungen"><span>Bestellungen &amp; Logistik</span></label>
+                    </div>
+                </div>
+
+                <div class="gamma-field gamma-field--full">
+                    <label class="gamma-cb gamma-cb--dsgvo">
+                        <input type="checkbox" name="dsgvo" required>
+                        <span>Ich stimme der Verarbeitung meiner Daten zu. Details in der <a href="public/datenschutz.html" target="_blank">Datenschutzerklärung</a>.</span>
+                    </label>
+                </div>
+
+                <div class="gamma-submit-row">
+                    <button type="submit" class="btn-white gamma-submit-btn" id="gammaSubmitBtn">
+                        <span class="gamma-btn-text">Meine persönliche Analyse erstellen</span>
+                        <span class="gamma-btn-spinner" aria-hidden="true"></span>
+                    </button>
+                    <p class="gamma-disclaimer">In ca. 2 Minuten landet Ihre individuelle Präsentation per E-Mail bei Ihnen.</p>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="gamma-success" id="gammaSuccess" hidden>
+            <i data-lucide="check-circle"></i>
+            <strong>Ihre Analyse ist unterwegs!</strong>
+            <p>Wir haben Ihnen gerade eine persönliche Präsentation per E-Mail geschickt. Checken Sie Ihren Posteingang.</p>
+        </div>
+
+        <div class="gamma-error" id="gammaError" hidden>
+            <i data-lucide="alert-circle"></i>
+            <span id="gammaErrorMsg">Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.</span>
+        </div>
     </div>
 </section>
 
@@ -744,11 +849,11 @@
                 <h4>Oder direkt:</h4>
                 <a href="tel:+4924219699680" class="contact-link">
                     <i data-lucide="phone"></i>
-                    02421 969 96 80
+                    0174 153 52 31
                 </a>
-                <a href="mailto:info@mlvision.de" class="contact-link">
+                <a href="mailto:kontakt@vision-ml.de" class="contact-link">
                     <i data-lucide="mail"></i>
-                    info@mlvision.de
+                    kontakt@vision-ml.de
                 </a>
             </div>
         </div>

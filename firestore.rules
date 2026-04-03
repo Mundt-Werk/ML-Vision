@@ -150,6 +150,51 @@ service cloud.firestore {
     }
 
     // ========================================================================
+    // SALES_LEADS Collection (Kunden-Stammdaten — customers.html)
+    // ========================================================================
+    match /sales_leads/{leadId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ========================================================================
+    // LEADS Collection (Leads Bot — leads-bot.html)
+    // ========================================================================
+    match /leads/{leadId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ========================================================================
+    // LEAD_SEARCHES Collection (Suchhistorie — leads-bot.html)
+    // ========================================================================
+    match /lead_searches/{searchId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ========================================================================
+    // SYSTEM_SETTINGS Collection (Admin-Konfiguration — settings.html)
+    // ========================================================================
+    match /system_settings/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ========================================================================
+    // AUDIT_LOGS Collection (Aktionsprotokoll — audit.js)
+    // ========================================================================
+    match /audit_logs/{logId} {
+      // Nur Admin lesen — schreiben erlaubt für alle eingeloggten Admins
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if false; // Audit-Logs sind unveränderlich
+    }
+
+    // ========================================================================
+    // QUOTES Collection (Preisangebote — pricing-calculator.html, Phase 6)
+    // ========================================================================
+    match /quotes/{quoteId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ========================================================================
     // Default: Alles andere ablehnen
     // ========================================================================
     match /{document=**} {

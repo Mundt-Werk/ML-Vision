@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[PREVIEW] Marcos persönliche KI-Roadmap | ML Vision</title>
+<link rel="stylesheet" href="../../assets/css/analyse.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</style>
+</head>
+<body>
+
+<!-- PREVIEW SWITCHER -->
+<div class="preview-banner">
+  ⚠ VORSCHAU — wird nicht live gezeigt
+  <select onchange="switchBranche(this.value)">
+    <option value="Gesundheit">Gesundheit & Praxis</option>
+    <option value="Handwerk">Handwerk & Betrieb</option>
+    <option value="Gastronomie">Gastronomie & Hotellerie</option>
+    <option value="Einzelhandel">Einzelhandel & E-Commerce</option>
+    <option value="Immobilien">Immobilien</option>
+    <option value="Beratung">Beratung & Dienstleistung</option>
+  </select>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="logo">ML<span>Vision</span></div>
+    <div class="nav-badge" id="nav-date">Persönliche Analyse · 11. März 2026</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow"><i data-lucide="sparkles"></i> Kostenlose KI-Prozessanalyse</div>
+    <h1>Marcos persönliche<br><em>KI-Roadmap</em></h1>
+    <p class="hero-sub" id="hero-sub">Maßgeschneiderte Automatisierungsstrategie für Ihren Betrieb — weniger Verwaltung, mehr Zeit für das Wesentliche.</p>
+    <div class="hero-meta">
+      <span class="hero-chip"><i data-lucide="building-2"></i> <span id="chip-branche">Gesundheit & Praxis</span></span>
+      <span class="hero-chip"><i data-lucide="users"></i> 21–50 Mitarbeiter</span>
+      <span class="hero-chip"><i data-lucide="zap"></i> 3 Zeitfresser identifiziert</span>
+    </div>
+  </div>
+  <div class="hero-img" id="hero-img">
+    <img id="hero-img-el" src="https://www.vision-ml.de/assets/img/analyse/gesundheit01.webp" alt=""
+      onerror="this.style.display='none';document.getElementById('hero-img-ph').style.display='flex'"
+      style="width:100%;height:100%;object-fit:cover;display:block">
+    <div class="img-placeholder" id="hero-img-ph" style="display:none">
+      <i data-lucide="image"></i>
+      <span id="hero-img-label">gesundheit01.webp</span>
+    </div>
+  </div>
+</div>
+
+<!-- WO IHRE ZEIT WIRKLICH BLEIBT -->
+<section>
+  <div class="wrap">
+    <div class="zeit-grid">
+      <div>
+        <p class="sec-label">Ihre Zeitfresser</p>
+        <h2 class="sec-title">Wo Ihre Zeit wirklich bleibt</h2>
+        <div class="zeit-intro">
+          <p class="sec-desc">Gesundheitsbetriebe verlieren wöchentlich bis zu <strong>19+ Stunden</strong> an administrativen Aufgaben — Zeit, die im Betrieb fehlt.</p>
+        </div>
+        <div class="zt-rows">
+          <div class="zt-row">
+            <div class="zt-hours">5–8h</div>
+            <div class="zt-body">
+              <div class="zt-title"><i data-lucide="calendar" class="zt-icon"></i> Terminplanung & Kalender</div>
+              <div class="zt-sub">KI-Buchungssystem mit automatischen Bestätigungen und Erinnerungen</div>
+            </div>
+          </div>
+          <div class="zt-row">
+            <div class="zt-hours">6–10h</div>
+            <div class="zt-body">
+              <div class="zt-title"><i data-lucide="message-circle" class="zt-icon"></i> Kundenanfragen & Support</div>
+              <div class="zt-sub">KI-Chatbot 24/7 + intelligentes Ticket-Routing</div>
+            </div>
+          </div>
+          <div class="zt-row">
+            <div class="zt-hours">4–7h</div>
+            <div class="zt-body">
+              <div class="zt-title"><i data-lucide="file-text" class="zt-icon"></i> Angebote & Rechnungen</div>
+              <div class="zt-sub">Automatische Angebotsgenerierung + digitale Signatur + Rechnungsversand</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="zeit-img-wrap">
+        <img id="zeit-img-el" src="https://www.vision-ml.de/assets/img/analyse/gesundheit02.webp" alt=""
+          onerror="this.style.display='none';document.getElementById('zeit-img-ph').style.display='flex'"
+          style="width:100%;height:100%;object-fit:cover;display:block">
+        <div class="img-placeholder" id="zeit-img-ph" style="aspect-ratio:3/4;display:none">
+          <i data-lucide="image"></i>
+          <span id="zeit-img-label">gesundheit02.webp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOP-3 AUTOMATISIERUNGEN -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">KI-Lösungen</p>
+    <h2 class="sec-title">Top-3 Automatisierungen für Ihren Betrieb</h2>
+    <p class="sec-desc" id="auto-desc">Gezielte KI-Lösungen, direkt auf die größten Zeitfresser in Gesundheit & Praxis zugeschnitten.</p>
+    <div class="auto-grid" id="auto-grid">
+      <div class="auto-card">
+        <div class="auto-icon-box"><i data-lucide="calendar" class="auto-icon"></i></div>
+        <h3>Online-Terminbuchung</h3>
+        <p>Patienten buchen, verschieben und stornieren selbstständig. Automatische Erinnerungen senken No-Shows um bis zu 40 %.</p>
+        <div class="auto-badge"><i data-lucide="clock" class="badge-clock"></i> 5–8 Std/Woche Einsparung</div>
+      </div>
+      <div class="auto-card">
+        <div class="auto-icon-box"><i data-lucide="clipboard-list" class="auto-icon"></i></div>
+        <h3>Dokumentation & Recall</h3>
+        <p>Automatische Recall-Nachrichten, Ergebnis-Mitteilungen und Folgetermin-Empfehlungen per SMS/E-Mail.</p>
+        <div class="auto-badge"><i data-lucide="clock" class="badge-clock"></i> 3–5 Std/Woche Einsparung</div>
+      </div>
+      <div class="auto-card">
+        <div class="auto-icon-box"><i data-lucide="credit-card" class="auto-icon"></i></div>
+        <h3>Abrechnungsautomatisierung</h3>
+        <p>Automatische Rechnungserstellung, Mahnwesen und Kassenabgleich ohne manuellen Aufwand.</p>
+        <div class="auto-badge"><i data-lucide="clock" class="badge-clock"></i> 4–6 Std/Woche Einsparung</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAS SIE KONKRET GEWINNEN -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">Ihr Potenzial</p>
+    <h2 class="sec-title">Was Sie konkret gewinnen</h2>
+    <p class="sec-desc">Realistische Kennzahlen auf Basis vergleichbarer Betriebe nach 3 Monaten Automatisierung.</p>
+    <div class="savings-grid">
+      <div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot dot-before"></div> Vorher (Std/Wo)</div>
+          <div class="legend-item"><div class="legend-dot dot-after"></div> Nachher (Std/Wo)</div>
+        </div>
+        <div class="bar-rows">
+          <div class="bar-row">
+            <div class="bar-label">Terminplanung & Kalender</div>
+            <div class="bars">
+              <div class="bar-wrap"><div class="bar bar-before" style="width:80%"><span>8h</span></div></div>
+              <div class="bar-wrap"><div class="bar bar-after"  style="width:12%"><span>1h</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Kundenanfragen & Support</div>
+            <div class="bars">
+              <div class="bar-wrap"><div class="bar bar-before" style="width:100%"><span>10h</span></div></div>
+              <div class="bar-wrap"><div class="bar bar-after"  style="width:15%"><span>2h</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Angebote & Rechnungen</div>
+            <div class="bars">
+              <div class="bar-wrap"><div class="bar bar-before" style="width:70%"><span>7h</span></div></div>
+              <div class="bar-wrap"><div class="bar bar-after"  style="width:11%"><span>1h</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="savings-nums">
+        <div class="savings-num-block">
+          <div class="savings-big">15–<span class="accent">25h</span></div>
+          <div class="savings-num-title">Zeitersparnis pro Woche</div>
+          <div class="savings-num-sub">Das sind 60–100 Stunden im Monat</div>
+        </div>
+        <div class="savings-divider"></div>
+        <div class="savings-num-block">
+          <div class="savings-big"><span class="accent">2.800 €</span></div>
+          <div class="savings-num-title">ROI / Monat</div>
+          <div class="savings-num-sub">Bei 35 €/Std Opportunitätskosten — konservativ kalkuliert</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AKTIONSPLAN -->
+<section>
+  <div class="wrap">
+    <div class="plan-grid">
+      <div class="plan-img-wrap">
+        <img id="plan-img-el" src="https://www.vision-ml.de/assets/img/analyse/gesundheit03.webp" alt=""
+          onerror="this.style.display='none';document.getElementById('plan-img-ph').style.display='flex'"
+          style="width:100%;height:100%;object-fit:cover;display:block">
+        <div class="img-placeholder" id="plan-img-ph" style="height:100%;display:none">
+          <i data-lucide="image"></i>
+          <span id="plan-img-label">gesundheit03.webp</span>
+        </div>
+      </div>
+      <div>
+        <p class="sec-label">Nächste Schritte</p>
+        <h2 class="sec-title">Ihr Aktionsplan mit ML Vision</h2>
+        <p class="sec-desc">Konkrete nächste Schritte — von der ersten Analyse bis zur laufenden Automatisierung.</p>
+        <div class="plan-steps">
+          <div class="plan-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Kostenloses Erstgespräch</h4>
+              <p>30-Minuten-Analyse Ihrer größten Zeitfresser — individuell, keine generischen Lösungen</p>
+            </div>
+          </div>
+          <div class="plan-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Pilotprojekt starten</h4>
+              <p>Wir implementieren die erste Automatisierung innerhalb von 2 Wochen — messbare Ergebnisse ab Tag 1</p>
+            </div>
+          </div>
+          <div class="plan-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Skalieren &amp; optimieren</h4>
+              <p>Schritt für Schritt weitere Prozesse automatisieren — Sie behalten stets die Kontrolle</p>
+            </div>
+          </div>
+        </div>
+        <div class="plan-cta-inline">
+          <i data-lucide="arrow-right"></i>
+          <p><strong>Jetzt handeln:</strong> Vereinbaren Sie noch diese Woche Ihr kostenloses Strategiegespräch mit ML Vision — und starten Sie Ihre persönliche Automatisierungsreise.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="wrap">
+    <div class="cta-box">
+      <div class="cta-badge"><i data-lucide="clock"></i> Ihr Analyse-Ergebnis · 11. März 2026</div>
+      <h2>Bereit, 15–25 Stunden<br>pro Woche zurückzugewinnen?</h2>
+      <p>In einem kostenlosen 30-Minuten-Gespräch zeigen wir Ihnen, wie wir die ersten Automatisierungen in Ihrem Betrieb umsetzen — konkret und direkt umsetzbar.</p>
+      <a href="https://www.vision-ml.de/#kontakt" class="btn">
+        Kostenloses Gespräch buchen <i data-lucide="arrow-right"></i>
+      </a>
+      <br>
+      <a href="https://www.vision-ml.de" class="btn-ghost">
+        Mehr über ML Vision erfahren <i data-lucide="external-link"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>
+      Diese Analyse wurde persönlich für <strong>Marco</strong> erstellt · Lead-ID: PREVIEW<br>
+      <a href="/public/datenschutz.html">Datenschutz</a> ·
+      <a href="/public/impressum.html">Impressum</a> ·
+      <a href="https://www.vision-ml.de">vision-ml.de</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+
+// Branche-Switcher: updated labels only (images shown as placeholders)
+const branchen = {
+  'Gesundheit':    { label: 'Gesundheit & Praxis',       key: 'gesundheit',    tagline: 'Mehr Zeit für Patienten — KI übernimmt die Administration.' },
+  'Handwerk':      { label: 'Handwerk & Betrieb',        key: 'handwerk',      tagline: 'Maßgeschneiderte Automatisierungsstrategie für Ihren Handwerksbetrieb — weniger Verwaltung, mehr Zeit für das Wesentliche.' },
+  'Gastronomie':   { label: 'Gastronomie & Hotellerie',  key: 'gastronomie',   tagline: 'Mehr Gäste, weniger Verwaltung — KI-Automatisierung für Ihr Restaurant oder Hotel.' },
+  'Einzelhandel':  { label: 'Einzelhandel & E-Commerce', key: 'einzelhandel',  tagline: 'Automatisiert verkaufen und wachsen — ohne zusätzlichen manuellen Aufwand.' },
+  'Immobilien':    { label: 'Immobilien',                key: 'immobilien',    tagline: 'Mehr Abschlüsse, weniger Routine — KI-Automatisierung für Makler.' },
+  'Beratung':      { label: 'Beratung & Dienstleistung', key: 'beratung',      tagline: 'Fokus auf Kunden statt Verwaltung — KI für Beratungsunternehmen.' },
+};
+
+const BASE_IMG = 'https://www.vision-ml.de/assets/img/analyse';
+
+function loadImg(elId, phId, labelId, src) {
+  const img = document.getElementById(elId);
+  const ph  = document.getElementById(phId);
+  const lbl = document.getElementById(labelId);
+  img.style.display = 'block';
+  ph.style.display  = 'none';
+  img.src = src;
+  if (lbl) lbl.textContent = src.split('/').pop();
+  img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+}
+
+function switchBranche(b) {
+  const bd = branchen[b] || branchen['Gesundheit'];
+  document.getElementById('chip-branche').textContent = bd.label;
+  document.getElementById('hero-sub').textContent = bd.tagline;
+  document.getElementById('auto-desc').textContent = `Gezielte KI-Lösungen, direkt auf die größten Zeitfresser in ${bd.label} zugeschnitten.`;
+  loadImg('hero-img-el', 'hero-img-ph', 'hero-img-label', `${BASE_IMG}/${bd.key}01.webp`);
+  loadImg('zeit-img-el', 'zeit-img-ph', 'zeit-img-label', `${BASE_IMG}/${bd.key}02.webp`);
+  loadImg('plan-img-el', 'plan-img-ph', 'plan-img-label', `${BASE_IMG}/${bd.key}03.webp`);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Customers Analyse - ML Vision</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        .container {
+            background: #0a0a0a;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #00ff00;
+        }
+        h1 {
+            color: #00ff00;
+            text-align: center;
+            margin-top: 0;
+        }
+        .section {
+            background: #1a1a1a;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #00ff00;
+            border-radius: 4px;
+        }
+        .section h2 {
+            color: #00aaff;
+            margin-top: 0;
+        }
+        button {
+            background: #00ff00;
+            color: #000;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        button:hover {
+            background: #00dd00;
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        #output {
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            max-height: 600px;
+            overflow-y: auto;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .warning {
+            background: #3a1a00;
+            border-left: 4px solid #ffaa00;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #ffaa00;
+        }
+        .info {
+            background: #001a3a;
+            border-left: 4px solid #00aaff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #00aaff;
+        }
+        .key {
+            color: #ff6b6b;
+        }
+        .string {
+            color: #51cf66;
+        }
+        .number {
+            color: #ffd43b;
+        }
+        .boolean {
+            color: #74c0fc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Firebase Customers Collection Analyse</h1>
+
+        <div class="info">
+            <strong>ℹ️ Zweck</strong><br>
+            Dieses Tool analysiert die bestehende "customers" Collection in Firebase,
+            um zu sehen welche Struktur und Daten bereits vorhanden sind.
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Wichtig</strong><br>
+            Dieses Tool liest nur Daten aus und ändert NICHTS in der Datenbank!
+        </div>
+
+        <button id="analyzeBtn" onclick="analyzeCustomers()">🔍 Customers Collection analysieren</button>
+        <button onclick="clearOutput()">🗑️ Ausgabe löschen</button>
+        <button onclick="copyToClipboard()">📋 Kopieren</button>
+
+        <div id="output"></div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from '../assets/js/firebase-config.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+        import { collection, getDocs, query, limit } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+        let currentUser = null;
+
+        // Check authentication
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (!user) {
+                output('❌ Nicht angemeldet! Bitte melden Sie sich an.\n');
+                document.getElementById('analyzeBtn').disabled = true;
+            } else {
+                output(`✅ Angemeldet als: ${user.email}\n`);
+            }
+        });
+
+        function output(text) {
+            const outputDiv = document.getElementById('output');
+            outputDiv.textContent += text;
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        }
+
+        window.clearOutput = function() {
+            document.getElementById('output').textContent = '';
+        }
+
+        window.copyToClipboard = function() {
+            const outputDiv = document.getElementById('output');
+            navigator.clipboard.writeText(outputDiv.textContent).then(() => {
+                alert('In Zwischenablage kopiert!');
+            });
+        }
+
+        function formatJSON(obj, indent = 0) {
+            const spaces = '  '.repeat(indent);
+            let result = '';
+
+            if (obj === null) return 'null';
+            if (obj === undefined) return 'undefined';
+            if (typeof obj === 'string') return `"${obj}"`;
+            if (typeof obj === 'number') return obj.toString();
+            if (typeof obj === 'boolean') return obj.toString();
+
+            if (Array.isArray(obj)) {
+                if (obj.length === 0) return '[]';
+                result = '[\n';
+                obj.forEach((item, i) => {
+                    result += spaces + '  ' + formatJSON(item, indent + 1);
+                    if (i < obj.length - 1) result += ',';
+                    result += '\n';
+                });
+                result += spaces + ']';
+                return result;
+            }
+
+            if (typeof obj === 'object') {
+                const keys = Object.keys(obj);
+                if (keys.length === 0) return '{}';
+                result = '{\n';
+                keys.forEach((key, i) => {
+                    result += spaces + '  "' + key + '": ' + formatJSON(obj[key], indent + 1);
+                    if (i < keys.length - 1) result += ',';
+                    result += '\n';
+                });
+                result += spaces + '}';
+                return result;
+            }
+
+            return String(obj);
+        }
+
+        window.analyzeCustomers = async function() {
+            if (!currentUser) {
+                alert('Bitte melden Sie sich zuerst an!');
+                return;
+            }
+
+            const btn = document.getElementById('analyzeBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Analysiere...';
+
+            clearOutput();
+            output('╔════════════════════════════════════════════════════════════╗\n');
+            output('║          FIREBASE CUSTOMERS COLLECTION ANALYSE            ║\n');
+            output('╚════════════════════════════════════════════════════════════╝\n\n');
+
+            try {
+                // 1. Anzahl der Dokumente
+                output('📊 Lade alle Customers-Dokumente...\n\n');
+                const customersRef = collection(db, 'customers');
+                const snapshot = await getDocs(customersRef);
+
+                output(`✅ Gefunden: ${snapshot.size} Dokument(e)\n`);
+                output('─'.repeat(60) + '\n\n');
+
+                if (snapshot.empty) {
+                    output('⚠️  Die "customers" Collection ist LEER!\n');
+                    output('   Es existieren noch keine Kundendaten in Firebase.\n\n');
+                } else {
+                    // 2. Details zu jedem Dokument
+                    let docIndex = 1;
+                    const allFields = new Set();
+
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+
+                        output(`\n📄 DOKUMENT #${docIndex}: ${doc.id}\n`);
+                        output('─'.repeat(60) + '\n');
+                        output(formatJSON(data, 0));
+                        output('\n\n');
+
+                        // Collect all field names
+                        Object.keys(data).forEach(key => allFields.add(key));
+
+                        docIndex++;
+                    });
+
+                    // 3. Zusammenfassung der Felder
+                    output('\n╔════════════════════════════════════════════════════════════╗\n');
+                    output('║                    FELDER-ÜBERSICHT                       ║\n');
+                    output('╚════════════════════════════════════════════════════════════╝\n\n');
+                    output('Alle verwendeten Felder in der Collection:\n\n');
+
+                    const fieldsArray = Array.from(allFields).sort();
+                    fieldsArray.forEach(field => {
+                        output(`  ✓ ${field}\n`);
+                    });
+
+                    output('\n─'.repeat(60) + '\n');
+                    output(`\nGesamt: ${fieldsArray.length} verschiedene Felder\n`);
+                }
+
+                // 4. Abschluss
+                output('\n╔════════════════════════════════════════════════════════════╗\n');
+                output('║                    ANALYSE ABGESCHLOSSEN                  ║\n');
+                output('╚════════════════════════════════════════════════════════════╝\n\n');
+                output(`Zeitpunkt: ${new Date().toLocaleString('de-DE')}\n`);
+
+            } catch (error) {
+                console.error('Error:', error);
+                output(`\n❌ FEHLER: ${error.message}\n`);
+                output(`\nDetails: ${error.stack}\n`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🔍 Customers Collection analysieren';
+            }
+        }
+    </script>
+</body>
+</html>

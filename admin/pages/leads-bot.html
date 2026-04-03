@@ -19,6 +19,17 @@
     <link rel="stylesheet" href="../../assets/css/layouts/admin-layout.css">
     <link rel="stylesheet" href="../../assets/css/pages/leads-bot.css">
     <link rel="stylesheet" href="../../assets/css/utilities/responsive.css">
+    <style>
+        .leads-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+        .leads-tabs .tab-btn { padding: 10px 24px; border: 1px solid rgba(225,232,237,0.15); background: transparent; color: rgba(225,232,237,0.6); border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .leads-tabs .tab-btn.active { background: #04A9D4; color: #fff; border-color: #04A9D4; }
+        .history-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px 24px; }
+        .history-item { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+        .history-item:last-child { border-bottom: none; }
+        .history-item-title { font-weight: 600; color: #e1e8ed; }
+        .history-item-meta { font-size: 13px; color: rgba(225,232,237,0.6); margin-top: 4px; }
+        .history-item-time { font-size: 12px; color: rgba(225,232,237,0.5); white-space: nowrap; flex-shrink: 0; }
+    </style>
 </head>
 <body>
     <button class="mobile-menu-toggle" onclick="toggleSidebar()">
@@ -61,6 +72,14 @@
                         Kunden
                     </a>
                 </li>
+                <li>
+                    <a href="tickets.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                        </svg>
+                        Support-Tickets
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-section-title">Tools</div>
@@ -71,6 +90,14 @@
                             <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
                         </svg>
                         Leads Bot
+                    </a>
+                </li>
+                <li>
+                    <a href="pricing-calculator.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                        Pricing Kalkulator
                     </a>
                 </li>
             </ul>
@@ -99,8 +126,14 @@
                 <p>Automatische Lead-Generierung für lokale Unternehmen mit Google Places API</p>
             </div>
 
+            <!-- Tabs -->
+            <div class="leads-tabs">
+                <button class="tab-btn active" id="tabNewSearch" onclick="switchTab('new')">Neue Suche</button>
+                <button class="tab-btn" id="tabHistory" onclick="switchTab('history')">Verlauf</button>
+            </div>
+
             <!-- Search Form -->
-            <div class="bot-container">
+            <div class="bot-container" id="newSearchSection">
                 <h2>Neue Lead-Suche starten</h2>
 
                 <form id="searchForm">
@@ -182,6 +215,16 @@
                 <p class="progress-text" id="progressText">Initialisiere Suche...</p>
             </div>
 
+            <!-- History Section -->
+            <div id="historySection" style="display: none;">
+                <div class="history-card">
+                    <h2 style="margin: 0 0 20px; color: #e1e8ed; font-size: 18px;">Letzte Suchanfragen</h2>
+                    <div id="historyList">
+                        <p style="color: rgba(225,232,237,0.5);">Wird geladen...</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Results Section -->
             <div class="results-section" id="resultsSection">
                 <div class="results-header">
@@ -215,9 +258,10 @@
     </div>
 
     <script>
-        // State
+        // State (window-scope für Firestore-Modul zugänglich)
         let selectedCategories = [];
         let currentLeads = [];
+        window._currentLeads = currentLeads;
 
         // API Base URL - automatisch lokal oder production
         const API_BASE_URL = window.location.hostname === 'localhost'
@@ -334,6 +378,13 @@
 
                 const result = await response.json();
                 currentLeads = result.leads || [];
+                window._currentLeads = currentLeads;
+                window._lastSearchParams = searchParams;
+
+                // Leads in Firestore persistieren (async, non-blocking)
+                if (window.saveLeadsToFirestore) {
+                    window.saveLeadsToFirestore(currentLeads, searchParams);
+                }
 
                 // Simulate progress
                 let progress = 0;
@@ -414,6 +465,27 @@
             a.click();
             URL.revokeObjectURL(url);
         }
+
+        // Tab switching
+        window.switchTab = function(tab) {
+            const newSearchSection = document.getElementById('newSearchSection');
+            const historySection = document.getElementById('historySection');
+
+            if (tab === 'new') {
+                newSearchSection.style.display = '';
+                historySection.style.display = 'none';
+                document.getElementById('tabNewSearch').classList.add('active');
+                document.getElementById('tabHistory').classList.remove('active');
+            } else {
+                newSearchSection.style.display = 'none';
+                document.getElementById('progressSection').classList.remove('active');
+                document.getElementById('resultsSection').classList.remove('active');
+                historySection.style.display = '';
+                document.getElementById('tabNewSearch').classList.remove('active');
+                document.getElementById('tabHistory').classList.add('active');
+                if (window.loadSearchHistory) window.loadSearchHistory();
+            }
+        };
 
         // Mobile Sidebar Toggle
         function toggleSidebar() {
@@ -511,18 +583,160 @@
         </div>
     </div>
 
-    <!-- Firebase Authentication & Logout -->
+    <!-- Firebase Authentication, Logout & Leads-Persistenz -->
     <script type="module">
         import { Sidebar } from '../../assets/js/components/Sidebar.js';
         import '../../assets/js/components/Modal.js';
         import { initDashboard } from '../../assets/js/dashboard.js';
+        import { db } from '../../assets/js/firebase-config.js';
+        import {
+            collection,
+            addDoc,
+            getDocs,
+            query,
+            where,
+            orderBy,
+            limit,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Initialize components
+        // Leads in Firestore speichern mit Duplikat-Check
+        window.saveLeadsToFirestore = async function(leads, searchParams) {
+            if (!leads || leads.length === 0) return;
+
+            const leadsRef = collection(db, 'leads');
+
+            // Collect unique phones from incoming leads
+            const phonesToCheck = [...new Set(
+                leads
+                    .map(l => l.phone)
+                    .filter(p => p && p !== '-' && p.trim() !== '')
+            )];
+
+            const existingPhones = new Set();
+
+            // Query existing leads by phone — in batches of 30 (Firestore 'in' limit)
+            for (let i = 0; i < phonesToCheck.length; i += 30) {
+                const batch = phonesToCheck.slice(i, i + 30);
+                const q = query(leadsRef, where('phone', 'in', batch));
+                const snap = await getDocs(q);
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    if (data.phone) existingPhones.add(data.phone);
+                });
+            }
+
+            const savePromises = [];
+            const savedLeadsData = [];
+            let saved = 0;
+            let skipped = 0;
+
+            for (const lead of leads) {
+                const phone = lead.phone && lead.phone !== '-' ? lead.phone.trim() : '';
+
+                // Skip duplicates by phone
+                if (phone && existingPhones.has(phone)) {
+                    skipped++;
+                    continue;
+                }
+                if (phone) existingPhones.add(phone);
+
+                const leadData = {
+                    name:        lead.name        || '',
+                    category:    lead.category    || '',
+                    city:        lead.city        || '',
+                    phone:       phone,
+                    website:     lead.website     || '',
+                    rating:      lead.rating      ?? null,
+                    reviews:     lead.reviews     || lead.user_ratings_total || 0,
+                    priority:    lead.priority    || 'low',
+                    searchQuery: searchParams.location,
+                    searchDate:  new Date().toISOString(),
+                    status:      'new',
+                    source:      'leads-bot'
+                };
+                savedLeadsData.push(leadData);
+                savePromises.push(addDoc(leadsRef, { ...leadData, savedAt: serverTimestamp() }));
+                saved++;
+            }
+
+            try {
+                await Promise.all([
+                    ...savePromises,
+                    // Save to search history
+                    addDoc(collection(db, 'lead_searches'), {
+                        location:    searchParams.location,
+                        categories:  searchParams.categories,
+                        radius:      searchParams.radius,
+                        resultCount: leads.length,
+                        savedCount:  saved,
+                        searchedAt:  serverTimestamp()
+                    })
+                ]);
+                // n8n: Leads → Brevo (fire-and-forget, einer pro Lead)
+                savedLeadsData.forEach(lead =>
+                    fetch('https://n8n.vision-ml.de/webhook/mlv-lead-to-brevo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(lead)
+                    }).catch(() => {})
+                );
+                const skipText = skipped > 0
+                    ? ` (${skipped} Duplikat${skipped !== 1 ? 'e' : ''} übersprungen)`
+                    : '';
+                window.showAlert(`${saved} Leads gespeichert${skipText}`, 'Leads gespeichert');
+            } catch (err) {
+                console.error('Fehler beim Speichern der Leads:', err);
+                window.showAlert('Fehler beim Speichern der Leads: ' + err.message, 'Fehler');
+            }
+        };
+
+        // Verlauf laden — wird vom Tab-Switch aufgerufen
+        window.loadSearchHistory = async function() {
+            const historyList = document.getElementById('historyList');
+            if (!historyList) return;
+            historyList.innerHTML = '<p style="color: rgba(225,232,237,0.5);">Wird geladen...</p>';
+
+            try {
+                const q = query(
+                    collection(db, 'lead_searches'),
+                    orderBy('searchedAt', 'desc'),
+                    limit(10)
+                );
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    historyList.innerHTML = '<p style="color: rgba(225,232,237,0.5);">Noch keine Suchanfragen gespeichert.</p>';
+                    return;
+                }
+
+                historyList.innerHTML = snap.docs.map(doc => {
+                    const d = doc.data();
+                    const date = d.searchedAt?.toDate
+                        ? d.searchedAt.toDate().toLocaleDateString('de-DE', {
+                            day: '2-digit', month: '2-digit', year: 'numeric',
+                            hour: '2-digit', minute: '2-digit'
+                          })
+                        : '–';
+                    const cats = Array.isArray(d.categories) ? d.categories.join(', ') : (d.categories || '–');
+                    const radiusKm = Math.round((d.radius || 0) / 1000);
+                    return `
+                        <div class="history-item">
+                            <div>
+                                <div class="history-item-title">${d.location || '–'}</div>
+                                <div class="history-item-meta">${cats} · ${radiusKm} km · ${d.resultCount || 0} gefunden · ${d.savedCount || 0} gespeichert</div>
+                            </div>
+                            <div class="history-item-time">${date}</div>
+                        </div>`;
+                }).join('');
+            } catch (err) {
+                console.error('Fehler beim Laden des Verlaufs:', err);
+                historyList.innerHTML = '<p style="color: rgba(225,232,237,0.5);">Fehler beim Laden des Verlaufs.</p>';
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
-            // Initialize Sidebar
             new Sidebar('sidebar');
-
-            // Initialize admin dashboard with role check and logout functionality
             await initDashboard('admin');
         });
     </script>

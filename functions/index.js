@@ -402,3 +402,52 @@ exports.manualImportInvoices = functions.https.onCall(async (data, context) => {
   console.log('Manual Stripe import triggered');
   return await exports.importStripeInvoices.run(context);
 });
+
+// ============================================================================
+// MODUL 4: BENUTZERVERWALTUNG
+// ============================================================================
+
+/**
+ * Löscht Firebase Auth-Account + Firestore-Dokument eines Benutzers.
+ * Wird von admin/pages/users.html via httpsCallable aufgerufen.
+ *
+ * @param {{ uid: string }} data — UID des zu löschenden Benutzers
+ */
+exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
+  // Nur für eingeloggte Benutzer
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Nicht authentifiziert');
+  }
+
+  // Überprüfe Admin-Rolle im Firestore
+  const callerDoc = await db.collection('users').doc(context.auth.uid).get();
+  if (!callerDoc.exists || callerDoc.data().role !== 'admin') {
+    throw new functions.https.HttpsError('permission-denied', 'Admin-Berechtigung erforderlich');
+  }
+
+  const { uid } = data;
+  if (!uid) {
+    throw new functions.https.HttpsError('invalid-argument', 'uid fehlt');
+  }
+
+  // Selbst-Löschen verbieten
+  if (uid === context.auth.uid) {
+    throw new functions.https.HttpsError('invalid-argument', 'Eigener Account kann nicht gelöscht werden');
+  }
+
+  // Firebase Auth-Account löschen
+  try {
+    await admin.auth().deleteUser(uid);
+  } catch (err) {
+    // Wenn Account in Auth nicht mehr existiert, trotzdem Firestore bereinigen
+    if (err.code !== 'auth/user-not-found') {
+      throw new functions.https.HttpsError('internal', 'Auth-Löschung fehlgeschlagen: ' + err.message);
+    }
+  }
+
+  // Firestore-Dokument löschen
+  await db.collection('users').doc(uid).delete();
+
+  console.log(`User ${uid} deleted by admin ${context.auth.uid}`);
+  return { success: true };
+});

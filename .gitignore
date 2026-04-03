@@ -41,10 +41,23 @@ build/
 
 # Sensitive files
 NICHTHOCHLADEN/
+KEYS_PRIVAT.md
+*KEYS_PRIVAT*
 *.pem
 *.key
 credentials.json
 firebase-service-account.json
+
+# Verträge & Kundenangebote
+MD/AVV_*.md
+MD/KVA_*.md
+MD/KVA_*.html
+MD/DSGVO_CHECKLIST_*.md
+admin/angebote/
+
+# Agent & Workflow Configs (können Credentials enthalten)
+.agents/
+n8n/
 
 # OS files
 Thumbs.db

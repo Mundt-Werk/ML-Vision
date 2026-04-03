@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "sevdesk-agent-cli": {
+      "source": "codecell-germany/sevdesk-agent-skill",
+      "sourceType": "github",
+      "computedHash": "fa8de748e88f78d5d6396366b65173b11883d9c8fc070827f94b95bc5f9f429d"
+    }
+  }
+}

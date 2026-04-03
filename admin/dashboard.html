@@ -63,6 +63,14 @@
                         Kunden
                     </a>
                 </li>
+                <li>
+                    <a href="pages/tickets.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                        </svg>
+                        Support-Tickets
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-section-title">Tools</div>
@@ -73,6 +81,14 @@
                             <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
                         </svg>
                         Leads Bot
+                    </a>
+                </li>
+                <li>
+                    <a href="pages/pricing-calculator.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                        Pricing Kalkulator
                     </a>
                 </li>
                 <li>
@@ -127,12 +143,12 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="stat-card-value">247</div>
-                    <div class="stat-card-change">
+                    <div class="stat-card-value" id="stat-customers">—</div>
+                    <div class="stat-card-change" id="stat-customers-change">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M7 14l5-5 5 5z"/>
                         </svg>
-                        +18 diese Woche
+                        Wird geladen...
                     </div>
                 </div>
 
@@ -145,48 +161,48 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="stat-card-value">1,842</div>
-                    <div class="stat-card-change">
+                    <div class="stat-card-value" id="stat-leads">—</div>
+                    <div class="stat-card-change" id="stat-leads-change">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M7 14l5-5 5 5z"/>
                         </svg>
-                        +12.5% vs. letzter Monat
+                        Wird geladen...
                     </div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-card-header">
-                        <span class="stat-card-title">Conversion Rate</span>
+                        <span class="stat-card-title">Offene Tickets</span>
                         <div class="stat-card-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                                <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
                             </svg>
                         </div>
                     </div>
-                    <div class="stat-card-value">34.2%</div>
-                    <div class="stat-card-change">
+                    <div class="stat-card-value" id="stat-tickets">—</div>
+                    <div class="stat-card-change" id="stat-tickets-change">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M7 14l5-5 5 5z"/>
                         </svg>
-                        +5.8% vs. letzter Monat
+                        Wird geladen...
                     </div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-card-header">
-                        <span class="stat-card-title">Monatlicher Umsatz</span>
+                        <span class="stat-card-title">Neue Kunden — Woche</span>
                         <div class="stat-card-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
+                                <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
                         </div>
                     </div>
-                    <div class="stat-card-value">42.8K</div>
-                    <div class="stat-card-change">
+                    <div class="stat-card-value" id="stat-new-customers">—</div>
+                    <div class="stat-card-change" id="stat-new-customers-change">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M7 14l5-5 5 5z"/>
                         </svg>
-                        +24.3% vs. letzter Monat
+                        Wird geladen...
                     </div>
                 </div>
             </div>
@@ -201,38 +217,24 @@
                         Systemstatus
                     </h2>
                     <div class="status-item">
-                        <div class="status-indicator success"></div>
-                        <div class="status-text">
-                            <strong>Leads Bot System</strong>
-                            <small>Alle Systeme betriebsbereit - 24/7 aktiv</small>
+                        <div class="status-indicator warning" id="status-firebase"></div>
+                        <div class="status-text" id="status-firebase-text">
+                            <strong>Firebase Datenbank</strong>
+                            <small>Wird geprüft...</small>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-indicator warning" id="status-n8n"></div>
+                        <div class="status-text" id="status-n8n-text">
+                            <strong>n8n Automatisierungen</strong>
+                            <small>Wird geprüft...</small>
                         </div>
                     </div>
                     <div class="status-item">
                         <div class="status-indicator success"></div>
                         <div class="status-text">
                             <strong>Voice Agent API</strong>
-                            <small>Betriebsbereit - 342 Gespräche heute</small>
-                        </div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-indicator warning"></div>
-                        <div class="status-text">
-                            <strong>Workflow-Automatisierung</strong>
-                            <small>Erhöhte Auslastung - 87 aktive Workflows</small>
-                        </div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-indicator success"></div>
-                        <div class="status-text">
-                            <strong>Datenbank</strong>
-                            <small>Optimal - Letzte Sicherung: Heute, 03:00 Uhr</small>
-                        </div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-indicator success"></div>
-                        <div class="status-text">
-                            <strong>CRM-Integration</strong>
-                            <small>Synchronisiert - Alle Systeme verbunden</small>
+                            <small>ElevenLabs — Status nicht abrufbar</small>
                         </div>
                     </div>
                 </div>
@@ -240,28 +242,13 @@
                 <div class="content-card">
                     <h2>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
                         </svg>
-                        Quick Stats
+                        Neuste Tickets
                     </h2>
-                    <div class="quick-stats">
-                        <div class="quick-stat">
-                            <div class="quick-stat-value">94.2%</div>
-                            <div class="quick-stat-label">Uptime</div>
-                        </div>
-                        <div class="quick-stat">
-                            <div class="quick-stat-value">1,247</div>
-                            <div class="quick-stat-label">Minuten heute</div>
-                        </div>
-                        <div class="quick-stat">
-                            <div class="quick-stat-value">87</div>
-                            <div class="quick-stat-label">Workflows</div>
-                        </div>
-                        <div class="quick-stat">
-                            <div class="quick-stat-value">152ms</div>
-                            <div class="quick-stat-label">Avg. Latenz</div>
-                        </div>
-                    </div>
+                    <ul class="activity-feed" id="recent-tickets-feed">
+                        <li class="activity-item"><div class="activity-content"><p style="color: rgba(225,232,237,0.5)">Wird geladen...</p></div></li>
+                    </ul>
                 </div>
             </div>
 
@@ -273,67 +260,8 @@
                     </svg>
                     Letzte Aktivitäten
                 </h2>
-                <ul class="activity-feed">
-                    <li class="activity-item">
-                        <div class="activity-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                        </div>
-                        <div class="activity-content">
-                            <strong>Neuer Kunde registriert</strong>
-                            <p>MaxTech GmbH hat sich für den Professional Plan angemeldet</p>
-                        </div>
-                        <div class="activity-time">Vor 5 Min</div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-                            </svg>
-                        </div>
-                        <div class="activity-content">
-                            <strong>Leads Bot: Neue Konversation</strong>
-                            <p>42 neue Leads erfasst und kategorisiert</p>
-                        </div>
-                        <div class="activity-time">Vor 12 Min</div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/>
-                            </svg>
-                        </div>
-                        <div class="activity-content">
-                            <strong>Workflow erfolgreich ausgeführt</strong>
-                            <p>"Email-Automation-Serie" für 127 Kontakte abgeschlossen</p>
-                        </div>
-                        <div class="activity-time">Vor 23 Min</div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                            </svg>
-                        </div>
-                        <div class="activity-content">
-                            <strong>System-Update durchgeführt</strong>
-                            <p>Security Patch v2.4.1 erfolgreich installiert</p>
-                        </div>
-                        <div class="activity-time">Vor 1 Std</div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                            </svg>
-                        </div>
-                        <div class="activity-content">
-                            <strong>Monatlicher Analytics-Report generiert</strong>
-                            <p>Performance-Bericht für November erstellt</p>
-                        </div>
-                        <div class="activity-time">Vor 2 Std</div>
-                    </li>
+                <ul class="activity-feed" id="recent-customers-feed">
+                    <li class="activity-item"><div class="activity-content"><p style="color: rgba(225,232,237,0.5)">Wird geladen...</p></div></li>
                 </ul>
             </div>
         </main>
@@ -377,6 +305,7 @@
         import { Sidebar } from '../assets/js/components/Sidebar.js';
         import '../assets/js/components/Modal.js';
         import { initDashboard } from '../assets/js/dashboard.js';
+        import { loadDashboardStats, loadSystemStatus } from '../assets/js/admin-dashboard-stats.js';
 
         // Initialize components
         document.addEventListener('DOMContentLoaded', async () => {
@@ -385,6 +314,10 @@
 
             // Initialize admin dashboard with role check
             await initDashboard('admin');
+
+            // Load real Firestore stats + system status
+            loadDashboardStats();
+            loadSystemStatus();
         });
     </script>
 </body>

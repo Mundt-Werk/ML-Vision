@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Kalkulator - ML Vision Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- Refactored CSS -->
+    <link rel="stylesheet" href="../../assets/css/base/variables.css">
+    <link rel="stylesheet" href="../../assets/css/base/reset.css">
+    <link rel="stylesheet" href="../../assets/css/base/typography.css">
+    <link rel="stylesheet" href="../../assets/css/components/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/components/modal.css">
+    <link rel="stylesheet" href="../../assets/css/components/buttons.css">
+    <link rel="stylesheet" href="../../assets/css/components/forms.css">
+    <link rel="stylesheet" href="../../assets/css/layouts/admin-layout.css">
+    <link rel="stylesheet" href="../../assets/css/pages/pricing-calculator.css">
+    <link rel="stylesheet" href="../../assets/css/utilities/responsive.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision Logo">
+                <div class="admin-badge-sidebar">ADMIN</div>
+            </div>
+
+            <div class="sidebar-section-title">Verwaltung</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="../dashboard.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Benutzerverwaltung
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Kunden
+                    </a>
+                </li>
+                <li>
+                    <a href="tickets.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                        </svg>
+                        Support-Tickets
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Tools</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="leads-bot.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
+                        </svg>
+                        Leads Bot
+                    </a>
+                </li>
+                <li>
+                    <a href="pricing-calculator.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                        Pricing Kalkulator
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">System</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="settings.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Einstellungen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn">Abmelden</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1>Pricing Kalkulator</h1>
+                <p>Berechne Projektkosten für KI-Lösungen — sofort, für jeden Kunden</p>
+            </div>
+
+            <!-- Exchange Rate + Price Warning -->
+            <div class="exchange-bar">
+                <span class="exchange-bar-label">Wechselkurs</span>
+                <div class="exchange-bar-input-wrap">
+                    <span>1 USD =</span>
+                    <input type="number" id="exchangeRate" class="exchange-rate-input"
+                        step="0.01" min="0.01" value="0.92">
+                    <span>EUR</span>
+                </div>
+                <span class="exchange-bar-date">Preise verifiziert: <strong id="pricesLastUpdated">März 2026</strong></span>
+            </div>
+
+            <div class="price-warning" id="priceWarning">
+                <i data-lucide="alert-triangle" class="price-warning-icon"></i>
+                <span>Die Preisdaten sind <strong id="priceWarningDays">90</strong>+ Tage alt. Bitte vor wichtigen Angeboten kurz verifizieren!</span>
+            </div>
+
+            <!-- SCHRITT 1: Bundle wählen -->
+            <div class="calc-container">
+                <div class="calc-section-title">Schritt 1 — Bundle wählen</div>
+                <div class="bundle-tabs" id="bundleTabs">
+                    <!-- Dynamisch befüllt -->
+                </div>
+                <p class="bundle-description" id="bundleDescription"></p>
+
+                <!-- SCHRITT 2: Volumen eingeben -->
+                <div class="calc-section-title">Schritt 2 — Volumen eingeben</div>
+                <div class="form-row" id="inputFields">
+                    <!-- Dynamisch befüllt -->
+                </div>
+
+                <!-- Stack Selector (optional, nur für Telefonbot) -->
+                <div id="stackSelector"></div>
+            </div>
+
+            <!-- SCHRITT 3: Einmalkosten (Setup) -->
+            <div class="calc-container" id="setupCostSection">
+                <div class="calc-section-title">Schritt 3 — Einmalkosten & Anfahrt <span class="optional-badge">optional</span></div>
+                <p class="bundle-description">Setup-Aufwand und Reisekosten — werden einmalig berechnet, separat im Angebot ausgewiesen.</p>
+
+                <div class="setup-grid">
+                    <div class="form-group">
+                        <label for="hourlyRate">Unser Stundensatz (intern, €)</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hourlyRate" value="90" min="0" step="5" oninput="updateSetup()">
+                            <span class="input-unit">€/h</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hoursKonzept">Konzeption & Beratung (h)</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hoursKonzept" value="3" min="0" step="0.5" oninput="updateSetup()">
+                            <span class="input-unit">h</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hoursDev">Entwicklung & Konfiguration (h)</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hoursDev" value="10" min="0" step="0.5" oninput="updateSetup()">
+                            <span class="input-unit">h</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hoursTesting">Testing & Einweisung (h)</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="hoursTesting" value="2" min="0" step="0.5" oninput="updateSetup()">
+                            <span class="input-unit">h</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anfahrt Toggle -->
+                <div class="anfahrt-toggle-row">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="anfahrtEnabled" onchange="toggleAnfahrt(this.checked)">
+                        <span class="toggle-text">Anfahrt berechnen</span>
+                    </label>
+                </div>
+
+                <div id="anfahrtSection" style="display:none">
+                    <div class="setup-grid">
+                        <div class="form-group">
+                            <label for="anfahrtKm">Einfache Strecke (km)</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="anfahrtKm" value="280" min="0" oninput="updateSetup()">
+                                <span class="input-unit">km</span>
+                            </div>
+                            <small class="field-hint">Beispiel: Leipzig ~280 km (einfach)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="kmSatz">km-Pauschale (€/km)</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="kmSatz" value="0.35" min="0" step="0.01" oninput="updateSetup()">
+                                <span class="input-unit">€/km</span>
+                            </div>
+                            <small class="field-hint">Steuerlich anerkannt 2025: €0,35/km</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="fahrzeitStunden">Fahrtzeit einfach (h)</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="fahrzeitStunden" value="2.5" min="0" step="0.5" oninput="updateSetup()">
+                                <span class="input-unit">h</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="uebernachtung" onchange="updateSetup()">
+                                <span>Übernachtung nötig (€120 pauschal)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="anfahrt-result" id="anfahrtResult">
+                        <!-- Anfahrt-Aufschlüsselung -->
+                    </div>
+                </div>
+
+                <div class="setup-total-row">
+                    <span class="setup-total-label">Einmalkosten gesamt (Netto)</span>
+                    <span class="setup-total-value" id="setupTotalNetto">€0,00</span>
+                </div>
+            </div>
+
+            <!-- ERGEBNIS -->
+            <div class="results-panel">
+                <div class="results-header">
+                    <h2>Unsere Kosten</h2>
+                    <div class="total-display">
+                        <div class="total-usd" id="totalUSD">$0.00</div>
+                        <div class="total-eur" id="totalEUR">~€0,00</div>
+                    </div>
+                </div>
+
+                <div class="breakdown" id="breakdown">
+                    <!-- Dynamisch befüllt -->
+                </div>
+
+                <div class="plan-recommendation" id="planRecommendation" style="display:none">
+                    <span class="plan-label">Empfehlung</span>
+                    <span class="plan-text"></span>
+                </div>
+            </div>
+
+            <!-- KUNDENPREIS -->
+            <div class="customer-panel">
+                <h2>Kundenpreis</h2>
+
+                <div class="margin-row">
+                    <label for="marginSlider">Marge</label>
+                    <div class="range-slider-container">
+                        <input type="range" id="marginSlider" min="0" max="80" value="40" step="5">
+                    </div>
+                    <span class="margin-value" id="marginValue">40%</span>
+                </div>
+
+                <div class="price-grid">
+                    <div class="price-card customer">
+                        <div class="price-card-label">Empfohlener Kundenpreis</div>
+                        <div class="price-card-value" id="customerPrice">€0,00</div>
+                    </div>
+                    <div class="price-card profit">
+                        <div class="price-card-label">Unser Gewinn</div>
+                        <div class="price-card-value" id="ourProfit">€0,00</div>
+                    </div>
+                </div>
+
+                <!-- Brutto / Netto -->
+                <div class="mwst-panel">
+                    <div class="mwst-row">
+                        <span>Monatliche Kosten (Netto)</span>
+                        <span id="monthlyNetto">€0,00</span>
+                    </div>
+                    <div class="mwst-row setup-row" id="setupMwstRow" style="display:none">
+                        <span>Einmalkosten (Netto)</span>
+                        <span id="setupNettoDisplay">€0,00</span>
+                    </div>
+                    <div class="mwst-row mwst-line">
+                        <span>zzgl. 19% MwSt.</span>
+                        <span id="mwstBetrag">€0,00</span>
+                    </div>
+                    <div class="mwst-row brutto-line">
+                        <span>Kundenpreis <strong>Brutto</strong> (monatlich)</span>
+                        <span id="customerPriceBrutto">€0,00</span>
+                    </div>
+                    <div class="mwst-row brutto-setup-line" id="setupBruttoRow" style="display:none">
+                        <span>Einmalkosten <strong>Brutto</strong></span>
+                        <span id="setupBruttoDisplay">€0,00</span>
+                    </div>
+                </div>
+
+                <div class="calc-actions">
+                    <button class="btn-copy" id="copyBtn" onclick="copyToClipboard()">
+                        <i data-lucide="clipboard"></i> In Zwischenablage
+                    </button>
+                    <button class="btn-copy btn-sevdesk" id="sevdeskBtn" onclick="copyForSevdesk()">
+                        <i data-lucide="file-text"></i> Sevdesk-Format
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../assets/js/pricing-calculator.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+        });
+    </script>
+
+    <!-- Mobile Sidebar Toggle -->
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle  = document.querySelector('.mobile-menu-toggle');
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
+
+    <!-- Firebase Authentication & Logout -->
+    <script type="module">
+        import { Sidebar }    from '../../assets/js/components/Sidebar.js';
+        import '../../assets/js/components/Modal.js';
+        import { initDashboard } from '../../assets/js/dashboard.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            new Sidebar('sidebar');
+            await initDashboard('admin');
+        });
+    </script>
+</body>
+</html>

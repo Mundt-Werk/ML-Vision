@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>Digitale Lösungen für Gastronomie | ML Vision</title>
+    <meta name="description" content="ML Vision hilft Restaurants, Cafés und Gastronomiebetrieben, Anfragen zu strukturieren, Abläufe zu automatisieren und digital professioneller aufgestellt zu sein. Kostenloses Erstgespräch.">
+    <meta name="keywords" content="Gastronomie Digitalisierung, Restaurant Automatisierung, Café Digitalisierung, KI Gastronomie, Reservierungssystem, Anfragen automatisieren, ML Vision">
+    <meta name="author" content="ML Vision">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://vision-ml.de/public/gastronomie.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vision-ml.de/public/gastronomie.html">
+    <meta property="og:title" content="Digitale Lösungen für Gastronomie | ML Vision">
+    <meta property="og:description" content="Mehr Zeit für Gäste. Weniger Chaos im Hintergrund. ML Vision hilft Gastronomiebetrieben mit KI, Automatisierung und modernen digitalen Prozessen.">
+    <meta property="og:image" content="https://vision-ml.de/assets/img/logo_white_trans.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/img/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/apple-touch-icon.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <!-- Turnstile -->
+    <script>
+    window.turnstileToken = null;
+    window.onTurnstileSuccess = function(token) {
+        window.turnstileToken = token;
+    };
+    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+    <script src="../assets/js/script.js" defer></script>
+
+    <!-- Gastro-spezifisches Design-Override -->
+    <style>
+        /* ── GASTRO FARB-PALETTE ─────────────────────────────── */
+        :root {
+            --g-bg:        #0F1115;
+            --g-bg2:       #171A20;
+            --g-bg3:       #1E2228;
+            --g-txt:       #F5F1E8;
+            --g-txt-soft:  #B8B1A4;
+            --g-bronze:    #B8845E;
+            --g-bronze-dk: #9E6E4A;
+            --g-bronze-lt: rgba(184,132,94,0.12);
+            --g-bronze-glow: rgba(184,132,94,0.28);
+            --g-sand:      #D8C7AE;
+            --g-tech:      #6FC2B0;
+            --g-border:    rgba(184,132,94,0.18);
+            --g-border-soft: rgba(255,255,255,0.07);
+        }
+
+        /* Accent-Override für diese Seite */
+        .g-page { --accent: #B8845E; --accent-dk: #9E6E4A; --accent-lt: rgba(184,132,94,0.12); --accent-glow: rgba(184,132,94,0.28); }
+
+        /* ── BASE ─────────────────────────────────────────────── */
+        .g-page {
+            background: var(--g-bg);
+            color: var(--g-txt);
+        }
+        .g-page .nav { background: rgba(15,17,21,0.85); border-bottom-color: var(--g-border-soft); }
+        .g-page .btn-primary { background: var(--g-bronze); box-shadow: 0 4px 20px var(--g-bronze-glow); }
+        .g-page .btn-primary:hover { background: var(--g-bronze-dk); box-shadow: 0 8px 32px var(--g-bronze-glow); }
+        .g-page .eyebrow { color: var(--g-bronze); }
+
+        /* ── SECTION BASE ─────────────────────────────────────── */
+        .g-section {
+            padding: 100px 0;
+        }
+        .g-section--alt { background: var(--g-bg2); }
+        .g-section--dark { background: var(--g-bg); }
+        .g-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .g-section-header {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 64px;
+        }
+        .g-section-header h2 {
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+            color: var(--g-txt);
+            margin-bottom: 16px;
+        }
+        .g-section-header p {
+            font-size: 18px;
+            color: var(--g-txt-soft);
+            line-height: 1.7;
+        }
+
+        /* ── HERO ─────────────────────────────────────────────── */
+        .g-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--g-bg);
+            padding: 120px 0 80px;
+        }
+        .g-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 80% 40%, rgba(184,132,94,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 60% at 10% 80%, rgba(111,194,176,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 80% 40% at 50% -20%, rgba(184,132,94,0.07) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        /* Decorative grid lines */
+        .g-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 75%);
+        }
+        .g-hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+        .g-hero-text {}
+        .g-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--g-bronze-lt);
+            border: 1px solid var(--g-border);
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--g-bronze);
+            margin-bottom: 28px;
+        }
+        .g-hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--g-bronze); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.8); } }
+
+        .g-hero h1 {
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+            color: var(--g-txt);
+            margin-bottom: 24px;
+        }
+        .g-hero h1 em {
+            font-style: normal;
+            color: var(--g-bronze);
+        }
+        .g-hero-sub {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--g-txt-soft);
+            margin-bottom: 40px;
+            max-width: 520px;
+        }
+        .g-hero-cta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .g-hero-trust {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-top: 48px;
+            flex-wrap: wrap;
+        }
+        .g-hero-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--g-txt-soft);
+        }
+        .g-hero-trust-item svg { color: var(--g-bronze); flex-shrink: 0; }
+
+        /* Hero Visual */
+        .g-hero-visual {
+            position: relative;
+        }
+        .g-hero-mockup {
+            background: var(--g-bg2);
+            border: 1px solid var(--g-border-soft);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .g-mockup-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+        .g-mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .g-mockup-dot:nth-child(1) { background: #FF5F57; }
+        .g-mockup-dot:nth-child(2) { background: #FEBC2E; }
+        .g-mockup-dot:nth-child(3) { background: #28C840; }
+        .g-mockup-title { font-size: 12px; color: var(--g-txt-soft); margin-left: 8px; }
+
+        .g-mockup-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .g-mockup-stat {
+            background: var(--g-bg3);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+        .g-mockup-stat-num { font-size: 24px; font-weight: 800; color: var(--g-bronze); line-height: 1; }
+        .g-mockup-stat-lbl { font-size: 10px; color: var(--g-txt-soft); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .g-mockup-list { display: flex; flex-direction: column; gap: 8px; }
+        .g-mockup-item {
+            background: var(--g-bg3);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--g-txt-soft);
+        }
+        .g-mockup-item-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .g-mockup-item-dot--green { background: #4ADE80; }
+        .g-mockup-item-dot--bronze { background: var(--g-bronze); }
+        .g-mockup-item-dot--blue { background: var(--g-tech); }
+        .g-mockup-item span:last-child { margin-left: auto; font-size: 11px; color: var(--g-txt-soft); opacity: 0.6; }
+
+        /* Floating Cards */
+        .g-float-card {
+            position: absolute;
+            z-index: 10;
+            background: rgba(23,26,32,0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--g-border);
+            border-radius: 14px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--g-txt);
+            white-space: nowrap;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(184,132,94,0.1);
+        }
+        .g-float-card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .g-float-card-icon--bronze { background: var(--g-bronze-lt); color: var(--g-bronze); }
+        .g-float-card-icon--tech { background: rgba(111,194,176,0.1); color: var(--g-tech); }
+        .g-float-card-icon--green { background: rgba(74,222,128,0.1); color: #4ADE80; }
+        .g-float-card--1 { top: -20px; right: -20px; animation: g-float1 3s ease-in-out infinite; }
+        .g-float-card--2 { bottom: 60px; left: -30px; animation: g-float2 3.5s ease-in-out infinite; }
+        .g-float-card--3 { bottom: -10px; right: 30px; animation: g-float3 4s ease-in-out infinite; }
+        @keyframes g-float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        @keyframes g-float2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+        @keyframes g-float3 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+        /* ── PROBLEM SECTION ─────────────────────────────────── */
+        .g-problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .g-problem-card {
+            background: var(--g-bg2);
+            border: 1px solid var(--g-border-soft);
+            border-radius: 16px;
+            padding: 28px;
+            transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+        .g-problem-card:hover {
+            border-color: var(--g-bronze);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(184,132,94,0.1);
+        }
+        .g-problem-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--g-bronze-lt);
+            color: var(--g-bronze);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .g-problem-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--g-txt);
+            margin-bottom: 8px;
+        }
+        .g-problem-card p {
+            font-size: 14px;
+            color: var(--g-txt-soft);
+            line-height: 1.6;
+        }
+
+        /* ── LÖSUNG SECTION ──────────────────────────────────── */
+        .g-solution-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .g-solution-block {
+            background: var(--g-bg2);
+            border: 1px solid var(--g-border-soft);
+            border-radius: 20px;
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .g-solution-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--g-bronze), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .g-solution-block:hover::before { opacity: 1; }
+        .g-solution-block:hover { border-color: var(--g-bronze); box-shadow: 0 16px 48px rgba(184,132,94,0.08); }
+        .g-solution-num {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--g-bronze);
+            opacity: 0.25;
+            line-height: 1;
+            margin-bottom: 16px;
+            font-variant-numeric: tabular-nums;
+        }
+        .g-solution-block h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--g-txt);
+            margin-bottom: 12px;
+        }
+        .g-solution-block p {
+            font-size: 15px;
+            color: var(--g-txt-soft);
+            line-height: 1.7;
+        }
+        .g-solution-cta {
+            text-align: center;
+            margin-top: 48px;
+        }
+
+        /* ── NUTZEN SECTION ──────────────────────────────────── */
+        .g-benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .g-benefit-card {
+            background: var(--g-bg);
+            border: 1px solid var(--g-border-soft);
+            border-radius: 16px;
+            padding: 28px;
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .g-benefit-card:hover {
+            border-color: rgba(184,132,94,0.4);
+            box-shadow: 0 8px 32px rgba(184,132,94,0.1);
+            transform: translateY(-3px);
+        }
+        .g-benefit-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--g-bronze-lt);
+            color: var(--g-bronze);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .g-benefit-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--g-txt);
+            margin-bottom: 10px;
+        }
+        .g-benefit-card p {
+            font-size: 14px;
+            color: var(--g-txt-soft);
+            line-height: 1.65;
+        }
+
+        /* ── USE CASES ────────────────────────────────────────── */
+        .g-usecase-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .g-usecase-card {
+            background: var(--g-bg2);
+            border: 1px solid var(--g-border-soft);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+        }
+        .g-usecase-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--g-bronze);
+            background: var(--g-bronze-lt);
+            border-radius: 20px;
+            padding: 4px 12px;
+            margin-bottom: 16px;
+        }
+        .g-usecase-card h3 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--g-txt);
+            margin-bottom: 12px;
+        }
+        .g-usecase-card p {
+            font-size: 15px;
+            color: var(--g-txt-soft);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .g-usecase-flow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .g-usecase-step {
+            background: var(--g-bg3);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: var(--g-txt-soft);
+        }
+        .g-usecase-arrow { color: var(--g-bronze); font-size: 14px; }
+        .g-usecase-step--highlight {
+            background: var(--g-bronze-lt);
+            color: var(--g-bronze);
+            font-weight: 600;
+        }
+
+        /* ── WARUM ML VISION ─────────────────────────────────── */
+        .g-why-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .g-why-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: var(--g-bg2);
+            border: 1px solid var(--g-border-soft);
+            border-radius: 16px;
+            padding: 24px;
+            transition: border-color 0.3s;
+        }
+        .g-why-item:hover { border-color: var(--g-bronze); }
+        .g-why-check {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--g-bronze-lt);
+            color: var(--g-bronze);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .g-why-item h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--g-txt);
+            margin-bottom: 6px;
+        }
+        .g-why-item p {
+            font-size: 14px;
+            color: var(--g-txt-soft);
+            line-height: 1.6;
+        }
+        .g-why-statement {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 56px;
+        }
+        .g-why-statement p {
+            font-size: 18px;
+            color: var(--g-txt-soft);
+            line-height: 1.7;
+        }
+
+        /* ── PROZESS ─────────────────────────────────────────── */
+        .g-process-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            position: relative;
+        }
+        .g-process-steps::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--g-bronze), var(--g-bronze), transparent);
+            opacity: 0.3;
+        }
+        .g-process-step {
+            text-align: center;
+            padding: 0 16px;
+            position: relative;
+        }
+        .g-process-num {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--g-bronze-lt);
+            border: 1px solid var(--g-bronze);
+            color: var(--g-bronze);
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .g-process-step h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--g-txt);
+            margin-bottom: 10px;
+        }
+        .g-process-step p {
+            font-size: 14px;
+            color: var(--g-txt-soft);
+            line-height: 1.6;
+        }
+
+        /* ── FAQ ─────────────────────────────────────────────── */
+        .g-faq-list {
+            max-width: 760px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .g-faq-item {
+            background: var(--g-bg2);
+            border: 1px solid var(--g-border-soft);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        .g-faq-item.open { border-color: var(--g-bronze); }
+        .g-faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .g-faq-question h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--g-txt);
+        }
+        .g-faq-toggle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--g-bronze-lt);
+            color: var(--g-bronze);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .g-faq-item.open .g-faq-toggle { transform: rotate(45deg); background: var(--g-bronze); color: white; }
+        .g-faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s var(--ease-out), padding 0.3s;
+            padding: 0 24px;
+        }
+        .g-faq-item.open .g-faq-answer { max-height: 200px; padding: 0 24px 20px; }
+        .g-faq-answer p {
+            font-size: 15px;
+            color: var(--g-txt-soft);
+            line-height: 1.7;
+        }
+
+        /* ── CTA SECTION ─────────────────────────────────────── */
+        .g-cta-section {
+            background: var(--g-bg2);
+            position: relative;
+            overflow: hidden;
+        }
+        .g-cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(184,132,94,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .g-cta-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 64px;
+        }
+        .g-cta-content h2 {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--g-txt);
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        .g-cta-content p {
+            font-size: 17px;
+            color: var(--g-txt-soft);
+            line-height: 1.7;
+        }
+
+        /* ── FORM ────────────────────────────────────────────── */
+        .g-form-wrap {
+            max-width: 640px;
+            margin: 0 auto;
+            background: var(--g-bg);
+            border: 1px solid var(--g-border);
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .g-form-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--g-txt);
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        .g-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .g-form-field {
+            margin-bottom: 12px;
+        }
+        .g-form-wrap input,
+        .g-form-wrap select,
+        .g-form-wrap textarea {
+            width: 100%;
+            background: var(--g-bg2);
+            border: 1px solid var(--g-border-soft);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--g-txt);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .g-form-wrap input::placeholder,
+        .g-form-wrap textarea::placeholder {
+            color: var(--g-txt-soft);
+            opacity: 0.6;
+        }
+        .g-form-wrap select {
+            appearance: none;
+            cursor: pointer;
+            color: var(--g-txt-soft);
+        }
+        .g-form-wrap select option { background: var(--g-bg2); color: var(--g-txt); }
+        .g-form-wrap input:focus,
+        .g-form-wrap select:focus,
+        .g-form-wrap textarea:focus {
+            border-color: var(--g-bronze);
+            box-shadow: 0 0 0 3px var(--g-bronze-lt);
+        }
+        .g-form-wrap textarea { resize: vertical; min-height: 100px; }
+
+        .g-form-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .g-form-check input[type="checkbox"] { flex-shrink: 0; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--g-bronze); cursor: pointer; }
+        .g-form-check label { font-size: 13px; color: var(--g-txt-soft); line-height: 1.5; cursor: pointer; }
+        .g-form-check a { color: var(--g-bronze); }
+
+        .g-form-required { font-size: 12px; color: var(--g-txt-soft); opacity: 0.6; margin-bottom: 16px; }
+
+        .g-form-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--g-bronze);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px var(--g-bronze-glow);
+        }
+        .g-form-submit:hover { background: var(--g-bronze-dk); transform: translateY(-2px); box-shadow: 0 8px 32px var(--g-bronze-glow); }
+        .g-form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .g-form-success {
+            display: none;
+            text-align: center;
+            padding: 32px;
+        }
+        .g-form-success-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(74,222,128,0.1);
+            color: #4ADE80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+        }
+        .g-form-success h3 { font-size: 20px; font-weight: 700; color: var(--g-txt); margin-bottom: 8px; }
+        .g-form-success p { font-size: 15px; color: var(--g-txt-soft); }
+        .g-form-error { display: none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; font-size: 14px; color: #f87171; }
+
+        /* ── FOOTER ──────────────────────────────────────────── */
+        .g-page .footer { background: #0A0C10; border-top-color: var(--g-border-soft); }
+
+        /* ── RESPONSIVE ──────────────────────────────────────── */
+        @media (max-width: 1024px) {
+            .g-hero-inner { grid-template-columns: 1fr; gap: 48px; }
+            .g-hero-visual { order: -1; max-width: 500px; margin: 0 auto; }
+            .g-process-steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+            .g-process-steps::before { display: none; }
+        }
+        @media (max-width: 768px) {
+            .g-section { padding: 64px 0; }
+            .g-problem-grid { grid-template-columns: repeat(2, 1fr); }
+            .g-solution-grid { grid-template-columns: 1fr; }
+            .g-benefit-grid { grid-template-columns: repeat(2, 1fr); }
+            .g-usecase-grid { grid-template-columns: 1fr; }
+            .g-why-grid { grid-template-columns: 1fr; }
+            .g-process-steps { grid-template-columns: 1fr; }
+            .g-form-row { grid-template-columns: 1fr; }
+            .g-form-wrap { padding: 28px 20px; }
+            .g-float-card--2 { display: none; }
+        }
+        @media (max-width: 480px) {
+            .g-problem-grid { grid-template-columns: 1fr; }
+            .g-benefit-grid { grid-template-columns: 1fr; }
+            .g-hero-cta { flex-direction: column; align-items: flex-start; }
+        }
+
+        /* ── ACCESSIBILITY ───────────────────────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+            .g-float-card, .g-hero::before, * { animation: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+<body class="no-js g-page">
+
+<!-- ═══════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+    <div class="nav-inner">
+        <a href="../index.html" class="nav-logo">
+            <img src="../assets/img/logo_white_trans.png" alt="ML Vision" id="navLogoImg">
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <div class="nav-center">
+                <a href="#problem" onclick="toggleMenu()">Herausforderungen</a>
+                <a href="#loesung" onclick="toggleMenu()">Leistungen</a>
+                <a href="#prozess" onclick="toggleMenu()">Ablauf</a>
+                <a href="#faq" onclick="toggleMenu()">FAQ</a>
+            </div>
+            <div class="nav-mobile-footer">
+                <a href="#kontakt" class="btn-primary btn-sm" onclick="toggleMenu()">Erstgespräch anfragen</a>
+                <a href="login.html" class="btn-outline btn-sm">LogIn</a>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a href="#kontakt" class="btn-primary btn-sm nav-cta">Erstgespräch anfragen</a>
+            <a href="login.html" class="btn-outline btn-sm">LogIn</a>
+        </div>
+        <button class="burger-menu" id="burgerBtn" onclick="toggleMenu()" aria-label="Menü öffnen">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     1. HERO
+══════════════════════════════════════════════════ -->
+<section class="g-hero" id="home">
+    <div class="g-hero-inner">
+        <!-- Text -->
+        <div class="g-hero-text scroll-reveal">
+            <div class="g-hero-badge">
+                <span></span>
+                Digitale Lösungen für Gastronomie
+            </div>
+            <h1>
+                Weniger Chaos<br>im Hintergrund.<br>
+                <em>Mehr Fokus auf<br>Gäste und Umsatz.</em>
+            </h1>
+            <p class="g-hero-sub">
+                ML Vision hilft Restaurants, Cafés und Gastronomiebetrieben dabei, Anfragen zu strukturieren, Abläufe zu automatisieren und digital professioneller aufgestellt zu sein.
+            </p>
+            <div class="g-hero-cta">
+                <a href="#kontakt" class="btn-primary btn-lg">Kostenloses Erstgespräch</a>
+                <a href="#loesung" class="btn-ghost btn-lg">Leistungen ansehen</a>
+            </div>
+            <div class="g-hero-trust">
+                <div class="g-hero-trust-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Für Restaurants, Cafés & Bars
+                </div>
+                <div class="g-hero-trust-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Individuelle Lösungen
+                </div>
+                <div class="g-hero-trust-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Unverbindliches Erstgespräch
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual -->
+        <div class="g-hero-visual scroll-reveal">
+            <!-- Floating Cards -->
+            <div class="g-float-card g-float-card--1">
+                <div class="g-float-card-icon g-float-card-icon--green">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight:600;font-size:11px;">Reservierungsanfrage</div>
+                    <div style="color:var(--g-txt-soft);font-size:10px;">automatisch erfasst</div>
+                </div>
+            </div>
+
+            <div class="g-float-card g-float-card--2">
+                <div class="g-float-card-icon g-float-card-icon--bronze">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight:600;font-size:11px;">Bewerbung weitergeleitet</div>
+                    <div style="color:var(--g-txt-soft);font-size:10px;">an richtigen Ansprechpartner</div>
+                </div>
+            </div>
+
+            <div class="g-float-card g-float-card--3">
+                <div class="g-float-card-icon g-float-card-icon--tech">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight:600;font-size:11px;">Event-Anfrage angelegt</div>
+                    <div style="color:var(--g-txt-soft);font-size:10px;">strukturiert im System</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Mockup -->
+            <div class="g-hero-mockup">
+                <div class="g-mockup-bar">
+                    <div class="g-mockup-dot"></div>
+                    <div class="g-mockup-dot"></div>
+                    <div class="g-mockup-dot"></div>
+                    <span class="g-mockup-title">Gastro Dashboard – Übersicht</span>
+                </div>
+                <div class="g-mockup-stats">
+                    <div class="g-mockup-stat">
+                        <div class="g-mockup-stat-num">47</div>
+                        <div class="g-mockup-stat-lbl">Anfragen / Monat</div>
+                    </div>
+                    <div class="g-mockup-stat">
+                        <div class="g-mockup-stat-num">3h</div>
+                        <div class="g-mockup-stat-lbl">Zeit gespart / Tag</div>
+                    </div>
+                    <div class="g-mockup-stat">
+                        <div class="g-mockup-stat-num">0</div>
+                        <div class="g-mockup-stat-lbl">Verpasste Leads</div>
+                    </div>
+                </div>
+                <div class="g-mockup-list">
+                    <div class="g-mockup-item">
+                        <div class="g-mockup-item-dot g-mockup-item-dot--green"></div>
+                        Reservierung Tisch 8 – Freitag 20 Uhr (6 Pers.)
+                        <span>gerade eben</span>
+                    </div>
+                    <div class="g-mockup-item">
+                        <div class="g-mockup-item-dot g-mockup-item-dot--bronze"></div>
+                        Firmen-Event Anfrage – 15. April (30 Pers.)
+                        <span>vor 4 Min.</span>
+                    </div>
+                    <div class="g-mockup-item">
+                        <div class="g-mockup-item-dot g-mockup-item-dot--blue"></div>
+                        Bewerbung Koch – automatisch sortiert
+                        <span>vor 12 Min.</span>
+                    </div>
+                    <div class="g-mockup-item">
+                        <div class="g-mockup-item-dot g-mockup-item-dot--green"></div>
+                        Geburtstag Anfrage – Samstag, 25 Pers.
+                        <span>vor 1 Std.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     2. PROBLEM SECTION
+══════════════════════════════════════════════════ -->
+<section class="g-section" id="problem">
+    <div class="g-container">
+        <div class="g-section-header scroll-reveal">
+            <span class="eyebrow">Kommt dir das bekannt vor?</span>
+            <h2>Im Gastro-Alltag geht Energie nicht verloren – sondern in unstrukturierten Abläufen</h2>
+            <p>Zwischen Service, Personal, Lieferanten, Reservierungen, Events, Social Media und spontanen Rückfragen bleibt für saubere Prozesse oft keine Zeit.</p>
+        </div>
+        <div class="g-problem-grid">
+            <div class="g-problem-card scroll-reveal">
+                <div class="g-problem-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3>Anfragen auf 5 Kanälen gleichzeitig</h3>
+                <p>WhatsApp, Instagram, E-Mail, Telefon und Website – jeder Kanal läuft separat, nichts ist strukturiert.</p>
+            </div>
+            <div class="g-problem-card scroll-reveal">
+                <div class="g-problem-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <h3>Reservierungen und Events unübersichtlich</h3>
+                <p>Anfragen kommen rein, landen im Postfach oder auf Zetteln – und gehen oft unter.</p>
+            </div>
+            <div class="g-problem-card scroll-reveal">
+                <div class="g-problem-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <h3>Zu viele manuelle Routinen</h3>
+                <p>Mitarbeitende verbringen wertvolle Zeit mit Weiterleiten, Tippen, Kopieren und Suchen.</p>
+            </div>
+            <div class="g-problem-card scroll-reveal">
+                <div class="g-problem-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h3>Wichtige Kontakte gehen verloren</h3>
+                <p>Anfragen werden zu spät bearbeitet oder fallen einfach durch – verlorenes Umsatzpotenzial.</p>
+            </div>
+            <div class="g-problem-card scroll-reveal">
+                <div class="g-problem-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <h3>Website konvertiert nicht</h3>
+                <p>Die Seite sieht vielleicht okay aus – bringt aber kaum echte, strukturierte Anfragen.</p>
+            </div>
+            <div class="g-problem-card scroll-reveal">
+                <div class="g-problem-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <h3>KI klingt spannend, aber wo anfangen?</h3>
+                <p>Automatisierung und KI sind sinnvoll – aber keiner hat Zeit, sich selbst darum zu kümmern.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     3. LÖSUNG SECTION
+══════════════════════════════════════════════════ -->
+<section class="g-section g-section--alt" id="loesung">
+    <div class="g-container">
+        <div class="g-section-header scroll-reveal">
+            <span class="eyebrow">Was wir konkret machen</span>
+            <h2>Digitale Systeme, die deiner Gastronomie wirklich Arbeit abnehmen</h2>
+            <p>Keine Standardlösungen. Wir schauen, wo in deinem Betrieb Reibung entsteht – und bauen daraus etwas, das im Alltag spürbar entlastet.</p>
+        </div>
+        <div class="g-solution-grid">
+            <div class="g-solution-block scroll-reveal">
+                <div class="g-solution-num">01</div>
+                <h3>Anfrage- und Reservierungsprozesse strukturieren</h3>
+                <p>Wir sorgen dafür, dass Anfragen aus Website, Social Media oder anderen Kanälen sauber erfasst, sortiert und an die richtige Stelle weitergeleitet werden – automatisch, ohne manuelle Eingriffe.</p>
+            </div>
+            <div class="g-solution-block scroll-reveal">
+                <div class="g-solution-num">02</div>
+                <h3>Wiederkehrende Aufgaben automatisieren</h3>
+                <p>Ob interne Benachrichtigungen, Formulare, Event-Anfragen, Bewerbungen oder Lead-Erfassung – manuelle Schritte werden reduziert, damit dein Team sich auf das Wesentliche konzentrieren kann.</p>
+            </div>
+            <div class="g-solution-block scroll-reveal">
+                <div class="g-solution-num">03</div>
+                <h3>Moderne Landingpages und digitale Auftritte</h3>
+                <p>Wir gestalten Seiten, die Vertrauen aufbauen, Leistungen klar kommunizieren und Besucher gezielt zur Anfrage führen. Nicht nur eine Visitenkarte – sondern ein aktives Kontaktsystem.</p>
+            </div>
+            <div class="g-solution-block scroll-reveal">
+                <div class="g-solution-num">04</div>
+                <h3>KI sinnvoll im Alltag einsetzen</h3>
+                <p>Nicht als Spielerei, sondern dort wo sie entlastet: Inhalte, Sortierung, Vorqualifizierung, interne Hilfsprozesse und mehr. KI als Werkzeug, das konkret Arbeit abnimmt.</p>
+            </div>
+        </div>
+        <div class="g-solution-cta scroll-reveal">
+            <a href="#kontakt" class="btn-primary btn-lg">Jetzt Potenziale prüfen</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     4. NUTZEN SECTION
+══════════════════════════════════════════════════ -->
+<section class="g-section" id="nutzen">
+    <div class="g-container">
+        <div class="g-section-header scroll-reveal">
+            <span class="eyebrow">Was du davon hast</span>
+            <h2>Weniger manuelle Arbeit. Mehr Struktur. Bessere Reaktionszeiten.</h2>
+        </div>
+        <div class="g-benefit-grid">
+            <div class="g-benefit-card scroll-reveal">
+                <div class="g-benefit-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h3>Zeit sparen</h3>
+                <p>Weniger manuelle Weiterleitung, weniger Sucherei, weniger Doppelerfassung. Zeit, die dein Team für Gäste und Service nutzen kann.</p>
+            </div>
+            <div class="g-benefit-card scroll-reveal">
+                <div class="g-benefit-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <h3>Schneller reagieren</h3>
+                <p>Anfragen landen direkt an der richtigen Stelle und gehen nicht verloren. Schnelle Reaktion schafft Vertrauen bei Gästen.</p>
+            </div>
+            <div class="g-benefit-card scroll-reveal">
+                <div class="g-benefit-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3>Professioneller auftreten</h3>
+                <p>Ein moderner digitaler Auftritt schafft Vertrauen bei Gästen, Bewerbern und Kooperationspartnern.</p>
+            </div>
+            <div class="g-benefit-card scroll-reveal">
+                <div class="g-benefit-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3>Mitarbeiter entlasten</h3>
+                <p>Wiederkehrende Aufgaben werden reduziert, damit das Team sich auf den direkten Gästekontakt konzentrieren kann.</p>
+            </div>
+            <div class="g-benefit-card scroll-reveal">
+                <div class="g-benefit-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <h3>Mehr aus Anfragen machen</h3>
+                <p>Kontakte werden nicht nur gesammelt, sondern sinnvoll verarbeitet. Keine verlorenen Leads mehr.</p>
+            </div>
+            <div class="g-benefit-card scroll-reveal">
+                <div class="g-benefit-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+                <h3>Skalierbare Grundlage schaffen</h3>
+                <p>Saubere digitale Systeme helfen nicht nur heute, sondern auch beim Wachstum deines Betriebs.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     5. USE CASES / PRAXISBEISPIELE
+══════════════════════════════════════════════════ -->
+<section class="g-section g-section--alt" id="beispiele">
+    <div class="g-container">
+        <div class="g-section-header scroll-reveal">
+            <span class="eyebrow">Praxis</span>
+            <h2>So kann das in deinem Betrieb aussehen</h2>
+            <p>Konkrete Beispiele, wie ML Vision Gastronomiebetriebe dabei unterstützt, Abläufe zu verbessern.</p>
+        </div>
+        <div class="g-usecase-grid">
+            <div class="g-usecase-card scroll-reveal">
+                <div class="g-usecase-tag">Event-Anfragen</div>
+                <h3>Geburtstage, Firmenessen und Feiern strukturiert verwalten</h3>
+                <p>Statt E-Mail-Chaos und Zetteln wird jede Anfrage automatisch strukturiert erfasst, intern weitergeleitet und nachverfolgbar gemacht. Kein Anfrage geht mehr verloren.</p>
+                <div class="g-usecase-flow">
+                    <div class="g-usecase-step">Anfrage über Website</div>
+                    <div class="g-usecase-arrow">→</div>
+                    <div class="g-usecase-step g-usecase-step--highlight">Automatisch erfasst</div>
+                    <div class="g-usecase-arrow">→</div>
+                    <div class="g-usecase-step">Team benachrichtigt</div>
+                </div>
+            </div>
+            <div class="g-usecase-card scroll-reveal">
+                <div class="g-usecase-tag">Bewerbungen</div>
+                <h3>Bewerbungen direkt sortiert beim richtigen Ansprechpartner</h3>
+                <p>Bewerbungen kommen über Website oder Social Media rein und landen direkt sortiert beim richtigen Ansprechpartner – ohne Copy-Paste, ohne Zettelwirtschaft.</p>
+                <div class="g-usecase-flow">
+                    <div class="g-usecase-step">Bewerbung eingeht</div>
+                    <div class="g-usecase-arrow">→</div>
+                    <div class="g-usecase-step g-usecase-step--highlight">Automatisch sortiert</div>
+                    <div class="g-usecase-arrow">→</div>
+                    <div class="g-usecase-step">Direkt zugewiesen</div>
+                </div>
+            </div>
+            <div class="g-usecase-card scroll-reveal">
+                <div class="g-usecase-tag">Website als Anfragen-System</div>
+                <h3>Website wird zum aktiven Kontaktpunkt statt zur Visitenkarte</h3>
+                <p>Die Landingpage wird nicht nur zur Visitenkarte, sondern zum aktiven Kontaktpunkt für Reservierungen, Events, Kooperationen oder Bewerbungen.</p>
+                <div class="g-usecase-flow">
+                    <div class="g-usecase-step">Besucher kommt</div>
+                    <div class="g-usecase-arrow">→</div>
+                    <div class="g-usecase-step g-usecase-step--highlight">Gezielte Anfrage</div>
+                    <div class="g-usecase-arrow">→</div>
+                    <div class="g-usecase-step">Lead im System</div>
+                </div>
+            </div>
+            <div class="g-usecase-card scroll-reveal">
+                <div class="g-usecase-tag">Interne Abläufe</div>
+                <h3>Routineprozesse laufen automatisiert statt mündlich</h3>
+                <p>Bestimmte Routineprozesse – z. B. Benachrichtigungen, Übergaben oder Informationssammlung – laufen automatisiert statt mündlich oder chaotisch per WhatsApp.</p>
+                <div class="g-usecase-flow">
+                    <div class="g-usecase-step">Trigger-Ereignis</div>
+                    <div class="g-usecase-arrow">→</div>
+                    <div class="g-usecase-step g-usecase-step--highlight">Automatisch ausgelöst</div>
+                    <div class="g-usecase-arrow">→</div>
+                    <div class="g-usecase-step">Team informiert</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     6. WARUM ML VISION
+══════════════════════════════════════════════════ -->
+<section class="g-section" id="warum">
+    <div class="g-container">
+        <div class="g-section-header scroll-reveal">
+            <span class="eyebrow">Warum ML Vision</span>
+            <h2>Keine Standardlösung. Systeme, die zu deinem Betrieb passen.</h2>
+        </div>
+        <div class="g-why-statement scroll-reveal">
+            <p>Jeder Gastronomiebetrieb arbeitet anders. Deshalb setzen wir nicht einfach irgendein Tool auf, sondern schauen, wo im Alltag wirklich Reibung entsteht – und entwickeln daraus eine Lösung, die praktikabel, modern und sinnvoll ist.</p>
+        </div>
+        <div class="g-why-grid">
+            <div class="g-why-item scroll-reveal">
+                <div class="g-why-check">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <h3>Individuelle statt starre Lösungen</h3>
+                    <p>Kein Baukasten, kein Standardpaket. Wir arbeiten gezielt an deinen konkreten Herausforderungen.</p>
+                </div>
+            </div>
+            <div class="g-why-item scroll-reveal">
+                <div class="g-why-check">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <h3>Technik verständlich statt kompliziert</h3>
+                    <p>Wir erklären, was wir tun – und warum. Kein Fachchinesisch, kein Blindflug.</p>
+                </div>
+            </div>
+            <div class="g-why-item scroll-reveal">
+                <div class="g-why-check">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <h3>Fokus auf Alltagstauglichkeit</h3>
+                    <p>Was wir bauen, muss im echten Gastro-Alltag funktionieren – nicht nur in der Demo.</p>
+                </div>
+            </div>
+            <div class="g-why-item scroll-reveal">
+                <div class="g-why-check">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <h3>Design + Systemdenken aus einer Hand</h3>
+                    <p>Wir denken digitale Auftritte und Prozesse zusammen – statt beides getrennt zu betrachten.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     7. PROZESS SECTION
+══════════════════════════════════════════════════ -->
+<section class="g-section g-section--alt" id="prozess">
+    <div class="g-container">
+        <div class="g-section-header scroll-reveal">
+            <span class="eyebrow">So läuft es ab</span>
+            <h2>So läuft die Zusammenarbeit ab</h2>
+            <p>Klar strukturiert, transparent und auf deinen Betrieb ausgerichtet.</p>
+        </div>
+        <div class="g-process-steps">
+            <div class="g-process-step scroll-reveal">
+                <div class="g-process-num">1</div>
+                <h3>Analyse</h3>
+                <p>Wir schauen, wo aktuell Zeit verloren geht, welche Prozesse chaotisch laufen und wo das größte Potenzial liegt.</p>
+            </div>
+            <div class="g-process-step scroll-reveal">
+                <div class="g-process-num">2</div>
+                <h3>Konzept</h3>
+                <p>Wir definieren die passende Struktur – von Landingpage über Formulare bis zu Automatisierungen und internen Abläufen.</p>
+            </div>
+            <div class="g-process-step scroll-reveal">
+                <div class="g-process-num">3</div>
+                <h3>Umsetzung</h3>
+                <p>Wir bauen Design, Technik und Prozesse so auf, dass sie im Alltag deines Betriebs zuverlässig funktionieren.</p>
+            </div>
+            <div class="g-process-step scroll-reveal">
+                <div class="g-process-num">4</div>
+                <h3>Optimierung</h3>
+                <p>Nach dem Start werden Abläufe weiter geschärft und bei Bedarf erweitert. Wir bleiben dabei.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     8. FAQ
+══════════════════════════════════════════════════ -->
+<section class="g-section" id="faq">
+    <div class="g-container">
+        <div class="g-section-header scroll-reveal">
+            <span class="eyebrow">Häufige Fragen</span>
+            <h2>Häufige Fragen</h2>
+        </div>
+        <div class="g-faq-list">
+            <div class="g-faq-item scroll-reveal">
+                <div class="g-faq-question" onclick="toggleFaq(this)">
+                    <h3>Ist das nur etwas für große Gastronomiebetriebe?</h3>
+                    <div class="g-faq-toggle">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                </div>
+                <div class="g-faq-answer">
+                    <p>Nein – im Gegenteil. Gerade kleinere und mittlere Betriebe mit 5 bis 50 Mitarbeitenden profitieren besonders stark von klaren digitalen Abläufen. Schon kleine Verbesserungen sparen hier täglich viel Zeit.</p>
+                </div>
+            </div>
+            <div class="g-faq-item scroll-reveal">
+                <div class="g-faq-question" onclick="toggleFaq(this)">
+                    <h3>Brauche ich schon bestimmte Tools oder Systeme?</h3>
+                    <div class="g-faq-toggle">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                </div>
+                <div class="g-faq-answer">
+                    <p>Nein. Wir schauen zuerst auf den Bedarf und bauen darauf auf. Ob bereits etwas vorhanden ist oder alles neu aufgebaut werden muss – wir passen die Lösung an deinen aktuellen Stand an.</p>
+                </div>
+            </div>
+            <div class="g-faq-item scroll-reveal">
+                <div class="g-faq-question" onclick="toggleFaq(this)">
+                    <h3>Geht es nur um Webseiten?</h3>
+                    <div class="g-faq-toggle">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                </div>
+                <div class="g-faq-answer">
+                    <p>Nein. Die Website ist nur ein Teil. Im Kern geht es um bessere Prozesse, Automatisierung und digitale Struktur – die Landingpage ist oft der erste Kontaktpunkt, aber nicht das Ende.</p>
+                </div>
+            </div>
+            <div class="g-faq-item scroll-reveal">
+                <div class="g-faq-question" onclick="toggleFaq(this)">
+                    <h3>Ist KI bei uns überhaupt sinnvoll?</h3>
+                    <div class="g-faq-toggle">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                </div>
+                <div class="g-faq-answer">
+                    <p>Ja – wenn sie konkret entlastet. Nicht als Trend, sondern als Werkzeug. Wir setzen KI dort ein, wo sie im Alltag wirklich Arbeit abnimmt: Sortierung, Vorqualifizierung, Inhalte, Prozesse.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     9. ABSCHLUSS CTA + KONTAKTFORMULAR
+══════════════════════════════════════════════════ -->
+<section class="g-section g-cta-section" id="kontakt">
+    <div class="g-container">
+        <div class="g-cta-content scroll-reveal">
+            <span class="eyebrow">Kostenloses Erstgespräch</span>
+            <h2>Lass uns schauen, wo in deinem Betrieb die größten digitalen Hebel liegen</h2>
+            <p>In einem unverbindlichen Erstgespräch schauen wir gemeinsam, welche Prozesse sich verbessern, automatisieren oder klarer strukturieren lassen – passend zu deinem gastronomischen Betrieb.</p>
+        </div>
+
+        <div class="g-form-wrap scroll-reveal">
+            <div class="g-form-title">Erstgespräch anfragen</div>
+
+            <div class="g-form-error" id="gastroFormError"></div>
+
+            <form id="gastroForm" novalidate>
+                <div class="g-form-row">
+                    <input type="text" name="vorname" placeholder="Vorname *" required>
+                    <input type="text" name="nachname" placeholder="Nachname">
+                </div>
+                <div class="g-form-row">
+                    <input type="text" name="betrieb" placeholder="Name deines Betriebs *" required>
+                    <input type="tel" name="telefon" placeholder="Telefonnummer">
+                </div>
+                <div class="g-form-field">
+                    <input type="email" name="email" placeholder="E-Mail-Adresse *" required>
+                </div>
+                <div class="g-form-field">
+                    <textarea name="herausforderung" rows="3" placeholder="Was läuft aktuell noch unstrukturiert? (optional)"></textarea>
+                </div>
+                <div class="g-form-field">
+                    <textarea name="entlastung" rows="3" placeholder="Wobei wünschst du dir Entlastung? (optional)"></textarea>
+                </div>
+
+                <p class="g-form-required">* Pflichtfelder</p>
+
+                <div class="g-form-check">
+                    <input type="checkbox" id="gastroDatenschutz" name="datenschutz" required>
+                    <label for="gastroDatenschutz">Ich stimme der Verarbeitung meiner Daten zu. Details in der <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a>.</label>
+                </div>
+
+                <div class="turnstile-container" style="margin-bottom:16px;">
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAACBQYFFK2Pk23ZuX" data-callback="onTurnstileSuccess"></div>
+                </div>
+
+                <button type="submit" class="g-form-submit" id="gastroSubmitBtn">
+                    Erstgespräch anfragen
+                </button>
+            </form>
+
+            <div class="g-form-success" id="gastroFormSuccess">
+                <div class="g-form-success-icon">✓</div>
+                <h3>Anfrage eingegangen!</h3>
+                <p>Wir melden uns innerhalb von 24 Stunden bei dir. Danke für dein Interesse!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════ -->
+<footer class="footer">
+    <div class="footer-top">
+        <div class="footer-brand">
+            <img src="../assets/img/logo_white_trans.png" alt="ML Vision" loading="lazy">
+            <p>Digitale Prozesse, KI-Automatisierung und moderne Systeme für Gastronomiebetriebe.</p>
+            <div class="footer-social">
+                <a href="https://www.instagram.com/ml_vision_?igsh=MXFvZjE3emZheGRueQ%3D%3D" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/company/ml-vision-gbr/about/?viewAsMember=true" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="https://x.com/ml_vision_?s=21" aria-label="X">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://www.tiktok.com/@ml_vision0?_r=1&_t=ZN-91S46Rdn0w2" aria-label="TikTok">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="footer-links-col">
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="../index.html">Startseite</a></li>
+                <li><a href="#loesung">Leistungen</a></li>
+                <li><a href="#prozess">Ablauf</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+        </div>
+        <div class="footer-links-col">
+            <h4>Rechtliches</h4>
+            <ul>
+                <li><a href="impressum.html">Impressum</a></li>
+                <li><a href="datenschutz.html">Datenschutz</a></li>
+            </ul>
+        </div>
+        <div class="footer-links-col">
+            <h4>Weitere Leistungen</h4>
+            <ul>
+                <li><a href="ki-automatisierung-dueren.html">KI Düren</a></li>
+                <li><a href="voice-agents-chatbots.html">Voice Agents</a></li>
+                <li><a href="blog.html">Blog</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024–2026 ML Vision – Alle Rechte vorbehalten.</p>
+    </div>
+</footer>
+
+<elevenlabs-convai agent-id="agent_3801kaeks87sfv0bfj0an3vxwpmd"></elevenlabs-convai>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE-SPECIFIC JS
+══════════════════════════════════════════════════ -->
+<script>
+(function() {
+    /* ── FAQ ACCORDION ─────────────────────────────────────── */
+    window.toggleFaq = function(questionEl) {
+        var item = questionEl.parentElement;
+        var isOpen = item.classList.contains('open');
+        // Close all
+        document.querySelectorAll('.g-faq-item').forEach(function(el) { el.classList.remove('open'); });
+        // Open clicked if it was closed
+        if (!isOpen) { item.classList.add('open'); }
+    };
+
+    /* ── FORM SUBMIT ───────────────────────────────────────── */
+    var GASTRO_WEBHOOK = 'https://n8n.vision-ml.de/webhook/gastro-lead';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var form      = document.getElementById('gastroForm');
+        var submitBtn = document.getElementById('gastroSubmitBtn');
+        var errorBox  = document.getElementById('gastroFormError');
+        var successEl = document.getElementById('gastroFormSuccess');
+
+        if (!form) return;
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Reset error
+            errorBox.style.display = 'none';
+            errorBox.textContent = '';
+
+            // Validate required fields
+            var vorname  = form.querySelector('[name="vorname"]').value.trim();
+            var betrieb  = form.querySelector('[name="betrieb"]').value.trim();
+            var email    = form.querySelector('[name="email"]').value.trim();
+            var datenschutz = form.querySelector('[name="datenschutz"]').checked;
+
+            if (!vorname) { showError('Bitte gib deinen Vornamen an.'); return; }
+            if (!betrieb) { showError('Bitte gib den Namen deines Betriebs an.'); return; }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Bitte gib eine gültige E-Mail-Adresse an.'); return; }
+            if (!datenschutz) { showError('Bitte stimme der Datenschutzerklärung zu.'); return; }
+            if (!window.turnstileToken) { showError('Bitte bestätige, dass du kein Bot bist.'); return; }
+
+            // Submit
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Wird gesendet…';
+
+            var payload = {
+                vorname:        vorname,
+                nachname:       form.querySelector('[name="nachname"]').value.trim(),
+                betrieb:        betrieb,
+                email:          email,
+                telefon:        form.querySelector('[name="telefon"]').value.trim(),
+                herausforderung: form.querySelector('[name="herausforderung"]').value.trim(),
+                entlastung:     form.querySelector('[name="entlastung"]').value.trim(),
+                quelle:         'gastronomie-landingpage',
+                turnstile:      window.turnstileToken
+            };
+
+            fetch(GASTRO_WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(res) {
+                if (res.ok) {
+                    form.style.display = 'none';
+                    successEl.style.display = 'block';
+                } else {
+                    throw new Error('Server-Fehler: ' + res.status);
+                }
+            })
+            .catch(function(err) {
+                showError('Beim Senden ist ein Fehler aufgetreten. Bitte versuche es erneut oder schreib uns direkt an info@vision-ml.de');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Erstgespräch anfragen';
+                console.error(err);
+            });
+        });
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+            errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    });
+
+    /* ── APPLE GLOW auf Cards ─────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.g-problem-card, .g-benefit-card, .g-solution-block').forEach(function(card) {
+            card.addEventListener('mousemove', function(e) {
+                var rect = card.getBoundingClientRect();
+                card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+                card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+            });
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

@@ -59,6 +59,14 @@
                         Kunden
                     </a>
                 </li>
+                <li>
+                    <a href="tickets.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                        </svg>
+                        Support-Tickets
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-section-title">Tools</div>
@@ -69,6 +77,14 @@
                             <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
                         </svg>
                         Leads Bot
+                    </a>
+                </li>
+                <li>
+                    <a href="pricing-calculator.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                        Pricing Kalkulator
                     </a>
                 </li>
             </ul>
@@ -120,6 +136,35 @@
                 </form>
             </div>
 
+            <!-- Brevo CRM Integration -->
+            <div class="settings-card">
+                <h2>Brevo CRM Integration</h2>
+                <form id="brevoForm">
+                    <div class="form-group">
+                        <label for="brevoApiKey">Brevo API Key</label>
+                        <input type="password" id="brevoApiKey" placeholder="xkeysib-...">
+                        <small style="color: rgba(225,232,237,0.5); font-size:12px; display:block; margin-top:4px">
+                            Brevo → Settings → API Keys → API Key v3
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brevoListLeads">Listen-ID "ML Vision Leads"</label>
+                        <input type="number" id="brevoListLeads" placeholder="z.B. 3">
+                        <small style="color: rgba(225,232,237,0.5); font-size:12px; display:block; margin-top:4px">
+                            Brevo → Contacts → Lists → ID der Leads-Liste
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brevoListCustomers">Listen-ID "ML Vision Kunden"</label>
+                        <input type="number" id="brevoListCustomers" placeholder="z.B. 4">
+                    </div>
+
+                    <button type="button" class="save-btn" onclick="saveBrevoSettings()">Brevo-Einstellungen speichern</button>
+                </form>
+            </div>
+
             <!-- Notification Settings -->
             <div class="settings-card">
                 <h2>Benachrichtigungen</h2>
@@ -146,11 +191,32 @@
             <div class="settings-card">
                 <h2>System-Information</h2>
                 <p style="color: rgba(225, 232, 237, 0.6); margin-bottom: 15px;">Version: 1.0.0</p>
-                <p style="color: rgba(225, 232, 237, 0.6); margin-bottom: 15px;">Letztes Update: 05.12.2024</p>
+                <p style="color: rgba(225, 232, 237, 0.6); margin-bottom: 15px;">Letztes Update: 14.03.2026</p>
 
                 <div class="info-box">
-                    <p><strong>Hinweis:</strong> Die Einstellungen werden aktuell lokal gespeichert. Nach der Firebase-Integration werden sie in der Cloud synchronisiert.</p>
+                    <p><strong>Hinweis:</strong> Die Einstellungen werden in Firestore (<code>system_settings/config</code>) gespeichert und sind geräteübergreifend synchronisiert.</p>
                 </div>
+            </div>
+
+            <!-- Audit Log -->
+            <div class="settings-card">
+                <h2>Audit Log — Letzte Aktionen</h2>
+                <div id="auditLogLoading" style="color: rgba(225,232,237,0.5); padding: 10px 0;">Wird geladen...</div>
+                <div style="overflow-x: auto;">
+                    <table id="auditLogTable" style="display:none; width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                <th style="text-align:left; padding:8px 6px; color:rgba(225,232,237,0.5); font-weight:500;">Datum</th>
+                                <th style="text-align:left; padding:8px 6px; color:rgba(225,232,237,0.5); font-weight:500;">Benutzer</th>
+                                <th style="text-align:left; padding:8px 6px; color:rgba(225,232,237,0.5); font-weight:500;">Aktion</th>
+                                <th style="text-align:left; padding:8px 6px; color:rgba(225,232,237,0.5); font-weight:500;">Bereich</th>
+                                <th style="text-align:left; padding:8px 6px; color:rgba(225,232,237,0.5); font-weight:500;">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditLogBody"></tbody>
+                    </table>
+                </div>
+                <div id="auditLogEmpty" style="display:none; color:rgba(225,232,237,0.5); padding:10px 0;">Noch keine Aktionen protokolliert.</div>
             </div>
         </main>
     </div>
@@ -189,34 +255,6 @@
     </div>
 
     <script>
-        function saveGeneralSettings() {
-            const companyName = document.getElementById('companyName').value;
-            const contactEmail = document.getElementById('contactEmail').value;
-            const contactPhone = document.getElementById('contactPhone').value;
-
-            // Später: Speichern in Firebase
-            console.log('Speichere allgemeine Einstellungen:', {
-                companyName,
-                contactEmail,
-                contactPhone
-            });
-
-            showAlert('Einstellungen erfolgreich gespeichert!', 'Erfolg');
-        }
-
-        function saveNotificationSettings() {
-            const emailNotifications = document.getElementById('emailNotifications').value;
-            const notificationEmail = document.getElementById('notificationEmail').value;
-
-            // Später: Speichern in Firebase
-            console.log('Speichere Benachrichtigungseinstellungen:', {
-                emailNotifications,
-                notificationEmail
-            });
-
-            showAlert('Benachrichtigungseinstellungen erfolgreich gespeichert!', 'Erfolg');
-        }
-
         // Custom Alert Modal
         function showAlert(message, title = 'Hinweis') {
             document.getElementById('alertTitle').textContent = title;
@@ -231,14 +269,14 @@
         // Custom Confirm Modal
         let confirmCallback = null;
 
-        function showConfirm(message, title = 'Bestätigung') {
+        window.showConfirm = function(message, title = 'Bestätigung') {
             return new Promise((resolve) => {
                 document.getElementById('confirmTitle').textContent = title;
                 document.getElementById('confirmMessage').textContent = message;
                 document.getElementById('confirmModal').classList.add('active');
                 confirmCallback = resolve;
             });
-        }
+        };
 
         window.closeConfirmModal = function(confirmed) {
             document.getElementById('confirmModal').classList.remove('active');
@@ -248,26 +286,18 @@
             }
         };
 
-        // Prevent clicks on modal content from bubbling to overlay
         document.querySelectorAll('.modal-content').forEach(content => {
             content.addEventListener('click', function(event) {
                 event.stopPropagation();
             });
         });
 
-        // Close modals on outside click (clicking on overlay background)
         document.addEventListener('click', function(event) {
-            // Alert Modal
             const alertModal = document.getElementById('alertModal');
-            if (event.target === alertModal) {
-                closeAlertModal();
-            }
+            if (event.target === alertModal) closeAlertModal();
 
-            // Confirm Modal
             const confirmModal = document.getElementById('confirmModal');
-            if (event.target === confirmModal) {
-                closeConfirmModal(false);
-            }
+            if (event.target === confirmModal) closeConfirmModal(false);
         });
     </script>
 
@@ -276,14 +306,152 @@
         import { Sidebar } from '../../assets/js/components/Sidebar.js';
         import '../../assets/js/components/Modal.js';
         import { initDashboard } from '../../assets/js/dashboard.js';
+        import { db } from '../../assets/js/firebase-config.js';
+        import {
+            doc,
+            getDoc,
+            setDoc,
+            collection,
+            getDocs,
+            query,
+            orderBy,
+            limit
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const CONFIG_REF = doc(db, 'system_settings', 'config');
+
+        async function loadSettings() {
+            try {
+                const snap = await getDoc(CONFIG_REF);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    if (data.companyName)        document.getElementById('companyName').value = data.companyName;
+                    if (data.contactEmail)       document.getElementById('contactEmail').value = data.contactEmail;
+                    if (data.contactPhone)       document.getElementById('contactPhone').value = data.contactPhone;
+                    if (data.emailNotifications) document.getElementById('emailNotifications').value = data.emailNotifications;
+                    if (data.notificationEmail)  document.getElementById('notificationEmail').value = data.notificationEmail;
+                    if (data.brevoApiKey)        document.getElementById('brevoApiKey').value = data.brevoApiKey;
+                    if (data.brevoListLeads)     document.getElementById('brevoListLeads').value = data.brevoListLeads;
+                    if (data.brevoListCustomers) document.getElementById('brevoListCustomers').value = data.brevoListCustomers;
+                }
+            } catch (err) {
+                console.error('Fehler beim Laden der Einstellungen:', err);
+            }
+        }
+
+        window.saveGeneralSettings = async function() {
+            const btn = document.querySelector('#generalForm .save-btn');
+            btn.disabled = true;
+            btn.textContent = 'Wird gespeichert...';
+            try {
+                await setDoc(CONFIG_REF, {
+                    companyName:  document.getElementById('companyName').value,
+                    contactEmail: document.getElementById('contactEmail').value,
+                    contactPhone: document.getElementById('contactPhone').value
+                }, { merge: true });
+                window.showAlert('Einstellungen erfolgreich gespeichert!', 'Erfolg');
+            } catch (err) {
+                window.showAlert('Fehler beim Speichern: ' + err.message, 'Fehler');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Einstellungen speichern';
+            }
+        };
+
+        window.saveBrevoSettings = async function() {
+            const btn = document.querySelector('#brevoForm .save-btn');
+            btn.disabled = true;
+            btn.textContent = 'Wird gespeichert...';
+            try {
+                await setDoc(CONFIG_REF, {
+                    brevoApiKey:        document.getElementById('brevoApiKey').value,
+                    brevoListLeads:     Number(document.getElementById('brevoListLeads').value) || null,
+                    brevoListCustomers: Number(document.getElementById('brevoListCustomers').value) || null
+                }, { merge: true });
+                window.showAlert('Brevo-Einstellungen gespeichert!', 'Erfolg');
+            } catch (err) {
+                window.showAlert('Fehler beim Speichern: ' + err.message, 'Fehler');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Brevo-Einstellungen speichern';
+            }
+        };
+
+        window.saveNotificationSettings = async function() {
+            const btn = document.querySelector('#notificationForm .save-btn');
+            btn.disabled = true;
+            btn.textContent = 'Wird gespeichert...';
+            try {
+                await setDoc(CONFIG_REF, {
+                    emailNotifications: document.getElementById('emailNotifications').value,
+                    notificationEmail:  document.getElementById('notificationEmail').value
+                }, { merge: true });
+                window.showAlert('Benachrichtigungseinstellungen erfolgreich gespeichert!', 'Erfolg');
+            } catch (err) {
+                window.showAlert('Fehler beim Speichern: ' + err.message, 'Fehler');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Einstellungen speichern';
+            }
+        };
+
+        async function loadAuditLog() {
+            const loading = document.getElementById('auditLogLoading');
+            const table = document.getElementById('auditLogTable');
+            const tbody = document.getElementById('auditLogBody');
+            const empty = document.getElementById('auditLogEmpty');
+
+            try {
+                const snap = await getDocs(query(
+                    collection(db, 'audit_logs'),
+                    orderBy('timestamp', 'desc'),
+                    limit(50)
+                ));
+
+                loading.style.display = 'none';
+
+                if (snap.empty) {
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                const actionLabels = {
+                    user_created: 'Benutzer erstellt', user_deleted: 'Benutzer gelöscht',
+                    customer_created: 'Kunde erstellt', customer_updated: 'Kunde bearbeitet', customer_deleted: 'Kunde gelöscht',
+                    ticket_status_changed: 'Ticket-Status geändert', ticket_reply_sent: 'Ticket-Antwort gesendet'
+                };
+
+                tbody.innerHTML = '';
+                snap.forEach(docSnap => {
+                    const d = docSnap.data();
+                    const date = d.timestamp?.toDate ? d.timestamp.toDate().toLocaleString('de-DE') : '—';
+                    const action = actionLabels[d.action] || d.action;
+                    const details = Object.entries(d.details || {})
+                        .map(([k, v]) => `${k}: ${v}`)
+                        .join(', ') || '—';
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+                    tr.innerHTML = `
+                        <td style="padding:7px 6px; color:rgba(225,232,237,0.7)">${date}</td>
+                        <td style="padding:7px 6px; color:rgba(225,232,237,0.7)">${d.email || '—'}</td>
+                        <td style="padding:7px 6px; color:#04A9D4">${action}</td>
+                        <td style="padding:7px 6px; color:rgba(225,232,237,0.7)">${d.entityType || '—'}</td>
+                        <td style="padding:7px 6px; color:rgba(225,232,237,0.5); font-size:12px">${details}</td>`;
+                    tbody.appendChild(tr);
+                });
+
+                table.style.display = 'table';
+            } catch (err) {
+                loading.textContent = 'Fehler beim Laden: ' + err.message;
+            }
+        }
 
         // Initialize components
         document.addEventListener('DOMContentLoaded', async () => {
-            // Initialize Sidebar
             new Sidebar('sidebar');
-
-            // Initialize admin dashboard with role check
             await initDashboard('admin');
+            await loadSettings();
+            await loadAuditLog();
         });
     </script>
 </body>

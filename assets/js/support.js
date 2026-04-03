@@ -337,6 +337,20 @@ async function createTicket() {
 
         await addDoc(collection(db, 'tickets', docRef.id, 'messages'), firstMessage);
 
+        // n8n: Neues Ticket → Brevo Bestätigungs-Mail (fire-and-forget)
+        fetch('https://n8n.vision-ml.de/webhook/mlv-ticket-mail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action:        'ticket_created',
+                ticketId:      docRef.id,
+                title:         ticketData.title,
+                priority:      ticketData.priority,
+                customerEmail: currentUser.email,
+                customerName:  currentUser.email.split('@')[0]
+            })
+        }).catch(() => {});
+
         alert('Ticket erfolgreich erstellt!');
         document.getElementById('createTicketForm').reset();
         showView('list');

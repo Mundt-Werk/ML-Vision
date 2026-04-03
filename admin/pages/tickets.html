@@ -313,6 +313,14 @@
                         Leads Bot
                     </a>
                 </li>
+                <li>
+                    <a href="pricing-calculator.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                        Pricing Kalkulator
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-section-title">System</div>
@@ -463,6 +471,7 @@
 
     <script type="module">
         import { auth, db, storage } from '../../assets/js/firebase-config.js';
+        import { logAction } from '../../assets/js/audit.js';
         import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
         import { collection, query, orderBy, getDocs, doc, getDoc, updateDoc, addDoc, serverTimestamp, where } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
         import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
@@ -700,16 +709,34 @@
             const newStatus = document.getElementById('ticketStatus').value;
 
             try {
+                const ticket = allTickets.find(t => t.id === currentTicketId);
+                const oldStatus = ticket ? ticket.status : null;
                 await updateDoc(doc(db, 'tickets', currentTicketId), {
                     status: newStatus,
                     updatedAt: new Date().toISOString()
                 });
-
-                // Update local data
-                const ticket = allTickets.find(t => t.id === currentTicketId);
+                await logAction('ticket_status_changed', 'ticket', currentTicketId, { oldStatus, newStatus, title: ticket?.title });
                 if (ticket) {
                     ticket.status = newStatus;
                     ticket.updatedAt = new Date().toISOString();
+                }
+                // n8n: Ticket geschlossen → Brevo Feedback-Mail (fire-and-forget)
+                if (newStatus === 'closed' && ticket?.customerId) {
+                    getDoc(doc(db, 'users', ticket.customerId)).then(userSnap => {
+                        if (!userSnap.exists()) return;
+                        const customerEmail = userSnap.data().email;
+                        fetch('https://n8n.vision-ml.de/webhook/mlv-ticket-mail', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                action:        'ticket_closed',
+                                ticketId:      currentTicketId,
+                                title:         ticket.title,
+                                customerEmail,
+                                customerName:  customerEmail.split('@')[0]
+                            })
+                        }).catch(() => {});
+                    }).catch(() => {});
                 }
 
                 // Re-render table
@@ -782,6 +809,7 @@
                 }
 
                 await updateDoc(doc(db, 'tickets', currentTicketId), updateData);
+                await logAction('ticket_reply_sent', 'ticket', currentTicketId, { title: ticket?.title, statusChanged: !!updateData.status });
 
                 // Update local data
                 ticket.updatedAt = new Date().toISOString();

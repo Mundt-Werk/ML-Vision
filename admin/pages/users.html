@@ -81,6 +81,14 @@
                         Leads Bot
                     </a>
                 </li>
+                <li>
+                    <a href="pricing-calculator.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                        Pricing Kalkulator
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-section-title">System</div>
@@ -234,13 +242,11 @@
     <!-- Firebase Logic -->
     <script type="module">
         import { auth, db, app } from '../../assets/js/firebase-config.js';
+        import { logAction } from '../../assets/js/audit.js';
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import {
             createUserWithEmailAndPassword,
-            deleteUser as firebaseDeleteUser,
-            updateEmail,
-            updatePassword,
             signOut
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import {
@@ -253,7 +259,6 @@
             query,
             orderBy
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
         let users = [];
         let currentEditId = null;
 
@@ -620,6 +625,7 @@
                     }
 
                     await setDoc(doc(db, 'users', user.uid), userData);
+                    await logAction('user_created', 'user', user.uid, { name: formData.name, email: formData.email, role: formData.role });
 
                     // Sign out from secondary auth instance
                     await signOut(secondaryAuth);
@@ -661,28 +667,27 @@
             }
         });
 
-        // Delete user
+        // Delete user — löscht Firestore-Dokument (kein Server nötig, kostenlos)
+        // Auth-Account bleibt technisch, aber ohne Firestore-Doc hat der User keine Rolle → kein Zugriff
         window.deleteUser = async function(userId) {
             const user = users.find(u => u.id === userId);
             if (!user) return;
 
             const confirmed = await showConfirm(
-                `Möchten Sie diesen Benutzer wirklich löschen?\n\nName: ${user.name}\nE-Mail: ${user.email}\n\nHINWEIS: Der Benutzer wird aus der Datenbank gelöscht. Der Authentication-Eintrag muss manuell in der Firebase Console gelöscht werden.`,
+                `Möchten Sie diesen Benutzer wirklich löschen?\n\nName: ${user.name}\nE-Mail: ${user.email}\n\nDer Login-Zugang wird sofort deaktiviert.`,
                 'Benutzer löschen'
             );
 
             if (!confirmed) return;
 
             try {
-                // Delete user document from Firestore
                 await deleteDoc(doc(db, 'users', userId));
-
-                showAlert(`Benutzer aus Datenbank gelöscht!\n\nWICHTIG: Bitte löschen Sie den Benutzer auch manuell in der Firebase Authentication Console:\nhttps://console.firebase.google.com/project/ml-vision-273ee/authentication/users\n\nSuchen Sie nach: ${user.email}`, 'Teilweise gelöscht');
+                await logAction('user_deleted', 'user', userId, { name: user.name, email: user.email });
+                showAlert('Benutzer gelöscht. Der Login-Zugang ist sofort deaktiviert.', 'Gelöscht');
                 await loadUsers();
-
             } catch (error) {
                 console.error('Fehler beim Löschen:', error);
-                showAlert('Fehler beim Löschen des Benutzers.', 'Fehler');
+                showAlert('Fehler beim Löschen: ' + (error.message || 'Unbekannter Fehler'), 'Fehler');
             }
         };
 
