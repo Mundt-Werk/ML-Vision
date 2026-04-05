@@ -40,7 +40,6 @@ dist/
 build/
 
 # Sensitive files
-NICHTHOCHLADEN/
 KEYS_PRIVAT.md
 *KEYS_PRIVAT*
 *.pem
@@ -48,12 +47,14 @@ KEYS_PRIVAT.md
 credentials.json
 firebase-service-account.json
 
-# Verträge & Kundenangebote
-MD/AVV_*.md
-MD/KVA_*.md
-MD/KVA_*.html
-MD/DSGVO_CHECKLIST_*.md
+# Verträge & Kundenangebote (jetzt in MD/kunden/ gesammelt)
+MD/kunden/
+
+# Admin-Angebote (generierte Kundendokumente)
 admin/angebote/
+
+# Kunden-Dateiablage
+kunden/
 
 # Agent & Workflow Configs (können Credentials enthalten)
 .agents/
@@ -66,4 +67,6 @@ desktop.ini
 # Backup files
 *.bak
 *.backup
-ARCHIV_ALTE_DATEIEN/
+
+# Archiv (war ARCHIV_ALTE_DATEIEN/ + NICHTHOCHLADEN/)
+_archiv/
