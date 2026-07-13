@@ -1,13 +1,14 @@
 import { db, auth } from './firebase-config.js';
 import { collection, query, where, orderBy, limit, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+import { initCustomerSidebar } from './components/CustomerSidebar.js';
 
 // ========================================================================
 // STATE
 // ========================================================================
-let currentUser = null;
 let currentCustomerId = null;
 let allCalls = [];
+let currentCalls = [];
 let currentPage = 1;
 const callsPerPage = 20;
 
@@ -20,24 +21,23 @@ onAuthStateChanged(auth, async (user) => {
         return;
     }
 
-    currentUser = user;
-
     // Get customerId from users collection
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (!userDoc.exists()) {
         console.error('User document not found in Firestore');
-        alert('Ihr Benutzerprofil wurde nicht gefunden. Bitte kontaktieren Sie den Administrator.');
+        showError('Ihr Benutzerprofil wurde nicht gefunden. Bitte kontaktieren Sie den Administrator unter support@vision-ml.de.');
         return;
     }
 
     const userData = userDoc.data();
     if (!userData.customerId) {
         console.error('customerId not found in user document');
-        alert('Ihre Kundennummer fehlt. Bitte kontaktieren Sie den Administrator.');
+        showError('Ihre Kundennummer fehlt. Bitte kontaktieren Sie den Administrator unter support@vision-ml.de.');
         return;
     }
 
     currentCustomerId = userData.customerId;
+    await initCustomerSidebar(currentCustomerId, 'voice');
     await loadCalls();
 });
 
@@ -50,7 +50,7 @@ async function loadCalls() {
             collection(db, 'calls'),
             where('customerId', '==', currentCustomerId),
             orderBy('timestamp', 'desc'),
-            limit(100) // Limit für Performance
+            limit(500)
         );
 
         const snapshot = await getDocs(q);
@@ -72,6 +72,8 @@ async function loadCalls() {
 // RENDER CALLS TABLE
 // ========================================================================
 function renderCalls(calls) {
+    currentCalls = calls;
+
     // Desktop Tabelle
     const tbody = document.querySelector('.calls-table tbody');
     tbody.innerHTML = '';
@@ -83,7 +85,7 @@ function renderCalls(calls) {
     if (calls.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">
+                <td colspan="4" style="text-align: center; padding: 40px; color: #6b7280;">
                     Keine Gespräche gefunden
                 </td>
             </tr>
@@ -112,16 +114,12 @@ function renderCalls(calls) {
                 <div><strong>${formatDate(call.timestamp)}</strong></div>
                 <div class="call-time">${formatTime(call.timestamp)}</div>
             </td>
-            <td><span class="call-duration">${formatDuration(call.duration)}</span></td>
-            <td><span class="call-result ${call.status}">${getStatusText(call.status)}</span></td>
-            <td style="color: #6b7280;">-</td>
+            <td><span class="call-duration">${formatDuration(getDuration(call))}</span></td>
+            <td><span class="call-result ${call.outcome}">${getStatusText(call.outcome)}</span></td>
             <td>
-                <div class="actions">
-                    ${call.recordingUrl ? `
-                        <button class="action-btn" onclick="event.stopPropagation(); playAudio('${call.recordingUrl}')">▶ Abspielen</button>
-                        <button class="action-btn" onclick="event.stopPropagation(); downloadAudio('${call.recordingUrl}', '${call.callId}')">⬇ Download</button>
-                    ` : '<span style="color: #6b7280;">Keine Aufnahme</span>'}
-                </div>
+                <div style="font-weight:500;">${call.name || '–'}</div>
+                <div style="color:#6b7280; font-size:13px;">${normalizeGermanPhone(call.telefon || call.anruferNummer) || ''}</div>
+                ${callbackBtn(call.telefon, call.anruferNummer)}
             </td>
         `;
         tbody.appendChild(tr);
@@ -137,27 +135,120 @@ function renderCalls(calls) {
                     <strong>${formatDate(call.timestamp)}</strong>
                     <span class="call-time">${formatTime(call.timestamp)}</span>
                 </div>
-                <span class="call-result ${call.status}">${getStatusText(call.status)}</span>
+                <span class="call-result ${call.outcome}">${getStatusText(call.outcome)}</span>
             </div>
             <div class="mobile-call-info">
                 <div class="mobile-info-item">
                     <span class="mobile-info-label">Dauer</span>
-                    <span class="call-duration">${formatDuration(call.duration)}</span>
+                    <span class="call-duration">${formatDuration(getDuration(call))}</span>
                 </div>
                 <div class="mobile-info-item">
-                    <span class="mobile-info-label">Status</span>
-                    <span>${getStatusText(call.status)}</span>
+                    <span class="mobile-info-label">Anrufer</span>
+                    <span>${call.name || normalizeGermanPhone(call.anruferNummer) || '–'}</span>
                 </div>
             </div>
-            ${call.recordingUrl ? `
-                <div class="mobile-call-actions">
+            <div class="mobile-call-actions">
+                ${callbackBtn(call.telefon, call.anruferNummer)}
+                ${call.recordingUrl ? `
                     <button class="action-btn" onclick="event.stopPropagation(); playAudio('${call.recordingUrl}')">▶ Abspielen</button>
                     <button class="action-btn" onclick="event.stopPropagation(); downloadAudio('${call.recordingUrl}', '${call.callId}')">⬇ Download</button>
-                </div>
-            ` : '<div style="color: #6b7280; font-size: 13px;">Keine Aufnahme verfügbar</div>'}
+                ` : ''}
+            </div>
         `;
         mobileList.appendChild(mobileCard);
     });
+
+    renderPagination();
+}
+
+function renderPagination() {
+    const container = document.getElementById('pagination');
+    if (!container) return;
+
+    const totalPages = Math.ceil(currentCalls.length / callsPerPage);
+    if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+    const pages = [];
+    // Zeige max. 5 Seitenzahlen um die aktuelle herum
+    const start = Math.max(1, currentPage - 2);
+    const end   = Math.min(totalPages, currentPage + 2);
+    for (let i = start; i <= end; i++) pages.push(i);
+
+    container.innerHTML = `
+        <div class="pagination">
+            <button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Zurück</button>
+            ${pages.map(p => `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`).join('')}
+            <button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Weiter →</button>
+            <span class="page-info">Seite ${currentPage} von ${totalPages} · ${currentCalls.length} Gespräche</span>
+        </div>
+    `;
+}
+
+window.goToPage = function(page) {
+    const totalPages = Math.ceil(currentCalls.length / callsPerPage);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderCallsPage();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+function renderCallsPage() {
+    const tbody = document.querySelector('.calls-table tbody');
+    const mobileList = document.getElementById('mobileCallsList');
+    tbody.innerHTML = '';
+    mobileList.innerHTML = '';
+
+    const startIndex = (currentPage - 1) * callsPerPage;
+    const paginatedCalls = currentCalls.slice(startIndex, startIndex + callsPerPage);
+
+    paginatedCalls.forEach(call => {
+        const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.onclick = () => openModal(call.id);
+        tr.innerHTML = `
+            <td>
+                <div><strong>${formatDate(call.timestamp)}</strong></div>
+                <div class="call-time">${formatTime(call.timestamp)}</div>
+            </td>
+            <td><span class="call-duration">${formatDuration(getDuration(call))}</span></td>
+            <td><span class="call-result ${call.outcome}">${getStatusText(call.outcome)}</span></td>
+            <td>
+                <div style="font-weight:500;">${call.name || '–'}</div>
+                <div style="color:#6b7280; font-size:13px;">${normalizeGermanPhone(call.telefon || call.anruferNummer) || ''}</div>
+                ${callbackBtn(call.telefon, call.anruferNummer)}
+            </td>
+        `;
+        tbody.appendChild(tr);
+
+        const mobileCard = document.createElement('div');
+        mobileCard.className = 'mobile-call-card';
+        mobileCard.onclick = () => openModal(call.id);
+        mobileCard.innerHTML = `
+            <div class="mobile-call-header">
+                <div class="mobile-call-date">
+                    <strong>${formatDate(call.timestamp)}</strong>
+                    <span class="call-time">${formatTime(call.timestamp)}</span>
+                </div>
+                <span class="call-result ${call.outcome}">${getStatusText(call.outcome)}</span>
+            </div>
+            <div class="mobile-call-info">
+                <div class="mobile-info-item">
+                    <span class="mobile-info-label">Dauer</span>
+                    <span class="call-duration">${formatDuration(getDuration(call))}</span>
+                </div>
+                <div class="mobile-info-item">
+                    <span class="mobile-info-label">Anrufer</span>
+                    <span>${call.name || normalizeGermanPhone(call.anruferNummer) || '–'}</span>
+                </div>
+            </div>
+            <div class="mobile-call-actions">
+                ${callbackBtn(call.telefon, call.anruferNummer)}
+            </div>
+        `;
+        mobileList.appendChild(mobileCard);
+    });
+
+    renderPagination();
 }
 
 // ========================================================================
@@ -167,62 +258,30 @@ document.querySelector('.filter-button').addEventListener('click', () => {
     const dateFrom = document.getElementById('dateFrom').value;
     const dateTo = document.getElementById('dateTo').value;
     const resultFilter = document.getElementById('resultFilter').value;
+    const minDuration = parseInt(document.getElementById('durationFilter')?.value || '0');
 
     let filtered = [...allCalls];
 
-    // Filter by date range
     if (dateFrom) {
-        filtered = filtered.filter(call =>
-            new Date(call.timestamp) >= new Date(dateFrom)
-        );
+        filtered = filtered.filter(call => new Date(call.timestamp) >= new Date(dateFrom));
     }
     if (dateTo) {
         const endDate = new Date(dateTo);
-        endDate.setHours(23, 59, 59); // End of day
-        filtered = filtered.filter(call =>
-            new Date(call.timestamp) <= endDate
-        );
+        endDate.setHours(23, 59, 59);
+        filtered = filtered.filter(call => new Date(call.timestamp) <= endDate);
     }
-
-    // Filter by status
     if (resultFilter) {
-        filtered = filtered.filter(call => call.status === resultFilter);
+        filtered = filtered.filter(call => call.outcome === resultFilter);
+    }
+    if (minDuration > 0) {
+        filtered = filtered.filter(call => (call.duration || 0) >= minDuration);
     }
 
-    currentPage = 1; // Reset to first page
+    currentPage = 1;
     renderCalls(filtered);
     updateHeader(filtered.length);
 });
 
-// ========================================================================
-// CSV EXPORT
-// ========================================================================
-document.querySelector('.export-button').addEventListener('click', () => {
-    const csvRows = [
-        ['Datum', 'Uhrzeit', 'Dauer (Sek)', 'Status', 'Telefonnummer']
-    ];
-
-    allCalls.forEach(call => {
-        csvRows.push([
-            formatDate(call.timestamp),
-            formatTime(call.timestamp),
-            call.duration,
-            getStatusText(call.status),
-            call.phoneNumber || 'N/A'
-        ]);
-    });
-
-    const csv = csvRows.map(row => row.join(',')).join('\\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `gespraeche_${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-
-    URL.revokeObjectURL(url);
-});
 
 // ========================================================================
 // AUDIO PLAYER
@@ -312,28 +371,75 @@ window.openModal = async function(callId) {
                 </div>
                 <div class="call-info-item">
                     <span class="call-info-label">Dauer</span>
-                    <span class="call-info-value">${formatDuration(call.duration)}</span>
+                    <span class="call-info-value">${formatDuration(getDuration(call))}</span>
                 </div>
                 <div class="call-info-item">
-                    <span class="call-info-label">Status</span>
-                    <span class="call-info-value">${getStatusText(call.status)}</span>
+                    <span class="call-info-label">Ergebnis</span>
+                    <span class="call-info-value"><span class="call-result ${call.outcome}">${getStatusText(call.outcome)}</span></span>
+                </div>
+                <div class="call-info-item">
+                    <span class="call-info-label">Anrufer</span>
+                    <span class="call-info-value">${call.name || '–'}</span>
                 </div>
                 <div class="call-info-item">
                     <span class="call-info-label">Telefonnummer</span>
-                    <span class="call-info-value">${call.phoneNumber || 'N/A'}</span>
+                    <span class="call-info-value" style="display:flex; align-items:center; gap:10px;">
+                        ${normalizeGermanPhone(call.telefon || call.anruferNummer) || '–'}
+                        ${callbackBtn(call.telefon, call.anruferNummer)}
+                    </span>
                 </div>
-                ${call.recordingUrl ? `
-                <div class="call-info-item" style="grid-column: 1 / -1;">
-                    <span class="call-info-label">Aufnahme</span>
-                    <div style="margin-top: 10px;">
-                        <button class="action-btn" onclick="playAudio('${call.recordingUrl}')" style="margin-right: 10px;">▶ Abspielen</button>
-                        <button class="action-btn" onclick="downloadAudio('${call.recordingUrl}', '${call.callId}')">⬇ Download</button>
-                    </div>
+                ${call.anruferNummer && call.anruferNummer !== call.telefon ? `
+                <div class="call-info-item">
+                    <span class="call-info-label">Anrufernummer</span>
+                    <span class="call-info-value">${normalizeGermanPhone(call.anruferNummer)}</span>
+                </div>` : ''}
+                <div class="call-info-item">
+                    <span class="call-info-label">E-Mail</span>
+                    <span class="call-info-value">${call.email || '–'}</span>
                 </div>
-                ` : ''}
+                ${call.terminart ? `
+                <div class="call-info-item">
+                    <span class="call-info-label">Terminart</span>
+                    <span class="call-info-value">${call.terminart}</span>
+                </div>` : ''}
+                ${call.wunschtermin ? `
+                <div class="call-info-item">
+                    <span class="call-info-label">Wunschtermin</span>
+                    <span class="call-info-value">${call.wunschtermin}</span>
+                </div>` : ''}
+                ${call.immoNr ? `
+                <div class="call-info-item">
+                    <span class="call-info-label">Immobilien-Nr.</span>
+                    <span class="call-info-value">${call.immoNr}</span>
+                </div>` : ''}
             </div>
         </div>
-        ${call.recordingUrl ? '' : '<p style="color: #6b7280; text-align: center; padding: 20px;">Keine Aufnahme verfügbar für dieses Gespräch.</p>'}
+        ${call.notizen ? `
+        <div class="call-detail-section">
+            <h3>Gesprächsnotizen</h3>
+            <p style="color:#374151; line-height:1.6; white-space:pre-wrap;">${call.notizen}</p>
+        </div>` : ''}
+        ${call.recordingUrl ? `
+        <div class="call-detail-section">
+            <h3>Aufnahme</h3>
+            <div>
+                <button class="action-btn" onclick="playAudio('${call.recordingUrl}')" style="margin-right: 10px;">▶ Abspielen</button>
+                <button class="action-btn" onclick="downloadAudio('${call.recordingUrl}', '${call.callId}')">⬇ Download</button>
+            </div>
+        </div>` : ''}
+        ${Array.isArray(call.transcript) && call.transcript.length > 0 ? `
+        <div class="call-detail-section">
+            <h3>Gesprächsverlauf</h3>
+            <div class="transcript">
+                ${call.transcript.map(msg => `
+                    <div class="transcript-msg transcript-${msg.role}">
+                        <span class="transcript-role">${msg.role === 'agent' ? 'KI-Assistent' : 'Anrufer'}</span>
+                        <div class="transcript-bubble">${msg.message}</div>
+                        ${msg.t > 0 ? `<span class="transcript-time">${msg.t}s</span>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        </div>` : ''}
     `;
 
     modal.classList.add('active');
@@ -354,16 +460,27 @@ window.closeModal = function() {
 // ========================================================================
 // HELPER FUNCTIONS
 // ========================================================================
+function parseTimestamp(timestamp) {
+    if (!timestamp) return null;
+    if (timestamp.toDate) return timestamp.toDate();
+    if (timestamp.seconds) return new Date(timestamp.seconds * 1000);
+    return new Date(timestamp);
+}
+
 function formatDate(timestamp) {
-    if (!timestamp) return 'N/A';
-    const date = new Date(timestamp);
+    const date = parseTimestamp(timestamp);
+    if (!date || isNaN(date.getTime())) return 'N/A';
     return date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 function formatTime(timestamp) {
-    if (!timestamp) return 'N/A';
-    const date = new Date(timestamp);
+    const date = parseTimestamp(timestamp);
+    if (!date || isNaN(date.getTime())) return 'N/A';
     return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+}
+
+function getDuration(call) {
+    return call.duration ?? call.call_duration_secs ?? call.metadata?.call_duration_secs ?? 0;
 }
 
 function formatDuration(seconds) {
@@ -373,13 +490,33 @@ function formatDuration(seconds) {
     return `${mins}:${secs.toString().padStart(2, '0')} Min`;
 }
 
-function getStatusText(status) {
-    const statusMap = {
-        'completed': 'Erfolgreich',
-        'failed': 'Fehlgeschlagen',
-        'unknown': 'Unbekannt'
+function normalizeGermanPhone(telefon) {
+    if (!telefon) return telefon;
+    const str = String(telefon).trim();
+    if (str.startsWith('+') || str.startsWith('0')) return str;
+    // Alle deutschen Nummern ohne führende 0 (Mobil & Festnetz)
+    return '0' + str;
+}
+
+function callbackBtn(telefon, anruferNummer) {
+    const normalized = normalizeGermanPhone(telefon || anruferNummer);
+    if (!normalized) return '';
+    const telClean = String(normalized).replace(/[^\d+]/g, '');
+    return `<a href="tel:${telClean}" class="callback-btn" onclick="event.stopPropagation()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        Rückruf
+    </a>`;
+}
+
+function getStatusText(outcome) {
+    const outcomeMap = {
+        'termin':   'Termin gebucht',
+        'info':     'Info-Anfrage',
+        'callback': 'Rückruf erbeten',
+        'hung_up':  'Aufgelegt',
+        'missed':   'Kein Ergebnis'
     };
-    return statusMap[status] || status;
+    return outcomeMap[outcome] || outcome || '-';
 }
 
 function updateHeader(count) {
@@ -391,7 +528,7 @@ function showError(message) {
     const tbody = document.querySelector('.calls-table tbody');
     tbody.innerHTML = `
         <tr>
-            <td colspan="5" style="text-align: center; padding: 40px; color: #ef4444;">
+            <td colspan="4" style="text-align: center; padding: 40px; color: #ef4444;">
                 ${message}
             </td>
         </tr>
@@ -426,7 +563,7 @@ document.addEventListener('click', function(event) {
 });
 
 // Logout
-const logoutBtn = document.querySelector('.logout-btn');
+const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async function(e) {
         e.preventDefault();

@@ -1,0 +1,32 @@
+# Node modules (alle)
+**/node_modules/**
+node_modules
+
+# Lokale Tools & Bots
+leads_bot/
+leads_bot/**
+
+# Firebase & Build
+firebase.json
+.firebaserc
+firestore.rules
+firestore.indexes.json
+storage.rules
+functions/
+
+# Private Kundendaten & interne Docs
+kunden/
+MD/
+scripts/
+n8n/
+_archiv/
+
+# Claude / IDE
+.claude/
+.git/
+*.md
+
+# Executables
+**/*.exe
+**/*.sh
+**/*.bat

@@ -28,50 +28,11 @@
             </div>
 
             <ul class="sidebar-menu">
-                <li>
-                    <a href="../dashboard.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
-                        </svg>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="gespraeche.html" class="active">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-                        </svg>
-                        Gespräche
-                    </a>
-                </li>
-                <li>
-                    <a href="support.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
-                        </svg>
-                        Support
-                    </a>
-                </li>
-                <li>
-                    <a href="rechnungen.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
-                        </svg>
-                        Rechnungen
-                    </a>
-                </li>
-                <li>
-                    <a href="einstellungen.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-                        </svg>
-                        Einstellungen
-                    </a>
-                </li>
+                <!-- Wird dynamisch von CustomerSidebar.js geladen -->
             </ul>
 
             <div class="sidebar-footer">
-                <a href="#" class="logout-btn">Abmelden</a>
+                <a href="#" id="logoutBtn">Abmelden</a>
             </div>
         </aside>
 
@@ -97,18 +58,21 @@
                         <label>Ergebnis</label>
                         <select id="resultFilter">
                             <option value="">Alle</option>
-                            <option value="success">Termin gebucht</option>
-                            <option value="pending">Anfrage</option>
-                            <option value="failed">Abgebrochen</option>
+                            <option value="termin">Termin gebucht</option>
+                            <option value="info">Info-Anfrage</option>
+                            <option value="callback">Rückruf erbeten</option>
+                            <option value="hung_up">Aufgelegt</option>
+                            <option value="missed">Kein Ergebnis</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label>Sentiment</label>
-                        <select id="sentimentFilter">
-                            <option value="">Alle</option>
-                            <option value="positive">Positiv</option>
-                            <option value="neutral">Neutral</option>
-                            <option value="negative">Negativ</option>
+                        <label>Min. Dauer</label>
+                        <select id="durationFilter">
+                            <option value="0">Alle</option>
+                            <option value="30">≥ 0:30 Min</option>
+                            <option value="60">≥ 1:00 Min</option>
+                            <option value="120">≥ 2:00 Min</option>
+                            <option value="300">≥ 5:00 Min</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -120,8 +84,7 @@
             <!-- Calls Table -->
             <div class="calls-table-container">
                 <div class="table-header">
-                    <h2>342 Gespräche gefunden</h2>
-                    <button class="export-button">Als CSV exportieren</button>
+                    <h2>Gespräche werden geladen …</h2>
                 </div>
                 <table class="calls-table">
                     <thead>
@@ -129,108 +92,18 @@
                             <th>Datum & Uhrzeit</th>
                             <th>Dauer</th>
                             <th>Ergebnis</th>
-                            <th>Sentiment</th>
-                            <th>Aktionen</th>
+                            <th>Anrufer</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr onclick="openModal(1)">
-                            <td>
-                                <div><strong>18.11.2025</strong></div>
-                                <div class="call-time">14:32 Uhr</div>
-                            </td>
-                            <td><span class="call-duration">3:45 Min</span></td>
-                            <td><span class="call-result success">Termin gebucht</span></td>
-                            <td>
-                                <div class="sentiment">
-                                    <span class="sentiment-icon">😊</span>
-                                    <span>Positiv</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions">
-                                    <button class="action-btn" onclick="event.stopPropagation(); playAudio(1)">▶ Abspielen</button>
-                                    <button class="action-btn" onclick="event.stopPropagation(); downloadAudio(1)">⬇ Download</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr onclick="openModal(2)">
-                            <td>
-                                <div><strong>18.11.2025</strong></div>
-                                <div class="call-time">13:15 Uhr</div>
-                            </td>
-                            <td><span class="call-duration">2:12 Min</span></td>
-                            <td><span class="call-result pending">Anfrage</span></td>
-                            <td>
-                                <div class="sentiment">
-                                    <span class="sentiment-icon">😐</span>
-                                    <span>Neutral</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions">
-                                    <button class="action-btn" onclick="event.stopPropagation(); playAudio(2)">▶ Abspielen</button>
-                                    <button class="action-btn" onclick="event.stopPropagation(); downloadAudio(2)">⬇ Download</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr onclick="openModal(3)">
-                            <td>
-                                <div><strong>18.11.2025</strong></div>
-                                <div class="call-time">11:47 Uhr</div>
-                            </td>
-                            <td><span class="call-duration">1:23 Min</span></td>
-                            <td><span class="call-result failed">Abgebrochen</span></td>
-                            <td>
-                                <div class="sentiment">
-                                    <span class="sentiment-icon">😠</span>
-                                    <span>Negativ</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions">
-                                    <button class="action-btn" onclick="event.stopPropagation(); playAudio(3)">▶ Abspielen</button>
-                                    <button class="action-btn" onclick="event.stopPropagation(); downloadAudio(3)">⬇ Download</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr onclick="openModal(4)">
-                            <td>
-                                <div><strong>17.11.2025</strong></div>
-                                <div class="call-time">16:22 Uhr</div>
-                            </td>
-                            <td><span class="call-duration">4:56 Min</span></td>
-                            <td><span class="call-result success">Termin gebucht</span></td>
-                            <td>
-                                <div class="sentiment">
-                                    <span class="sentiment-icon">😊</span>
-                                    <span>Positiv</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions">
-                                    <button class="action-btn" onclick="event.stopPropagation(); playAudio(4)">▶ Abspielen</button>
-                                    <button class="action-btn" onclick="event.stopPropagation(); downloadAudio(4)">⬇ Download</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr onclick="openModal(5)">
-                            <td>
-                                <div><strong>17.11.2025</strong></div>
-                                <div class="call-time">10:05 Uhr</div>
-                            </td>
-                            <td><span class="call-duration">5:32 Min</span></td>
-                            <td><span class="call-result success">Termin gebucht</span></td>
-                            <td>
-                                <div class="sentiment">
-                                    <span class="sentiment-icon">😊</span>
-                                    <span>Positiv</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions">
-                                    <button class="action-btn" onclick="event.stopPropagation(); playAudio(5)">▶ Abspielen</button>
-                                    <button class="action-btn" onclick="event.stopPropagation(); downloadAudio(5)">⬇ Download</button>
+                        <tr>
+                            <td colspan="4" style="text-align:center; padding:48px; color:#9ca3af;">
+                                <div style="display:inline-flex; flex-direction:column; align-items:center; gap:12px;">
+                                    <svg style="animation:gamma-spin 1s linear infinite; width:28px; height:28px; color:#04A9D4;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                                    </svg>
+                                    <span style="font-size:14px;">Gespräche werden geladen …</span>
                                 </div>
                             </td>
                         </tr>
@@ -242,6 +115,9 @@
             <div class="mobile-calls-list" id="mobileCallsList">
                 <!-- Wird dynamisch mit JavaScript gefüllt -->
             </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="pagination-container"></div>
         </main>
     </div>
 
@@ -253,50 +129,7 @@
                 <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="call-detail-section">
-                    <h3>Gesprächsinformationen</h3>
-                    <div class="call-info-grid">
-                        <div class="call-info-item">
-                            <span class="call-info-label">Datum & Uhrzeit</span>
-                            <span class="call-info-value">18.11.2025, 14:32 Uhr</span>
-                        </div>
-                        <div class="call-info-item">
-                            <span class="call-info-label">Dauer</span>
-                            <span class="call-info-value">3:45 Min</span>
-                        </div>
-                        <div class="call-info-item">
-                            <span class="call-info-label">Ergebnis</span>
-                            <span class="call-info-value">Termin gebucht</span>
-                        </div>
-                        <div class="call-info-item">
-                            <span class="call-info-label">Sentiment</span>
-                            <span class="call-info-value">😊 Positiv</span>
-                        </div>
-                        <div class="call-info-item">
-                            <span class="call-info-label">Telefonnummer</span>
-                            <span class="call-info-value">+49 123 4567890</span>
-                        </div>
-                        <div class="call-info-item">
-                            <span class="call-info-label">Keywords</span>
-                            <span class="call-info-value">Termin, Beratung, Mittwoch</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="call-detail-section">
-                    <h3>Transkript</h3>
-                    <div class="transcript">
-                        <p><strong>Agent:</strong> Guten Tag! Hier spricht der KI-Assistent von ML Vision. Wie kann ich Ihnen heute helfen?</p>
-                        <p><strong>Kunde:</strong> Hallo, ich würde gerne einen Beratungstermin vereinbaren.</p>
-                        <p><strong>Agent:</strong> Sehr gerne! Ich kann Ihnen verschiedene Termine anbieten. Haben Sie einen Wunschtag?</p>
-                        <p><strong>Kunde:</strong> Am liebsten diese Woche noch, geht Mittwoch?</p>
-                        <p><strong>Agent:</strong> Ja, Mittwoch ist noch frei. Passt Ihnen 14:00 Uhr?</p>
-                        <p><strong>Kunde:</strong> Perfekt, das nehme ich.</p>
-                        <p><strong>Agent:</strong> Wunderbar! Ich habe den Termin für Mittwoch um 14:00 Uhr für Sie gebucht. Sie erhalten gleich eine Bestätigung per E-Mail. Kann ich sonst noch etwas für Sie tun?</p>
-                        <p><strong>Kunde:</strong> Nein, das war alles. Vielen Dank!</p>
-                        <p><strong>Agent:</strong> Sehr gerne! Ich wünsche Ihnen einen schönen Tag. Auf Wiederhören!</p>
-                    </div>
-                </div>
+                <!-- Wird dynamisch per JS befüllt -->
             </div>
         </div>
     </div>

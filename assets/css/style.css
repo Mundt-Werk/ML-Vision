@@ -268,7 +268,7 @@ body:not(.no-js) .scroll-reveal.revealed { opacity: 1; transform: translateY(0);
    STATS
 ════════════════════════════════════════════════════════════ */
 .stats-section { background: var(--light); border-bottom: 1px solid var(--light-border); }
-.stats-grid { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; align-items: start; padding: 16px 40px; }
+.stats-grid { margin: 0; display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; align-items: start; }
 .stat { text-align: center; padding: 16px 24px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
 .stat-val { display: flex; align-items: baseline; justify-content: center; gap: 2px; margin-bottom: 6px; }
 .trust-number, .trust-number-static { font-size: 52px; font-weight: 900; letter-spacing: -0.04em; line-height: 1; color: var(--txt-dark); }

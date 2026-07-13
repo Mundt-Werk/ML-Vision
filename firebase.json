@@ -2,7 +2,7 @@
   "functions": {
     "source": "functions",
     "predeploy": [],
-    "runtime": "nodejs18"
+    "runtime": "nodejs20"
   },
   "firestore": {
     "rules": "firestore.rules",
@@ -15,12 +15,29 @@
     "public": ".",
     "ignore": [
       "firebase.json",
+      "firestore.rules",
+      "firestore.indexes.json",
+      "storage.rules",
+      "skills-lock.json",
+      "*.md",
       "**/.*",
+      ".git",
+      ".git/**",
+      ".claude/**",
       "**/node_modules/**",
       "functions/**",
+      "leads_bot/**",
       "ARCHIV_ALTE_DATEIEN/**",
+      "_archiv/**",
       "ref/**",
-      ".claude/**"
+      "kunden/**",
+      "MD/**",
+      "scripts/**",
+      "n8n/**",
+      "**/*.exe",
+      "**/*.bat",
+      "**/*.sh",
+      "**/*.dll"
     ],
     "rewrites": [
       {

@@ -269,7 +269,7 @@ async function createTicket() {
 
         // Upload file if exists
         let files = [];
-        if (fileInput.files.length > 0) {
+        if (fileInput && fileInput.files.length > 0) {
             const file = fileInput.files[0];
             console.log('File selected:', file.name, file.size, 'bytes');
 
@@ -376,7 +376,7 @@ async function sendReply() {
 
         // Upload file if exists
         let files = [];
-        if (fileInput.files.length > 0) {
+        if (fileInput && fileInput.files.length > 0) {
             const file = fileInput.files[0];
 
             if (file.size > 10 * 1024 * 1024) {

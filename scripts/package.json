@@ -15,6 +15,8 @@
   "author": "ML Vision",
   "license": "MIT",
   "dependencies": {
+    "basic-ftp": "^6.0.1",
+    "dotenv": "^17.4.2",
     "firebase-admin": "^12.0.0"
   }
 }

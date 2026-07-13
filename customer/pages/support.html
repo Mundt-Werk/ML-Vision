@@ -34,6 +34,33 @@
                 <p>Stellen Sie Fragen und verfolgen Sie Ihre Support-Anfragen</p>
             </div>
 
+            <!-- 8.3 Direktkontakt ML Vision -->
+            <div class="direct-contact-card">
+                <div class="direct-contact-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div class="direct-contact-info">
+                    <strong>Direktkontakt ML Vision</strong>
+                    <p>Für dringende Anliegen erreichen Sie uns direkt:</p>
+                    <div class="direct-contact-links">
+                        <a href="tel:+491741535231" class="contact-link contact-link--phone">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                            </svg>
+                            +49 174 153 52 31
+                        </a>
+                        <a href="mailto:support@vision-ml.de" class="contact-link contact-link--email">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                            support@vision-ml.de
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- LIST VIEW -->
             <div id="listView" class="view-mode active">
                 <div class="support-header">
@@ -85,12 +112,6 @@
                             <textarea id="ticketBody" required placeholder="Beschreiben Sie Ihr Anliegen..."></textarea>
                         </div>
 
-                        <div class="form-group">
-                            <label for="ticketFile">Datei anhängen (optional, max 10 MB)</label>
-                            <input type="file" id="ticketFile" accept="image/*,application/pdf,.doc,.docx,.txt">
-                            <small class="help-text">Erlaubt: Bilder, PDF, Word, Text</small>
-                        </div>
-
                         <div class="form-actions">
                             <button type="button" class="btn-secondary" id="cancelCreateBtn">Abbrechen</button>
                             <button type="submit" class="btn-primary">Ticket erstellen</button>
@@ -124,11 +145,6 @@
                         <div class="form-group">
                             <label for="replyText">Ihre Antwort</label>
                             <textarea id="replyText" required placeholder="Schreiben Sie Ihre Antwort..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="replyFile">Datei anhängen (optional)</label>
-                            <input type="file" id="replyFile" accept="image/*,application/pdf,.doc,.docx,.txt">
                         </div>
 
                         <button type="submit" class="btn-primary">Antwort senden</button>

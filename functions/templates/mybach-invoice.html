@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="doc-customer-id" content="mybach">
+<title>Rechnung {{INVOICE_NO}} – Mybach & Co Immobilien GmbH</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand:    #0ea5e9;
+    --brand-dk: #0369a1;
+    --dark:     #0f172a;
+    --mid:      #1e293b;
+    --text:     #1e293b;
+    --muted:    #64748b;
+    --border:   #e2e8f0;
+    --bg:       #f8fafc;
+    --green:    #22c55e;
+    --green-dk: #15803d;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: #fff;
+    line-height: 1.5;
+  }
+
+  .page { max-width: 820px; margin: 0 auto; background: #fff; }
+
+  @page { size: A4; margin: 12mm 14mm; }
+  @media print {
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { max-width: 100%; }
+    .no-print { display: none !important; }
+  }
+
+  .print-bar {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 40px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .btn-print {
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-print:hover { background: var(--brand-dk); }
+  .print-hint { font-size: 11px; color: var(--muted); }
+
+  .header {
+    background: var(--dark);
+    color: #fff;
+    padding: 32px 40px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .logo-block .tagline {
+    font-size: 10px;
+    color: #94a3b8;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .doc-meta { text-align: right; }
+  .doc-meta .doc-type {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+  .doc-meta .doc-number { font-size: 20px; font-weight: 700; color: #fff; }
+  .doc-meta .doc-date { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+  .address-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .address-block { padding: 24px 40px; }
+  .address-block + .address-block {
+    border-left: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .address-block .label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .address-block .name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .address-block p { color: var(--muted); font-size: 12px; line-height: 1.7; }
+
+  .meta-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .meta-item { padding: 16px 24px; border-right: 1px solid var(--border); }
+  .meta-item:last-child { border-right: none; }
+  .meta-item .meta-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .meta-item .meta-value { font-size: 12.5px; font-weight: 600; color: var(--dark); }
+
+  .subject-wrap {
+    padding: 28px 40px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .subject-line {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    border-left: 3px solid var(--green);
+    padding: 10px 16px;
+    background: var(--bg);
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 14px;
+  }
+  .subject-line span {
+    color: var(--muted);
+    font-weight: 400;
+    margin-right: 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .subject-text { font-size: 12.5px; color: #374151; line-height: 1.75; max-width: 640px; }
+
+  .section-title {
+    padding: 20px 40px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .invoice-table-wrap {
+    padding: 0 40px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th {
+    background: var(--dark);
+    color: #fff;
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  thead th:last-child { border-right: none; text-align: right; }
+  thead th.right { text-align: right; }
+  tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  tbody td.right { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+  .pos-num { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .pos-title { font-size: 12.5px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+  .pos-desc { font-size: 11px; color: var(--muted); line-height: 1.55; }
+
+  .totals-wrap { padding: 0 40px 28px; border-bottom: 1px solid var(--border); }
+  .totals-table { width: 320px; margin-left: auto; border-collapse: collapse; }
+  .totals-table td { padding: 7px 0; font-size: 12.5px; vertical-align: top; }
+  .totals-table td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    padding-left: 24px;
+  }
+  .totals-table .t-label { color: var(--muted); }
+  .totals-table .t-mwst td { font-size: 12px; color: var(--muted); }
+  .totals-table .t-total td {
+    border-top: 2px solid var(--dark);
+    padding-top: 10px;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--dark);
+  }
+  .totals-table .t-brutto td {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--brand-dk);
+    padding-top: 4px;
+  }
+
+  .sepa-wrap { padding: 24px 40px; border-bottom: 1px solid var(--border); }
+  .sepa-box {
+    background: rgba(14,165,233,0.04);
+    border: 1px solid var(--brand);
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .sepa-box h4 {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .sepa-box p { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .sepa-box strong { color: var(--dark); }
+
+  .closing-wrap { padding: 24px 40px 32px; border-bottom: 1px solid var(--border); }
+  .closing-wrap p { font-size: 12.5px; color: #374151; line-height: 1.75; margin-bottom: 10px; max-width: 640px; }
+  .closing-wrap p:last-child { margin-bottom: 0; }
+  .closing-signature { margin-top: 28px; font-size: 13px; color: var(--dark); line-height: 1.8; }
+  .closing-signature strong { font-size: 14px; }
+  .closing-signature .sig-sub { color: var(--muted); font-size: 11.5px; }
+
+  .footer {
+    background: var(--dark);
+    color: #94a3b8;
+    padding: 24px 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 24px;
+    font-size: 10.5px;
+    line-height: 1.7;
+  }
+  .footer .footer-name { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .footer h5 {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 700px) {
+    .header { flex-direction: column; gap: 16px; padding: 24px 20px 20px; }
+    .address-strip { grid-template-columns: 1fr; }
+    .address-block { padding: 18px 20px; }
+    .address-block + .address-block { border-left: none; border-top: 1px solid var(--border); }
+    .meta-strip { grid-template-columns: 1fr 1fr; }
+    .subject-wrap, .invoice-table-wrap, .totals-wrap, .sepa-wrap, .closing-wrap { padding-left: 20px; padding-right: 20px; }
+    .totals-table { width: 100%; }
+    .footer { grid-template-columns: 1fr 1fr; padding: 20px; gap: 16px; }
+    .print-bar { padding: 10px 20px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="print-bar no-print">
+    <button class="btn-print" onclick="window.print()">Als PDF drucken / speichern</button>
+    <span class="print-hint">Im Druckdialog: „Als PDF speichern" → Hintergrundgrafiken aktivieren → Kopf- &amp; Fußzeile deaktivieren</span>
+  </div>
+
+  <div class="header">
+    <div class="logo-block">
+      <img src="/assets/img/logo_white_trans.png" alt="ML Vision" style="height:44px; display:block; margin-bottom:4px;">
+      <div class="tagline">KI-Lösungen &amp; Automation</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-type">Monatliche Servicerechnung</div>
+      <div class="doc-number">{{INVOICE_NO}}</div>
+      <div class="doc-date">Datum: {{DATE_STR}}</div>
+    </div>
+  </div>
+
+  <div class="address-strip">
+    <div class="address-block">
+      <div class="label">Rechnungsempfänger</div>
+      <div class="name">Mybach &amp; Co Immobilien GmbH</div>
+      <p>
+        z. Hd. Thomas Mybach<br>
+        Hohenzollernstraße 1, 52351 Düren<br>
+        thomas@mybach-immobilien.de
+      </p>
+    </div>
+    <div class="address-block">
+      <div class="label">Rechnungssteller</div>
+      <div class="name">Schauerte &amp; Mundt GbR (ML Vision)</div>
+      <p>
+        Leon Schauerte / Marco Mundt<br>
+        In der Lohe 14, 52399 Merzenich<br>
+        Steuer-Nr.: 207/5893/4317<br>
+        info@vision-ml.de &nbsp;·&nbsp; www.vision-ml.de
+      </p>
+    </div>
+  </div>
+
+  <div class="meta-strip">
+    <div class="meta-item">
+      <div class="meta-label">Rechnungsnummer</div>
+      <div class="meta-value">{{INVOICE_NO}}</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Rechnungsdatum</div>
+      <div class="meta-value">{{DATE_STR}}</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Leistungszeitraum</div>
+      <div class="meta-value">{{MONTH_YEAR}}</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Zahlungsart</div>
+      <div class="meta-value">SEPA-Lastschrift</div>
+    </div>
+  </div>
+
+  <div class="subject-wrap">
+    <div class="subject-line">
+      <span>Betreff:</span>KI-Telefonassistent – Servicegebühr {{MONTH_YEAR}}
+    </div>
+    <p class="subject-text">
+      Wir stellen Ihnen hiermit die monatliche Servicegebühr für den KI-Telefonassistenten im Monat {{MONTH_YEAR}} in Rechnung. Im enthaltenen Volumen sind 120 Gesprächsminuten pro Monat inbegriffen. Mehrminuten werden ggf. separat zum Preis von 0,30 € netto/Min. abgerechnet.
+    </p>
+  </div>
+
+  <div class="section-title">Rechnungspositionen</div>
+
+  <div class="invoice-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:5%">Pos.</th>
+          <th style="width:60%">Bezeichnung</th>
+          <th class="right" style="width:12%">Menge</th>
+          <th class="right" style="width:12%">Einzelpreis</th>
+          <th class="right" style="width:11%">Gesamt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pos-num">01</span></td>
+          <td>
+            <div class="pos-title">KI-Telefonassistent – Paket Standard</div>
+            <div class="pos-desc">
+              Servicegebühr · Leistungszeitraum {{MONTH_YEAR}}<br>
+              Inkl. 120 Gesprächsminuten/Monat · ElevenLabs ConvAI · n8n Automation · Brevo E-Mail-Benachrichtigung<br>
+              Mehrminuten: 0,30 € netto/Min · werden ggf. separat abgerechnet
+            </div>
+          </td>
+          <td class="right">1</td>
+          <td class="right">40,00 €</td>
+          <td class="right">40,00 €</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="totals-wrap">
+    <table class="totals-table">
+      <tbody>
+        <tr>
+          <td class="t-label">Nettobetrag</td>
+          <td>40,00 €</td>
+        </tr>
+        <tr class="t-mwst">
+          <td class="t-label">zzgl. 19 % MwSt.</td>
+          <td>7,60 €</td>
+        </tr>
+        <tr class="t-total">
+          <td>Rechnungsbetrag</td>
+          <td></td>
+        </tr>
+        <tr class="t-brutto">
+          <td>Gesamtbetrag (Brutto)</td>
+          <td>47,60 €</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sepa-wrap">
+    <div class="sepa-box">
+      <h4>SEPA-Lastschrift – Keine Überweisung erforderlich</h4>
+      <p>
+        Der Betrag von <strong>47,60 € (brutto)</strong> wird automatisch per SEPA-Lastschrift von Ihrem hinterlegten Konto eingezogen.<br>
+        Kunden-ID: <strong>K-1774297733263</strong> &nbsp;·&nbsp;
+        Mandatsreferenz: <strong>MYB-SEPA-001</strong><br><br>
+        Bei Rückfragen zur Abbuchung wenden Sie sich bitte an: <strong>info@vision-ml.de</strong> oder <strong>+49 174 153 52 31</strong>
+      </p>
+    </div>
+  </div>
+
+  <div class="closing-wrap">
+    <p>Vielen Dank für Ihr Vertrauen. Ihren KI-Telefonassistenten können Sie jederzeit in Ihrem Kundenbereich unter <strong>vision-ml.de/customer</strong> einsehen.</p>
+    <div class="closing-signature">
+      <strong>Leon Schauerte</strong><br>
+      Schauerte &amp; Mundt GbR (ML Vision)<br>
+      <span class="sig-sub">+49 174 153 52 31 &nbsp;·&nbsp; info@vision-ml.de &nbsp;·&nbsp; www.vision-ml.de</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      <div class="footer-name">Schauerte &amp; Mundt GbR (ML Vision)</div>
+      In der Lohe 14<br>52399 Merzenich<br>Deutschland
+    </div>
+    <div>
+      <h5>Kontakt</h5>
+      +49 174 153 52 31<br>
+      info@vision-ml.de<br>
+      www.vision-ml.de
+    </div>
+    <div>
+      <h5>Steuer</h5>
+      Steuer-Nr.<br>207/5893/4317<br>
+      <br>GF: Leon Schauerte<br>Marco Mundt
+    </div>
+    <div>
+      <h5>Bank</h5>
+      Qonto<br>
+      IBAN DE19 1001 0123 3564 3106 95<br>
+      BIC QNTODEB2XXX
+    </div>
+  </div>
+
+</div>
+
+<script type="module" src="../../../assets/js/doc-protect.js"></script>
+</body>
+</html>

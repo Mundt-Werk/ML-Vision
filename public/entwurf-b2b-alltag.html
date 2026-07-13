@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML Vision Entwurf | Eigene Systeme für kleine Betriebe</title>
+  <meta name="description" content="Ein neuer ML Vision Entwurf für Handwerk, Gastronomie, Kanzleien und Kleingewerbe: individuelle Betriebssoftware statt aufgeblähte Standardtools.">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preconnect" href="https://images.pexels.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #18201d;
+      --muted: #68716d;
+      --paper: #f8f4ec;
+      --paper-2: #eee4d5;
+      --white: #fffdf8;
+      --green: #1f5c46;
+      --green-2: #d7eadb;
+      --blue: #214c67;
+      --yellow: #f7c95f;
+      --red: #bd4b39;
+      --line: rgba(24, 32, 29, 0.14);
+      --shadow: 0 24px 70px rgba(35, 31, 24, 0.16);
+      --radius: 8px;
+      --content: 1200px;
+      --page-pad: clamp(18px, 5vw, 72px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(247, 201, 95, 0.14), transparent 34%),
+        linear-gradient(90deg, rgba(24, 32, 29, 0.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(24, 32, 29, 0.045) 1px, transparent 1px),
+        linear-gradient(180deg, #fbf8f1 0%, var(--paper) 46%, #fbf8f1 100%);
+      background-size: auto, 42px 42px, 42px 42px, auto;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
+      align-items: center;
+      gap: 24px;
+      padding: 10px max(var(--page-pad), calc((100vw - var(--content)) / 2));
+      border-bottom: 1px solid rgba(24, 32, 29, 0.08);
+      background: rgba(251, 248, 241, 0.92);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-logo {
+      width: auto;
+      height: clamp(28px, 2.8vw, 36px);
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .topbar > .btn {
+      justify-self: end;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+    }
+
+    .nav-eyes {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 7px;
+      border: 1px solid rgba(24, 32, 29, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, 0.78);
+    }
+
+    .eye {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(24, 32, 29, 0.2);
+      border-radius: 50%;
+      background: #fffdf8;
+      box-shadow: inset 0 1px 3px rgba(24, 32, 29, 0.12);
+    }
+
+    .pupil {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ink);
+      transform: translate(calc(-50% + var(--eye-x, 0px)), calc(-50% + var(--eye-y, 0px)));
+      transition: transform 80ms linear;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: var(--white);
+      font-weight: 800;
+      box-shadow: 6px 6px 0 var(--yellow);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      transform: translate(3px, 3px);
+      box-shadow: 3px 3px 0 var(--yellow);
+    }
+
+    .btn.secondary {
+      background: var(--white);
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 24px;
+      align-items: center;
+      width: min(calc(100% - 2 * var(--page-pad)), var(--content));
+      min-height: calc(100vh - 72px);
+      margin: 0 auto;
+      padding: clamp(42px, 7vw, 96px) 0 46px;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      grid-column: 1 / span 6;
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 22px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, 0.7);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 0 5px rgba(189, 75, 57, 0.14);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(48px, 6.4vw, 92px);
+      font-weight: 800;
+      line-height: 0.98;
+    }
+
+    .hero-copy h1 em {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .hero-lead {
+      max-width: 650px;
+      margin: 28px 0 0;
+      color: #404a45;
+      font-size: clamp(18px, 2.2vw, 24px);
+      line-height: 1.45;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin: 34px 0 0;
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      max-width: 700px;
+      margin: 42px 0 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--line);
+    }
+
+    .proof-strip div {
+      min-height: 96px;
+      padding: 18px;
+      background: rgba(255, 253, 248, 0.78);
+    }
+
+    .proof-strip strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 22px;
+    }
+
+    .proof-strip span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .stance {
+      max-width: 700px;
+      margin: 24px 0 0;
+      padding: 18px 20px;
+      border-left: 5px solid var(--red);
+      background: rgba(255, 253, 248, 0.72);
+      color: #334039;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .hero-media {
+      position: relative;
+      grid-column: 8 / span 5;
+      min-height: 620px;
+    }
+
+    .photo-stack {
+      position: absolute;
+      inset: 0;
+    }
+
+    .photo {
+      position: absolute;
+      overflow: hidden;
+      border: 9px solid var(--white);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo.main {
+      top: 6%;
+      right: 0;
+      width: 78%;
+      height: 62%;
+      transform: rotate(1.2deg);
+    }
+
+    .photo.small {
+      left: 0;
+      bottom: 5%;
+      width: 52%;
+      height: 38%;
+      transform: rotate(-1.4deg);
+    }
+
+    .note {
+      position: absolute;
+      right: 10%;
+      bottom: 12%;
+      width: min(260px, 58%);
+      padding: 18px;
+      border: 1px solid rgba(24, 32, 29, 0.2);
+      border-radius: var(--radius);
+      background: var(--yellow);
+      box-shadow: 12px 12px 0 rgba(24, 32, 29, 0.12);
+      transform: rotate(-2deg);
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .note span {
+      color: #443710;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .section {
+      padding: clamp(72px, 10vw, 124px) var(--page-pad);
+    }
+
+    .section.alt {
+      background: var(--white);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 24px;
+      align-items: end;
+      max-width: var(--content);
+      margin: 0 auto 42px;
+    }
+
+    .section-head > div {
+      grid-column: 1 / span 7;
+    }
+
+    .section-head > p {
+      grid-column: 9 / span 4;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(34px, 4.4vw, 58px);
+      font-weight: 800;
+      line-height: 1.06;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .industry-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      max-width: var(--content);
+      margin: 0 auto;
+    }
+
+    .industry-card {
+      position: relative;
+      min-height: 420px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: var(--white);
+      isolation: isolate;
+    }
+
+    .industry-card img {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 500ms ease;
+    }
+
+    .industry-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.78));
+    }
+
+    .industry-card:hover img {
+      transform: scale(1.06);
+    }
+
+    .industry-content {
+      position: absolute;
+      inset: auto 0 0;
+      padding: 22px;
+    }
+
+    .industry-card h3 {
+      margin-bottom: 12px;
+      font-size: 24px;
+    }
+
+    .industry-card ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 14px;
+      line-height: 1.45;
+      list-style: none;
+    }
+
+    .problem-board {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+      max-width: var(--content);
+      margin: 0 auto;
+    }
+
+    .problem-list {
+      display: grid;
+      grid-column: 1 / span 7;
+      gap: 12px;
+    }
+
+    .problem {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+
+    .problem b {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--yellow);
+      font-size: 20px;
+    }
+
+    .problem strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 19px;
+    }
+
+    .problem span {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      max-width: var(--content);
+      margin: 0 auto;
+      align-items: stretch;
+    }
+
+    .tool-card {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 340px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.78);
+    }
+
+    .tool-card.dark {
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .tool-card.accent {
+      background: var(--yellow);
+    }
+
+    .tool-card h3 {
+      margin-bottom: 18px;
+      font-size: 28px;
+      line-height: 1.08;
+    }
+
+    .tool-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 32ch;
+    }
+
+    .tool-card.dark p {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .tool-card ul {
+      display: grid;
+      gap: 10px;
+      margin: 28px 0 0;
+      padding: 0;
+      list-style: none;
+      color: inherit;
+      line-height: 1.45;
+      align-self: end;
+    }
+
+    .tool-card li::before {
+      content: "/";
+      margin-right: 8px;
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .tool-card.dark li::before {
+      color: var(--yellow);
+    }
+
+    .tool-card.accent {
+      border-color: rgba(24, 32, 29, 0.18);
+    }
+
+    .tool-card.accent p {
+      color: rgba(24, 32, 29, 0.66);
+    }
+
+    .calc-card {
+      position: sticky;
+      top: 96px;
+      grid-column: 8 / span 5;
+      align-self: start;
+      padding: 26px;
+      border-radius: var(--radius);
+      background: var(--green);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .calc-card h3 {
+      margin-bottom: 18px;
+      font-size: 28px;
+    }
+
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .calc-row strong {
+      color: var(--white);
+    }
+
+    .calc-total {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: var(--radius);
+      background: var(--yellow);
+      color: var(--ink);
+    }
+
+    .calc-total strong {
+      display: block;
+      font-size: 32px;
+    }
+
+    .before-after {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+      max-width: var(--content);
+      margin: 0 auto;
+    }
+
+    .flow-panel {
+      min-height: auto;
+      padding: 0;
+      border-radius: var(--radius);
+      background: transparent;
+      border: 0;
+    }
+
+    .flow-panel.after {
+      background: transparent;
+    }
+
+    .flow-panel h3 {
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--line);
+      font-size: 28px;
+    }
+
+    .flow-panel.after h3 {
+      border-color: rgba(31, 92, 70, 0.32);
+      color: var(--green);
+    }
+
+    .flow-steps {
+      display: grid;
+      gap: 0;
+    }
+
+    .flow-step {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .flow-step strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .flow-step span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .split-feature {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 24px;
+      align-items: center;
+      max-width: var(--content);
+      margin: 0 auto;
+    }
+
+    .split-feature > .feature-photo {
+      grid-column: 1 / span 5;
+    }
+
+    .split-feature > div {
+      grid-column: 7 / span 6;
+    }
+
+    .feature-photo {
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      aspect-ratio: 4 / 5;
+    }
+
+    .feature-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .promise-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .promise {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.78);
+    }
+
+    .promise i {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--red);
+      color: var(--white);
+      font-style: normal;
+      font-weight: 800;
+    }
+
+    .promise strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .promise span {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .cta-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.55fr);
+      gap: 30px;
+      align-items: center;
+      max-width: var(--content);
+      margin: 0 auto;
+      padding: clamp(28px, 5vw, 54px);
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .cta-band h2 {
+      max-width: 760px;
+    }
+
+    .cta-band p {
+      max-width: 650px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .quick-form {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: var(--white);
+    }
+
+    .quick-form input,
+    .quick-form select {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 14px;
+      border: 1px solid rgba(24, 32, 29, 0.18);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .quick-form .btn {
+      width: 100%;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 34px clamp(18px, 5vw, 72px);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1080px) {
+      .topbar {
+        grid-template-columns: auto 1fr auto;
+      }
+
+      .hero,
+      .section-head,
+      .problem-board,
+      .split-feature,
+      .cta-band {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy,
+      .hero-media,
+      .section-head > div,
+      .section-head > p,
+      .problem-list,
+      .calc-card,
+      .split-feature > .feature-photo,
+      .split-feature > div {
+        grid-column: auto;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-media {
+        min-height: 520px;
+      }
+
+      .industry-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .calc-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        display: none;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr auto;
+      }
+
+      .topbar .btn {
+        min-height: 42px;
+        padding: 0 14px;
+        box-shadow: none;
+      }
+
+      .brand-logo {
+        height: 34px;
+      }
+
+      .hero {
+        padding-top: 36px;
+      }
+
+      .hero-media {
+        min-height: 430px;
+      }
+
+      .photo.main {
+        width: 88%;
+        height: 60%;
+      }
+
+      .photo.small {
+        width: 62%;
+      }
+
+      .proof-strip,
+      .industry-grid,
+      .before-after,
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .industry-card {
+        min-height: 360px;
+      }
+
+      .problem {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#">
+      <img class="brand-logo" src="logo_color_trans.png" alt="ML Vision">
+      <span class="brand-name">ML Vision</span>
+    </a>
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a href="#branchen">Branchen</a>
+      <a href="#systeme">Systeme</a>
+      <span class="nav-eyes" aria-hidden="true">
+        <span class="eye"><span class="pupil"></span></span>
+        <span class="eye"><span class="pupil"></span></span>
+      </span>
+      <a href="#toolproblem">Toolproblem</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <a class="btn" href="#kontakt">Analyse starten</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Individuelle Systeme für kleine Unternehmen in NRW</p>
+        <h1>Nicht noch ein Tool. <em>Ihr eigenes System.</em></h1>
+        <p class="hero-lead">Viele Betriebe haben kein echtes Fundament: Daten liegen verstreut, Prozesse leben im Kopf einzelner Mitarbeiter und Standardsoftware wird jedes Jahr teurer. Wir bauen individuelle Lösungen, die nach Ihren Regeln arbeiten.</p>
+        <p class="stance">Voice Agents, Formulare, Dashboards, Schnittstellen und KI sind nur Bausteine. Entscheidend ist die Struktur dahinter: ein System, das zu Ihrem Betrieb passt, statt Ihren Betrieb in ein fremdes Tool zu pressen.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#kontakt">Systemanalyse starten</a>
+          <a class="btn secondary" href="#systeme">Ansatz ansehen</a>
+        </div>
+        <div class="proof-strip" aria-label="Vorteile">
+          <div>
+            <strong>Eigene Regeln</strong>
+            <span>Der Ablauf richtet sich nach Ihrem Betrieb, nicht nach dem Menü eines Tools.</span>
+          </div>
+          <div>
+            <strong>Klein starten</strong>
+            <span>Ein erster Prozess, der sofort hilft. Danach erweitern wir gezielt.</span>
+          </div>
+          <div>
+            <strong>Keine Tool-Falle</strong>
+            <span>Weniger Abo-Wildwuchs, weniger Workarounds, mehr Kontrolle.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-media" aria-hidden="true">
+        <div class="photo-stack">
+          <figure class="photo main">
+            <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=1200&q=82" alt="">
+          </figure>
+          <figure class="photo small">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=82" alt="">
+          </figure>
+          <div class="note">
+            <strong>Ihr Ablauf, Ihre Regeln</strong>
+            <span>Von Anfrage bis Rechnung: ein System, das so arbeitet, wie Ihr Betrieb wirklich funktioniert.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="branchen">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Nicht für Software-Abteilungen gedacht</p>
+          <h2>Für Betriebe, die Struktur brauchen, aber keine aufgeblähte Plattform.</h2>
+        </div>
+        <p>Wir ersetzen nicht blind Menschen durch Bots. Wir ordnen Daten, Verantwortlichkeiten und wiederkehrende Arbeit so, dass Ihr Unternehmen weniger von Zetteln, Excel-Listen und einzelnen Mitarbeitern abhängt.</p>
+      </div>
+
+      <div class="industry-grid">
+        <article class="industry-card">
+          <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=82" alt="Handwerker in Werkstatt">
+          <div class="industry-content">
+            <h3>Handwerk</h3>
+            <ul>
+              <li>Anfrage, Ortstermin, Angebot und Rechnung verbunden</li>
+              <li>Keine verstreuten Notizen zwischen Baustelle und Büro</li>
+              <li>Eigene Angebotslogik statt starrem Standard-CRM</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="industry-card">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=82" alt="Gastronomie Service">
+          <div class="industry-content">
+            <h3>Gastronomie</h3>
+            <ul>
+              <li>Reservierungen, Events, Bewertungen und Personal im Blick</li>
+              <li>Telefon, WhatsApp und Website sauber zusammengeführt</li>
+              <li>Einfacher als ein überladenes Gastro-System</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="industry-card">
+          <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=82" alt="Kanzlei Dokumente">
+          <div class="industry-content">
+            <h3>Kanzleien</h3>
+            <ul>
+              <li>Mandantenaufnahme nach eigener Kanzleilogik</li>
+              <li>Unterlagen, Fristen und Rückfragen strukturiert</li>
+              <li>Diskret, nachvollziehbar und ohne Tool-Chaos</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="industry-card">
+          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=82" alt="Kleines Geschäft mit Kasse">
+          <div class="industry-content">
+            <h3>Kleingewerbe</h3>
+            <ul>
+              <li>Vom Postfach zum einfachen Betriebs-Cockpit</li>
+              <li>Kunden, Aufgaben und Dokumente an einem Ort</li>
+              <li>Individuell gebaut statt monatlich mehr Abos</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="systeme">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Was wir wirklich bauen</p>
+          <h2>Nicht nur Automatisierung. Ein Betriebssystem für Ihren Alltag.</h2>
+        </div>
+        <p>Ein Voice Agent kann sinnvoll sein. Ein Formular auch. Ein Dashboard ebenfalls. Aber erst wenn alles zusammenpasst, entsteht echte Entlastung: klare Eingaben, klare Regeln, klare Ausgabe.</p>
+      </div>
+
+      <div class="problem-board">
+        <div class="problem-list">
+          <article class="problem">
+            <b>01</b>
+            <div>
+              <strong>Erst Struktur, dann Automatisierung.</strong>
+              <span>Wir klären, welche Informationen wirklich gebraucht werden, wer Entscheidungen trifft und wo Daten landen sollen.</span>
+            </div>
+          </article>
+          <article class="problem">
+            <b>02</b>
+            <div>
+              <strong>Ihre Abläufe werden nicht verbogen.</strong>
+              <span>Standardtools erzwingen oft ihre Logik. Wir bauen die Logik so, wie Ihr Betrieb arbeitet.</span>
+            </div>
+          </article>
+          <article class="problem">
+            <b>03</b>
+            <div>
+              <strong>Bestehende Tools werden verbunden oder ersetzt.</strong>
+              <span>E-Mail, Kalender, Rechnungstool, Tabellen, CRM oder Branchensoftware werden sinnvoll zusammengeführt.</span>
+            </div>
+          </article>
+          <article class="problem">
+            <b>04</b>
+            <div>
+              <strong>KI kommt nur dahin, wo sie wirklich hilft.</strong>
+              <span>Nicht jeder Prozess braucht einen Voice Agent. Manchmal reicht ein gutes Formular, ein sauberes Dashboard oder eine kleine Schnittstelle.</span>
+            </div>
+          </article>
+        </div>
+
+        <aside class="calc-card">
+          <h3>Typisches Problem</h3>
+          <div class="calc-row">
+            <span>CRM für Vertrieb</span>
+            <strong>35 EUR</strong>
+          </div>
+          <div class="calc-row">
+            <span>Termin-Tool</span>
+            <strong>29 EUR</strong>
+          </div>
+          <div class="calc-row">
+            <span>Formular-Tool</span>
+            <strong>49 EUR</strong>
+          </div>
+          <div class="calc-row">
+            <span>Automations-Tool</span>
+            <strong>ab 60 EUR</strong>
+          </div>
+          <div class="calc-total">
+            <span>Und trotzdem passt es nicht richtig</span>
+            <strong>Tool-Falle</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section alt" id="toolproblem">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Der Unterschied</p>
+          <h2>Standardtools geben Regeln vor. Wir bauen die Regeln mit Ihnen.</h2>
+        </div>
+        <p>Viele Softwarepakete können sehr viel. Genau das ist oft das Problem: Man bezahlt Funktionen, die niemand nutzt, und baut Workarounds für das, was wirklich gebraucht wird.</p>
+      </div>
+
+      <div class="tool-grid">
+        <article class="tool-card">
+          <h3>Wenn Tools zu groß werden</h3>
+          <p>Es gibt Menüs, Rollen, Module, Limits, Upgrades und Abos. Am Ende arbeitet der Betrieb für das Tool, nicht das Tool für den Betrieb.</p>
+          <ul>
+            <li>zu viele Funktionen</li>
+            <li>zu wenig Passung</li>
+            <li>mehr Kosten bei jedem Wachstum</li>
+          </ul>
+        </article>
+        <article class="tool-card dark">
+          <h3>Wenn Struktur fehlt</h3>
+          <p>Viele Unternehmen haben gar kein sauberes Grundsystem. Wissen liegt in WhatsApp, Excel, E-Mail und im Kopf einzelner Personen.</p>
+          <ul>
+            <li>keine klare Datenbasis</li>
+            <li>keine einheitlichen Abläufe</li>
+            <li>Abhängigkeit von Einzelpersonen</li>
+          </ul>
+        </article>
+        <article class="tool-card accent">
+          <h3>Was wir anders machen</h3>
+          <p>Wir bauen schlanke Werkzeuge um Ihren echten Ablauf herum. So viel Technik wie nötig, so wenig Ballast wie möglich.</p>
+          <ul>
+            <li>individuelle Eingaben und Ausgaben</li>
+            <li>eigene Logik und Freigaben</li>
+            <li>erweiterbar, wenn der Betrieb wächst</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="ablauf">
+      <div class="section-head">
+        <div>
+          <p class="kicker">So fühlt sich der Unterschied an</p>
+          <h2>Vorher: Tool-Chaos. Nachher: ein System, das Ihre Regeln kennt.</h2>
+        </div>
+        <p>Ein Beispiel für einen typischen Anfrage- und Auftragsprozess im Handwerk, in der Gastro oder bei Dienstleistern.</p>
+      </div>
+
+      <div class="before-after">
+        <article class="flow-panel">
+          <h3>Vorher</h3>
+          <div class="flow-steps">
+            <div class="flow-step">
+              <strong>Kunde schreibt, ruft an oder füllt ein Formular aus</strong>
+              <span>Informationen landen in WhatsApp, E-Mail, Kalender, Excel oder auf Papier.</span>
+            </div>
+            <div class="flow-step">
+              <strong>Jedes Tool hat seine eigene Logik</strong>
+              <span>Das CRM will andere Felder als das Rechnungstool, der Kalender kennt den Status nicht.</span>
+            </div>
+            <div class="flow-step">
+              <strong>Mitarbeiter bauen Workarounds</strong>
+              <span>Listen, Notizen, manuelle Erinnerungen und doppelte Eingaben halten den Betrieb irgendwie zusammen.</span>
+            </div>
+            <div class="flow-step">
+              <strong>Auswertung ist kaum möglich</strong>
+              <span>Niemand sieht sauber, welche Anfragen offen sind, wo Geld liegt und was als Nächstes passieren muss.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="flow-panel after">
+          <h3>Nachher</h3>
+          <div class="flow-steps">
+            <div class="flow-step">
+              <strong>Alle Eingaben laufen in eine saubere Struktur</strong>
+              <span>Telefon, Website, E-Mail oder Formular werden in ein einheitliches Modell überführt.</span>
+            </div>
+            <div class="flow-step">
+              <strong>Ihre Regeln entscheiden den nächsten Schritt</strong>
+              <span>Priorisieren, zuweisen, nachfragen, ablehnen, Termin vorschlagen oder Angebot vorbereiten.</span>
+            </div>
+            <div class="flow-step">
+              <strong>Nur sinnvolle Bausteine werden automatisiert</strong>
+              <span>Manchmal Voice Agent, manchmal Dashboard, manchmal Schnittstelle, manchmal nur ein besseres Formular.</span>
+            </div>
+            <div class="flow-step">
+              <strong>Der Betrieb bekommt ein eigenes Cockpit</strong>
+              <span>Offene Aufgaben, Kunden, Angebote, Termine und Dokumente werden sichtbar und steuerbar.</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="split-feature">
+        <figure class="feature-photo">
+          <img src="https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=1000&q=82" alt="Beratungsgespräch im kleinen Unternehmen">
+        </figure>
+        <div>
+          <p class="kicker">Persönlich statt Plattform</p>
+          <h2>Sie bekommen kein Standardpaket. Sie bekommen Ihr eigenes Betriebssystem.</h2>
+          <div class="promise-list">
+            <div class="promise">
+              <i>1</i>
+              <div>
+                <strong>Wir starten bei Ihrer Realität.</strong>
+                <span>Nicht bei einer Tool-Liste. Wir schauen, wie Anfragen, Daten, Entscheidungen und Dokumente heute wirklich laufen.</span>
+              </div>
+            </div>
+            <div class="promise">
+              <i>2</i>
+              <div>
+                <strong>Wir bauen die passende Logik.</strong>
+                <span>Freigaben, Status, Felder, Benachrichtigungen und Auswertungen richten sich nach Ihrem Betrieb.</span>
+              </div>
+            </div>
+            <div class="promise">
+              <i>3</i>
+              <div>
+                <strong>Wir erweitern nur, wenn es Sinn ergibt.</strong>
+                <span>Kein aufgeblähter Funktionskatalog. Erst Fundament, dann weitere Bausteine wie KI, Voice, Dashboards oder Schnittstellen.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="kontakt">
+      <div class="cta-band">
+        <div>
+          <p class="kicker">Kostenlose Systemanalyse</p>
+          <h2>Zeigen Sie uns Ihr Tool-Chaos. Wir zeigen, wie daraus ein klarer Ablauf wird.</h2>
+          <p>In 20 Minuten klären wir, welche Struktur fehlt, welche Tools bleiben können und wo eine individuelle Lösung mehr Sinn ergibt als das nächste Abo.</p>
+        </div>
+        <form class="quick-form">
+          <input type="text" name="name" placeholder="Ihr Name" aria-label="Ihr Name">
+          <input type="email" name="email" placeholder="E-Mail" aria-label="E-Mail">
+          <select name="branche" aria-label="Branche">
+            <option>Branche wählen</option>
+            <option>Handwerk</option>
+            <option>Gastronomie</option>
+            <option>Kanzlei / Beratung</option>
+            <option>Kleingewerbe</option>
+          </select>
+          <button class="btn" type="button">Systemanalyse anfragen</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>ML Vision - Entwurf B2B-Alltag</span>
+    <span>Diesen Entwurf separat testen, ohne die aktuelle Website zu ersetzen.</span>
+  </footer>
+  <script>
+    const eyes = [...document.querySelectorAll(".eye")];
+
+    function setEyePosition(event) {
+      eyes.forEach((eye) => {
+        const rect = eye.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const angle = Math.atan2(event.clientY - centerY, event.clientX - centerX);
+        const radius = 4.5;
+
+        eye.style.setProperty("--eye-x", `${Math.cos(angle) * radius}px`);
+        eye.style.setProperty("--eye-y", `${Math.sin(angle) * radius}px`);
+      });
+    }
+
+    function resetEyes() {
+      eyes.forEach((eye) => {
+        eye.style.setProperty("--eye-x", "0px");
+        eye.style.setProperty("--eye-y", "0px");
+      });
+    }
+
+    window.addEventListener("pointermove", setEyePosition, { passive: true });
+    window.addEventListener("pointerleave", resetEyes);
+  </script>
+</body>
+</html>

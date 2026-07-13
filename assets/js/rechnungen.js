@@ -1,7 +1,6 @@
-import { auth, db, storage } from './firebase-config.js';
+import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 import { collection, query, where, orderBy, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
-import { ref, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 import { initCustomerSidebar, checkModuleAccess } from './components/CustomerSidebar.js';
 
 let currentCustomerId = null;
@@ -166,6 +165,10 @@ async function loadInvoices() {
         }));
 
         applyFilters();
+
+        // 6.4: Nächste fällige Rechnung prominent anzeigen
+        showNextDueBanner(allInvoices);
+
     } catch (error) {
         console.error('Error loading invoices:', error);
         document.getElementById('invoicesTableBody').innerHTML = `
@@ -177,6 +180,28 @@ async function loadInvoices() {
             </tr>
         `;
     }
+}
+
+// 6.4: Banner für offene Rechnung
+function showNextDueBanner(invoices) {
+    const openInvoices = invoices.filter(inv => inv.status === 'open');
+    if (openInvoices.length === 0) return;
+
+    // Älteste offene Rechnung zuerst
+    openInvoices.sort((a, b) => parseDate(a.date) - parseDate(b.date));
+    const oldest = openInvoices[0];
+
+    const banner = document.getElementById('nextDueInvoiceBanner');
+    const text = document.getElementById('nextDueInvoiceText');
+
+    const amountStr = oldest.amountGross
+        ? ` · Betrag: ${formatAmount(oldest.amountGross, oldest.currency)}`
+        : '';
+    const dateStr = oldest.date ? ` · Datum: ${formatDate(oldest.date)}` : '';
+    const nrStr = oldest.invoiceNo ? `Rechnung ${oldest.invoiceNo}` : 'Eine Rechnung';
+
+    text.textContent = `${nrStr} ist noch offen${dateStr}${amountStr}.`;
+    banner.style.display = 'flex';
 }
 
 function applyFilters() {
@@ -246,7 +271,7 @@ function renderInvoices() {
             <td><strong>${formatAmount(invoice.amountGross, invoice.currency)}</strong></td>
             <td><span class="invoice-status ${invoice.status}">${getStatusText(invoice.status)}</span></td>
             <td>
-                <button class="download-btn" onclick="window.downloadInvoice('${invoice.id}', '${escapeHtml(invoice.pdfPath)}', '${escapeHtml(invoice.invoiceNo)}')">
+                <button class="download-btn" onclick="downloadInvoice(event, '${escapeHtml(invoice.id)}')" ${!invoice.pdfUrl && !invoice.storagePath ? 'disabled title="PDF noch nicht verfügbar"' : ''}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
@@ -282,7 +307,7 @@ function renderInvoices() {
             </div>
             <div class="mobile-invoice-footer">
                 <span class="mobile-invoice-amount">${formatAmount(invoice.amountGross, invoice.currency)}</span>
-                <button class="download-btn" onclick="window.downloadInvoice('${invoice.id}', '${escapeHtml(invoice.pdfPath)}', '${escapeHtml(invoice.invoiceNo)}')">
+                <button class="download-btn" onclick="downloadInvoice(event, '${escapeHtml(invoice.id)}')" ${!invoice.pdfUrl && !invoice.storagePath ? 'disabled title="PDF noch nicht verfügbar"' : ''}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
@@ -316,24 +341,13 @@ function renderInvoices() {
     }
 }
 
-window.downloadInvoice = async function(invoiceId, pdfPath, invoiceNo) {
-    try {
-        // Get download URL from Storage
-        const storageRef = ref(storage, pdfPath);
-        const url = await getDownloadURL(storageRef);
-
-        // Open in new tab or trigger download
-        window.open(url, '_blank');
-    } catch (error) {
-        console.error('Error downloading invoice:', error);
-        if (error.code === 'storage/object-not-found') {
-            alert('PDF-Datei nicht gefunden. Bitte kontaktieren Sie den Support.');
-        } else if (error.code === 'storage/unauthorized') {
-            alert('Zugriff verweigert. Sie haben keine Berechtigung für diese Datei.');
-        } else {
-            alert('Fehler beim Herunterladen der Rechnung: ' + error.message);
-        }
+window.downloadInvoice = function(event, invoiceId) {
+    const invoice = allInvoices.find(inv => inv.id === invoiceId);
+    if (!invoice?.pdfUrl) {
+        alert('PDF noch nicht verfügbar. Bitte kontaktieren Sie uns unter info@vision-ml.de.');
+        return;
     }
+    window.open(invoice.pdfUrl, '_blank', 'noopener,noreferrer');
 };
 
 function getStatusText(status) {
@@ -346,7 +360,7 @@ function getStatusText(status) {
 }
 
 function formatAmount(amountCents, currency = 'EUR') {
-    const amount = (amountCents / 100).toFixed(2);
+    const amount = (amountCents / 100).toFixed(2).replace('.', ',');
     return `${amount} ${currency}`;
 }
 

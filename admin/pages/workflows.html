@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workflow-Monitor - ML Vision Kundenbereich</title>
+    <title>Workflow-Monitor - ML Vision Admin</title>
     <meta name="robots" content="noindex, nofollow">
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -11,141 +11,14 @@
     <link rel="icon" type="image/png" sizes="96x96" href="../../assets/img/favicon-96x96.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/apple-touch-icon.png">
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/base/variables.css">
+    <link rel="stylesheet" href="../../assets/css/base/reset.css">
+    <link rel="stylesheet" href="../../assets/css/base/typography.css">
+    <link rel="stylesheet" href="../../assets/css/components/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/components/buttons.css">
+    <link rel="stylesheet" href="../../assets/css/layouts/admin-layout.css">
+    <link rel="stylesheet" href="../../assets/css/utilities/responsive.css">
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Futura Book', Arial, sans-serif;
-            background: #f5f7fa;
-            overflow-x: hidden;
-        }
-
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar (same as previous pages) */
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #051d3a 0%, #0a2847 100%);
-            padding: 20px 0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-
-        .sidebar-logo {
-            padding: 0 20px 30px 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-logo img {
-            height: 60px;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 20px 0;
-            margin: 0;
-        }
-
-        .sidebar-menu li {
-            margin: 5px 0;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .sidebar-menu a::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: #04A9D4;
-            transform: scaleY(0);
-            transition: transform 0.3s;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            color: #fff;
-            background: rgba(4, 169, 212, 0.1);
-        }
-
-        .sidebar-menu a.active::before,
-        .sidebar-menu a:hover::before {
-            transform: scaleY(1);
-        }
-
-        .sidebar-menu svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        .sidebar-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 20px;
-        }
-
-        .sidebar-footer a {
-            display: block;
-            padding: 10px;
-            color: #ff4757;
-            text-decoration: none;
-            text-align: center;
-            border: 2px solid #ff4757;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .sidebar-footer a:hover {
-            background: #ff4757;
-            color: #fff;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 30px;
-        }
-
-        .dashboard-header {
-            margin-bottom: 30px;
-        }
-
-        .dashboard-header h1 {
-            font-size: 32px;
-            color: #1a1a1a;
-            margin: 0 0 10px 0;
-        }
-
-        .dashboard-header p {
-            color: #6b7280;
-            margin: 0;
-            font-size: 16px;
-        }
-
         /* Usage Stats */
         .usage-grid {
             display: grid;
@@ -155,17 +28,17 @@
         }
 
         .usage-card {
-            background: #fff;
+            background: var(--bg-card);
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #04A9D4;
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--color-primary);
         }
 
         .usage-card h3 {
             margin: 0 0 15px 0;
             font-size: 14px;
-            color: #6b7280;
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -173,18 +46,18 @@
         .usage-value {
             font-size: 36px;
             font-weight: bold;
-            color: #1a1a1a;
+            color: var(--text-primary);
             margin: 0 0 10px 0;
         }
 
         .usage-limit {
             font-size: 14px;
-            color: #6b7280;
+            color: var(--text-secondary);
         }
 
         .usage-bar {
             height: 8px;
-            background: #e5e7eb;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             overflow: hidden;
             margin-top: 10px;
@@ -205,9 +78,10 @@
         }
 
         .workflow-card {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
             overflow: hidden;
             transition: all 0.3s;
         }
@@ -215,12 +89,13 @@
         .workflow-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 4px 16px rgba(4, 169, 212, 0.2);
+            border-color: var(--border-primary);
         }
 
         .workflow-header {
             padding: 20px;
-            background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
+            background: var(--bg-card-secondary);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -251,13 +126,13 @@
         .workflow-title-text h3 {
             margin: 0 0 5px 0;
             font-size: 18px;
-            color: #1a1a1a;
+            color: var(--text-primary);
         }
 
         .workflow-title-text p {
             margin: 0;
             font-size: 13px;
-            color: #6b7280;
+            color: var(--text-secondary);
         }
 
         .workflow-status {
@@ -271,13 +146,13 @@
         }
 
         .workflow-status.active {
-            background: #d1fae5;
-            color: #065f46;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--color-success);
         }
 
         .workflow-status.inactive {
-            background: #fee2e2;
-            color: #991b1b;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--color-error);
         }
 
         .status-dot {
@@ -301,31 +176,26 @@
         .workflow-stat {
             text-align: center;
             padding: 15px;
-            background: #f9fafb;
+            background: var(--bg-card-secondary);
             border-radius: 8px;
         }
 
         .workflow-stat-value {
             font-size: 24px;
             font-weight: bold;
-            color: #1a1a1a;
+            color: var(--text-primary);
             margin-bottom: 5px;
         }
 
         .workflow-stat-label {
             font-size: 11px;
-            color: #6b7280;
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .workflow-stat.success .workflow-stat-value {
-            color: #10b981;
-        }
-
-        .workflow-stat.error .workflow-stat-value {
-            color: #ef4444;
-        }
+        .workflow-stat.success .workflow-stat-value { color: var(--color-success); }
+        .workflow-stat.error .workflow-stat-value { color: var(--color-error); }
 
         .workflow-actions {
             display: flex;
@@ -336,40 +206,41 @@
         .workflow-btn {
             flex: 1;
             padding: 10px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
             background: transparent;
             border-radius: 8px;
             font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            color: #6b7280;
+            color: var(--text-secondary);
         }
 
         .workflow-btn:hover {
-            background: #04A9D4;
+            background: var(--color-primary);
             color: #fff;
-            border-color: #04A9D4;
+            border-color: var(--color-primary);
         }
 
         /* Error Logs */
         .logs-section {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
             overflow: hidden;
         }
 
         .logs-header {
             padding: 20px;
-            background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
+            background: var(--bg-card-secondary);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .logs-header h2 {
             margin: 0;
             font-size: 20px;
-            color: #1a1a1a;
+            color: var(--text-primary);
             font-weight: bold;
         }
 
@@ -381,23 +252,15 @@
 
         .log-item {
             padding: 15px;
-            background: #f9fafb;
-            border-left: 4px solid #ef4444;
+            background: var(--bg-card-secondary);
+            border-left: 4px solid var(--color-error);
             border-radius: 8px;
             margin-bottom: 12px;
         }
 
-        .log-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .log-item.warning {
-            border-left-color: #f59e0b;
-        }
-
-        .log-item.info {
-            border-left-color: #3b82f6;
-        }
+        .log-item:last-child { margin-bottom: 0; }
+        .log-item.warning { border-left-color: var(--color-warning); }
+        .log-item.info { border-left-color: var(--color-primary); }
 
         .log-header {
             display: flex;
@@ -409,92 +272,34 @@
         .log-title {
             font-size: 14px;
             font-weight: bold;
-            color: #1a1a1a;
+            color: var(--text-primary);
         }
 
         .log-time {
             font-size: 12px;
-            color: #6b7280;
+            color: var(--text-muted);
         }
 
         .log-message {
             font-size: 13px;
-            color: #6b7280;
+            color: var(--text-secondary);
             margin: 0;
         }
 
         .log-code {
             font-size: 11px;
-            color: #6b7280;
+            color: var(--text-muted);
             font-family: 'Courier New', monospace;
             margin-top: 8px;
             padding: 8px;
-            background: #fff;
+            background: var(--bg-dark);
             border-radius: 4px;
         }
 
-        /* Mobile Menu Toggle */
-        .mobile-menu-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 2000;
-            background: #04A9D4;
-            border: none;
-            border-radius: 8px;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(4, 169, 212, 0.4);
-        }
-
-        .mobile-menu-toggle span {
-            display: block;
-            width: 24px;
-            height: 3px;
-            background: #fff;
-            margin: 5px auto;
-            border-radius: 2px;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 80px 15px 20px 15px;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .dashboard-header h1 {
-                font-size: 24px;
-            }
-
-            .usage-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .workflow-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .workflow-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
-            }
+            .usage-grid { grid-template-columns: 1fr; }
+            .workflow-stats { grid-template-columns: 1fr; }
+            .workflow-header { flex-direction: column; gap: 15px; align-items: flex-start; }
         }
     </style>
 </head>
@@ -509,9 +314,10 @@
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
-                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision">
+                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision Logo">
             </div>
 
+            <div class="sidebar-section-title">Übersicht</div>
             <ul class="sidebar-menu">
                 <li>
                     <a href="../dashboard.html">
@@ -521,40 +327,20 @@
                         Dashboard
                     </a>
                 </li>
+            </ul>
+
+            <div class="sidebar-section-title">Kunden &amp; Business</div>
+            <ul class="sidebar-menu">
                 <li>
-                    <a href="gespraeche.html">
+                    <a href="customers.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                         </svg>
-                        Gesprächsübersicht
+                        Kunden
                     </a>
                 </li>
                 <li>
-                    <a href="termine.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                        </svg>
-                        Termine & Anfragen
-                    </a>
-                </li>
-                <li>
-                    <a href="workflows.html" class="active">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                        </svg>
-                        Workflow-Monitor
-                    </a>
-                </li>
-                <li>
-                    <a href="statistiken.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                        </svg>
-                        Statistiken
-                    </a>
-                </li>
-                <li>
-                    <a href="benutzer.html">
+                    <a href="users.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                         </svg>
@@ -562,49 +348,95 @@
                     </a>
                 </li>
                 <li>
-                    <a href="support.html">
+                    <a href="tickets.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                            <path d="M20 12v-2h-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v5c0 1.1.9 1.99 2 1.99V18l4-2h1v-1c0-2.21 1.79-4 4-4h7zm2 1h-7c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5.5l2.5 2v-2c1.1 0 2-.9 2-2v-3c0-1.1-.9-2-2-2z"/>
                         </svg>
-                        Support & Tickets
+                        Support-Tickets
                     </a>
                 </li>
                 <li>
-                    <a href="dokumentation.html">
+                    <a href="provision.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5zm-1 6v2h2v-2h-2zm0-4v2h2V7h-2z"/>
                         </svg>
-                        Dokumentation
+                        Kundenbereich einr.
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Angebote &amp; Dokumente</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="../angebote/dokument-hub.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Dokument-Hub
                     </a>
                 </li>
                 <li>
-                    <a href="rechnungen.html">
+                    <a href="../angebote/kva-form.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3v2zm-3-7V3.5L18.5 9H13z"/>
                         </svg>
-                        Rechnungen
+                        KVA erstellen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Technik &amp; Automation</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="leads-bot.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
+                        </svg>
+                        Leads Bot
                     </a>
                 </li>
                 <li>
-                    <a href="sicherheit.html">
+                    <a href="pricing-calculator.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
                         </svg>
-                        Sicherheit & Logs
+                        Pricing Kalkulator
+                    </a>
+                </li>
+                <li>
+                    <a href="workflows.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                        </svg>
+                        Workflow-Monitor
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">System</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="settings.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Einstellungen
                     </a>
                 </li>
             </ul>
 
             <div class="sidebar-footer">
-                <a href="../login.html">Abmelden</a>
+                <a href="#" class="logout-btn">Abmelden</a>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="dashboard-header">
-                <h1>Workflow-Monitor</h1>
-                <p>Überwachen Sie Ihre Automationen und Integrationen</p>
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <h1>Workflow-Monitor</h1>
+                    <p>Überwachen Sie Ihre Automationen und Integrationen</p>
+                </div>
             </div>
 
             <!-- Usage Stats -->
@@ -841,23 +673,9 @@
         </main>
     </div>
 
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('active');
-        }
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.querySelector('.mobile-menu-toggle');
-
-            if (window.innerWidth <= 768) {
-                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
-                    sidebar.classList.remove('active');
-                }
-            }
-        });
+    <script type="module">
+        import { Sidebar } from '../../assets/js/components/Sidebar.js';
+        new Sidebar('sidebar');
     </script>
 </body>
 </html>

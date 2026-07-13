@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termine - ML Vision Kundenbereich</title>
+    <meta name="robots" content="noindex, nofollow">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../assets/img/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/pages/gespraeche.css">
+    <style>
+        /* Terminart-Badge */
+        .terminart-badge {
+            display: inline-block; padding: 3px 10px; border-radius: 6px;
+            font-weight: 700; font-size: 12px;
+        }
+        .terminart-badge.besichtigung { background: rgba(16,185,129,0.15); color: #10B981; }
+        .terminart-badge.erstgespraech { background: rgba(4,169,212,0.15); color: #04A9D4; }
+        .terminart-badge.beratung { background: rgba(245,158,11,0.15); color: #F59E0B; }
+        .terminart-badge.default { background: rgba(255,255,255,0.08); color: rgba(225,232,237,0.6); }
+        /* Termine-Tabelle: mehr Spalten → kompakteres Padding */
+        .calls-table th, .calls-table td { padding: 14px 14px; }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision">
+            </div>
+
+            <ul class="sidebar-menu">
+                <!-- Wird dynamisch von CustomerSidebar.js geladen -->
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn">Abmelden</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Termine</h1>
+                <p>Alle über den KI-Assistenten gebuchten Termine</p>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Terminart</label>
+                        <select id="terminartFilter">
+                            <option value="">Alle</option>
+                            <option value="Besichtigung">Besichtigung</option>
+                            <option value="Erstgespräch">Erstgespräch</option>
+                            <option value="Beratung">Beratung</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-button">Filtern</button>
+                    </div>
+                    <div class="filter-group" style="margin-left:auto;">
+                        <!-- Spacer, Export-Button kommt per JS in table-header -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Termine Table -->
+            <div class="calls-table-container">
+                <div class="table-header">
+                    <h2>Termine werden geladen …</h2>
+                    <button class="export-button" id="exportBtn">CSV exportieren</button>
+                </div>
+                <table class="calls-table" id="termineTable">
+                    <thead>
+                        <tr>
+                            <th>Buchungsdatum</th>
+                            <th>Wunschtermin</th>
+                            <th>Terminart</th>
+                            <th>Anrufer</th>
+                            <th>Telefon</th>
+                            <th>E-Mail</th>
+                            <th>Immobilien-Nr.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding:48px; color:#9ca3af;">
+                                <div style="display:inline-flex; flex-direction:column; align-items:center; gap:12px;">
+                                    <svg style="animation:gamma-spin 1s linear infinite; width:28px; height:28px; color:#04A9D4;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                                    </svg>
+                                    <span style="font-size:14px;">Termine werden geladen …</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Termine List -->
+            <div class="mobile-calls-list" id="mobileTermineList"></div>
+        </main>
+    </div>
+
+    <script type="module" src="../../assets/js/termine.js"></script>
+</body>
+</html>

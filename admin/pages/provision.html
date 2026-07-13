@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kundenbereich einrichten - ML Vision Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/base/variables.css">
+    <link rel="stylesheet" href="../../assets/css/base/reset.css">
+    <link rel="stylesheet" href="../../assets/css/base/typography.css">
+    <link rel="stylesheet" href="../../assets/css/components/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/components/buttons.css">
+    <link rel="stylesheet" href="../../assets/css/components/forms.css">
+    <link rel="stylesheet" href="../../assets/css/layouts/admin-layout.css">
+    <link rel="stylesheet" href="../../assets/css/utilities/responsive.css">
+    <style>
+        .provision-container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .provision-form-card {
+            background: #1a2942;
+            border: 1px solid rgba(4, 169, 212, 0.15);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .provision-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #04A9D4;
+            margin: 0 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(4, 169, 212, 0.15);
+        }
+
+        .provision-uid-hint {
+            font-size: 12px;
+            color: rgba(225, 232, 237, 0.5);
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .provision-uid-hint code {
+            background: rgba(4, 169, 212, 0.1);
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 11px;
+            color: #04A9D4;
+        }
+
+        .module-toggles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .module-toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .module-toggle-item:has(input:checked) {
+            background: rgba(4, 169, 212, 0.12);
+            border-color: rgba(4, 169, 212, 0.4);
+        }
+
+        .module-toggle-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #04A9D4;
+            cursor: pointer;
+        }
+
+        .module-toggle-item label {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(225, 232, 237, 0.85);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .status-box {
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .status-box.success {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-box.error {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-box.info {
+            background: rgba(4, 169, 212, 0.1);
+            border: 1px solid rgba(4, 169, 212, 0.25);
+        }
+
+        .status-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0 0 8px;
+        }
+
+        .status-box.success .status-title { color: #10B981; }
+        .status-box.error .status-title { color: #EF4444; }
+        .status-box.info .status-title { color: #04A9D4; }
+
+        .status-body {
+            font-size: 13px;
+            color: rgba(225, 232, 237, 0.75);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .status-body code {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+            color: rgba(225, 232, 237, 0.9);
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0;
+        }
+
+        .check-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: rgba(225, 232, 237, 0.7);
+            padding: 5px 0;
+        }
+
+        .check-list li.done { color: #10B981; }
+        .check-list li.failed { color: #EF4444; }
+        .check-list li.pending { color: rgba(225, 232, 237, 0.4); }
+
+        .check-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .btn-provision {
+            width: 100%;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%);
+            color: #fff;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-provision:hover { opacity: 0.88; }
+        .btn-provision:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .existing-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10B981;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .provision-preview {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .provision-preview-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(225, 232, 237, 0.4);
+            margin: 0 0 12px;
+        }
+
+        .provision-preview pre {
+            margin: 0;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+            color: rgba(225, 232, 237, 0.65);
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.7;
+        }
+
+        .provision-preview .key { color: #04A9D4; }
+        .provision-preview .val-str { color: #a8e6cf; }
+        .provision-preview .val-bool-true { color: #10B981; }
+        .provision-preview .val-num { color: #ffd166; }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../../assets/img/logo_white_trans.png" alt="ML Vision Logo">
+            </div>
+
+            <div class="sidebar-section-title">Übersicht</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="../dashboard.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Kunden & Business</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="customers.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Kunden
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Benutzerverwaltung
+                    </a>
+                </li>
+                <li>
+                    <a href="tickets.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                        </svg>
+                        Support-Tickets
+                    </a>
+                </li>
+                <li>
+                    <a href="provision.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                        </svg>
+                        Kundenbereich einr.
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Angebote & Dokumente</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="../angebote/dokument-hub.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Dokument-Hub
+                    </a>
+                </li>
+                <li>
+                    <a href="../angebote/kva-form.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3v2zm-3-7V3.5L18.5 9H13z"/>
+                        </svg>
+                        KVA erstellen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Technik & Automation</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="leads-bot.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm7.5-1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM8 15h8v2H8v-2z"/>
+                        </svg>
+                        Leads Bot
+                    </a>
+                </li>
+                <li>
+                    <a href="pricing-calculator.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                        Pricing Kalkulator
+                    </a>
+                </li>
+                <li>
+                    <a href="workflows.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                        </svg>
+                        Workflow-Monitor
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">System</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="settings.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Einstellungen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn">Abmelden</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <h1>Kundenbereich einrichten</h1>
+                    <p>Firebase Auth-Nutzer mit Firestore-Profil verknüpfen</p>
+                </div>
+            </div>
+
+            <div class="provision-container">
+
+                <!-- Status-Box (dynamisch befüllt) -->
+                <div class="status-box" id="statusBox">
+                    <div class="status-title" id="statusTitle"></div>
+                    <p class="status-body" id="statusBody"></p>
+                    <ul class="check-list" id="checkList"></ul>
+                </div>
+
+                <!-- Formular -->
+                <div class="provision-form-card">
+                    <div class="provision-section-title">1. Firebase Auth UID</div>
+
+                    <div class="form-group">
+                        <label for="authUid">Firebase Auth UID <span class="required">*</span></label>
+                        <input type="text" id="authUid" placeholder="z.B. BFytJk4SeJP7JKW6sIECGtXrzAbc123" autocomplete="off">
+                        <p class="provision-uid-hint">
+                            Zu finden in Firebase Console → Authentication → Nutzer anklicken → <code>Nutzer-UID</code>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="provision-form-card">
+                    <div class="provision-section-title">2. Kundenbereich-Profil</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerId">Kunden-ID (Firestore-Dokument-ID) <span class="required">*</span></label>
+                            <input type="text" id="customerId" placeholder="z.B. mybach" autocomplete="off"
+                                pattern="[a-z0-9_-]+" title="Nur Kleinbuchstaben, Zahlen, Bindestrich und Unterstrich">
+                            <p class="provision-uid-hint">Kleinbuchstaben, keine Leerzeichen. Wird der permanente Bezeichner.</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="planName">Plan-Name</label>
+                            <input type="text" id="planName" value="Standard">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companyName">Firmenname <span class="required">*</span></label>
+                            <input type="text" id="companyName" placeholder="z.B. Mybach & Co Immobilien GmbH">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Login-E-Mail <span class="required">*</span></label>
+                            <input type="email" id="customerEmail" placeholder="z.B. mybach@vision-ml.de">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="callbackEmail">Callback-E-Mail (Benachrichtigungen)</label>
+                            <input type="email" id="callbackEmail" placeholder="z.B. info@mybach-immobilien.de">
+                        </div>
+                        <div class="form-group">
+                            <label for="agentId">ElevenLabs Agent-ID</label>
+                            <input type="text" id="agentId" placeholder="Leer lassen bis Go-Live">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="provision-form-card">
+                    <div class="provision-section-title">3. Module aktivieren</div>
+
+                    <div class="module-toggles">
+                        <div class="module-toggle-item">
+                            <input type="checkbox" id="moduleVoice" checked>
+                            <label for="moduleVoice">Gespräche</label>
+                        </div>
+                        <div class="module-toggle-item">
+                            <input type="checkbox" id="moduleSupport" checked>
+                            <label for="moduleSupport">Support</label>
+                        </div>
+                        <div class="module-toggle-item">
+                            <input type="checkbox" id="moduleInvoices" checked>
+                            <label for="moduleInvoices">Rechnungen</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vorschau -->
+                <div class="provision-form-card" id="previewCard" style="display:none;">
+                    <div class="provision-section-title">Vorschau — Firestore-Dokumente</div>
+                    <div class="provision-preview">
+                        <div class="provision-preview-title">users/{uid}</div>
+                        <pre id="previewUsers"></pre>
+                    </div>
+                    <div class="provision-preview" style="margin-top: 12px;">
+                        <div class="provision-preview-title">customers/{customerId}</div>
+                        <pre id="previewCustomers"></pre>
+                    </div>
+                </div>
+
+                <button class="btn-provision" id="btnProvision" onclick="runProvision()">
+                    Kundenbereich einrichten
+                </button>
+
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { db, auth } from '../../assets/js/firebase-config.js';
+        import {
+            doc, setDoc, getDoc, serverTimestamp
+        } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+        // Firestore + Auth global verfügbar machen
+        window._fs = { db, doc, setDoc, getDoc, serverTimestamp };
+
+        // Auth-Check: Admin-Schutz
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = '/public/login.html';
+                return;
+            }
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+                window.location.href = '/customer/dashboard.html';
+                return;
+            }
+        });
+
+        // Logout
+        const logoutBtn = document.querySelector('.logout-btn');
+        if (logoutBtn) {
+            import('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js')
+                .then(({ signOut }) => {
+                    logoutBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await signOut(auth);
+                        window.location.href = '/public/login.html';
+                    });
+                });
+        }
+    </script>
+
+    <script>
+        // Sidebar-Toggle (handled by Sidebar module below)
+        window.toggleSidebar = function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        };
+
+        // Live-Vorschau bei Eingabe aktualisieren
+        ['authUid', 'customerId', 'companyName', 'customerEmail', 'callbackEmail',
+         'agentId', 'planName', 'moduleVoice', 'moduleSupport', 'moduleInvoices']
+            .forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', updatePreview);
+                if (el) el.addEventListener('change', updatePreview);
+            });
+
+        function updatePreview() {
+            const uid        = document.getElementById('authUid').value.trim();
+            const custId     = document.getElementById('customerId').value.trim();
+            const company    = document.getElementById('companyName').value.trim();
+            const email      = document.getElementById('customerEmail').value.trim();
+            const cbEmail    = document.getElementById('callbackEmail').value.trim();
+            const agentId    = document.getElementById('agentId').value.trim();
+            const planName   = document.getElementById('planName').value.trim() || 'Standard';
+            const voice      = document.getElementById('moduleVoice').checked;
+            const support    = document.getElementById('moduleSupport').checked;
+            const invoices   = document.getElementById('moduleInvoices').checked;
+
+            if (!uid || !custId) {
+                document.getElementById('previewCard').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('previewCard').style.display = 'block';
+
+            const usersDoc = {
+                email: email || '(eingeben)',
+                role: 'customer',
+                customerId: custId,
+                createdAt: '(serverTimestamp)'
+            };
+
+            const customersDoc = {
+                name: company || '(eingeben)',
+                email: email || '(eingeben)',
+                planName: planName,
+                plan: planName.toLowerCase(),
+                agentId: agentId || '',
+                callbackEmail: cbEmail || '',
+                modules: { voice, support, invoices },
+                settings: { maxCallDuration: 300, dailyCallLimit: 10 },
+                agentStatus: 'inactive',
+                createdAt: '(serverTimestamp)'
+            };
+
+            document.getElementById('previewUsers').textContent =
+                JSON.stringify(usersDoc, null, 2);
+            document.getElementById('previewCustomers').textContent =
+                JSON.stringify(customersDoc, null, 2);
+        }
+
+        // Provision ausführen
+        window.runProvision = async function() {
+            const uid      = document.getElementById('authUid').value.trim();
+            const custId   = document.getElementById('customerId').value.trim();
+            const company  = document.getElementById('companyName').value.trim();
+            const email    = document.getElementById('customerEmail').value.trim();
+            const cbEmail  = document.getElementById('callbackEmail').value.trim();
+            const agentId  = document.getElementById('agentId').value.trim();
+            const planName = document.getElementById('planName').value.trim() || 'Standard';
+            const voice    = document.getElementById('moduleVoice').checked;
+            const support  = document.getElementById('moduleSupport').checked;
+            const invoices = document.getElementById('moduleInvoices').checked;
+
+            // Validierung
+            if (!uid) { showStatus('error', 'Pflichtfeld fehlt', 'Bitte Firebase Auth UID eingeben.'); return; }
+            if (!custId) { showStatus('error', 'Pflichtfeld fehlt', 'Bitte Kunden-ID eingeben (z.B. mybach).'); return; }
+            if (!company) { showStatus('error', 'Pflichtfeld fehlt', 'Bitte Firmennamen eingeben.'); return; }
+            if (!email) { showStatus('error', 'Pflichtfeld fehlt', 'Bitte Login-E-Mail eingeben.'); return; }
+
+            const { db, doc, setDoc, getDoc, serverTimestamp } = window._fs;
+            if (!db) {
+                showStatus('error', 'Firebase nicht bereit', 'Bitte Seite neu laden und als Admin einloggen.');
+                return;
+            }
+
+            const btn = document.getElementById('btnProvision');
+            btn.disabled = true;
+            btn.textContent = 'Wird eingerichtet...';
+
+            const checks = [];
+
+            showStatus('info', 'Einrichtung läuft...', 'Firestore-Dokumente werden angelegt.', [
+                { id: 'check-existing', label: 'Prüfe ob bereits vorhanden', state: 'pending' },
+                { id: 'check-users', label: `users/${uid.substring(0,12)}… anlegen`, state: 'pending' },
+                { id: 'check-customers', label: `customers/${custId} anlegen`, state: 'pending' }
+            ]);
+
+            try {
+                // 1. Prüfe ob user-doc bereits existiert
+                updateCheck('check-existing', 'pending', 'Prüfe bestehende Dokumente...');
+                const existingUser = await getDoc(doc(db, 'users', uid));
+                const existingCustomer = await getDoc(doc(db, 'customers', custId));
+
+                let warningText = '';
+                if (existingUser.exists()) warningText += `users/${uid.substring(0,12)}… existiert bereits und wird überschrieben. `;
+                if (existingCustomer.exists()) warningText += `customers/${custId} existiert bereits und wird überschrieben.`;
+
+                updateCheck('check-existing', 'done', warningText || 'Keine Konflikte — Dokumente werden neu angelegt.');
+
+                // 2. users/{uid} anlegen
+                updateCheck('check-users', 'pending', `users/${uid.substring(0,12)}… wird geschrieben...`);
+                await setDoc(doc(db, 'users', uid), {
+                    email: email,
+                    role: 'customer',
+                    customerId: custId,
+                    createdAt: serverTimestamp()
+                });
+                updateCheck('check-users', 'done', `users/${uid.substring(0,12)}… ✓`);
+
+                // 3. customers/{custId} anlegen
+                updateCheck('check-customers', 'pending', `customers/${custId} wird geschrieben...`);
+                await setDoc(doc(db, 'customers', custId), {
+                    name: company,
+                    email: email,
+                    planName: planName,
+                    plan: planName.toLowerCase(),
+                    agentId: agentId || '',
+                    callbackEmail: cbEmail || '',
+                    modules: { voice, support, invoices },
+                    settings: { maxCallDuration: 300, dailyCallLimit: 10 },
+                    agentStatus: 'inactive',
+                    createdAt: serverTimestamp()
+                });
+                updateCheck('check-customers', 'done', `customers/${custId} ✓`);
+
+                // Erfolg
+                showStatus('success',
+                    'Kundenbereich erfolgreich eingerichtet',
+                    `${company} kann sich jetzt unter /public/login.html einloggen und auf den Kundenbereich zugreifen.`,
+                    [
+                        { id: 'r1', label: `users/${uid.substring(0,16)}… angelegt`, state: 'done' },
+                        { id: 'r2', label: `customers/${custId} angelegt`, state: 'done' },
+                        { id: 'r3', label: `Module: Gespräche=${voice}, Support=${support}, Rechnungen=${invoices}`, state: 'done' }
+                    ]
+                );
+
+                btn.textContent = 'Nochmals einrichten';
+
+            } catch (err) {
+                console.error('Provision error:', err);
+                showStatus('error',
+                    'Fehler beim Einrichten',
+                    `Firestore hat die Anfrage abgelehnt: ${err.message}. Prüfe die Firestore Security Rules (Admin-Rolle benötigt Schreibrechte auf users/ und customers/).`
+                );
+                btn.textContent = 'Erneut versuchen';
+            }
+
+            btn.disabled = false;
+        };
+
+        // -------------------------------------------------------
+        // UI Helpers
+        // -------------------------------------------------------
+        function showStatus(type, title, body, checkItems) {
+            const box = document.getElementById('statusBox');
+            const titleEl = document.getElementById('statusTitle');
+            const bodyEl = document.getElementById('statusBody');
+            const listEl = document.getElementById('checkList');
+
+            box.className = `status-box ${type}`;
+            box.style.display = 'block';
+            titleEl.textContent = title;
+            bodyEl.textContent = body || '';
+
+            listEl.innerHTML = '';
+            if (checkItems) {
+                checkItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.id = item.id;
+                    li.className = item.state;
+                    li.innerHTML = `
+                        <span class="check-icon">${stateIcon(item.state)}</span>
+                        <span>${item.label}</span>
+                    `;
+                    listEl.appendChild(li);
+                });
+            }
+
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function updateCheck(id, state, label) {
+            const li = document.getElementById(id);
+            if (!li) return;
+            li.className = state;
+            li.innerHTML = `
+                <span class="check-icon">${stateIcon(state)}</span>
+                <span>${label}</span>
+            `;
+        }
+
+        function stateIcon(state) {
+            if (state === 'done')    return '✓';
+            if (state === 'failed')  return '✗';
+            if (state === 'pending') return '⟳';
+            return '·';
+        }
+    </script>
+
+    <script type="module">
+        import { Sidebar } from '../../assets/js/components/Sidebar.js';
+        new Sidebar('sidebar');
+    </script>
+</body>
+</html>

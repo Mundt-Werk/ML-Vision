@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -X POST https://n8n.vision-ml.de/webhook/mybach-termin -H 'Content-Type: application/json' -d '{:*)",
+      "Bash(Get-ChildItem -Path \"d:\\\\Projekte\\\\Kunden\\\\ML_Vision\\\\Brand\\\\Webdesign\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "Bash(curl -s -X POST https://n8n.vision-ml.de/rest/login -H 'Content-Type: application/json' -c /tmp/n8n_cookies.txt -d '{\"email\":\"ml-vision@vision-ml.de\",\"password\":\"cRubJF7Lx5vk4TuCyihk!\"}')",
+      "Bash(curl -s \"https://us-central1-ml-vision-273ee.cloudfunctions.net/backfillMybachCalls\" -H \"Authorization: Bearer mlv-mybach-fn-4a7b2c9e3d1f\" --max-time 300)",
+      "Bash(firebase functions:config:get)"
+    ]
+  }
+}

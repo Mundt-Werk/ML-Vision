@@ -1,6 +1,9 @@
 # Firebase Service Account Key (NIEMALS committen!)
 firebase-service-account.json
 
+# FTP / Server Credentials
+.env
+
 # Node modules
 node_modules/
 

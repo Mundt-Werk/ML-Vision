@@ -45,11 +45,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="pages/support.html">
+                    <a href="pages/termine.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
                         </svg>
-                        Support
+                        Termine
+                    </a>
+                </li>
+                <li>
+                    <a href="pages/statistiken.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                        Statistiken
                     </a>
                 </li>
                 <li>
@@ -68,6 +76,22 @@
                         Einstellungen
                     </a>
                 </li>
+                <li>
+                    <a href="pages/support.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                        </svg>
+                        Support
+                    </a>
+                </li>
+                <li>
+                    <a href="pages/dokumentation.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                        </svg>
+                        Dokumentation
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-footer">
@@ -77,15 +101,22 @@
 
         <!-- Main Content -->
         <main class="main-content">
+
+            <!-- Error Banner -->
+            <div id="errorBanner" style="display:none;"></div>
+
+            <!-- Dashboard Header -->
             <div class="dashboard-header">
-                <h1>Dashboard</h1>
-                <p>Willkommen zurück! Hier ist eine Übersicht Ihrer Aktivitäten.</p>
+                <div class="dashboard-header-left">
+                    <h1>Willkommen zurück, <span id="userName" class="welcome-name">...</span></h1>
+                    <p>Hier ist eine Übersicht Ihrer Aktivitäten.</p>
+                </div>
+                <div class="dashboard-header-avatar" id="userAvatar">--</div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <!-- Voice/Calls Stats -->
-                <div class="stat-card" id="callsTodayCard" style="display: none;">
+            <!-- Stats Grid (shown/hidden by JS based on modules) -->
+            <!-- <div class="stats-grid">
+                <div class="stat-card" id="callsTodayCard" style="display:none;">
                     <div class="stat-card-header">
                         <span class="stat-card-title">Gespräche heute</span>
                         <div class="stat-card-icon">
@@ -98,7 +129,20 @@
                     <div class="stat-card-change" id="callsTodayChange">Heute</div>
                 </div>
 
-                <div class="stat-card" id="avgDurationCard" style="display: none;">
+                <div class="stat-card" id="termineWeekCard" style="display:none;">
+                    <div class="stat-card-header">
+                        <span class="stat-card-title">Termine diese Woche</span>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value" id="termineWeekValue">0</div>
+                    <div class="stat-card-change" id="termineWeekChange">Gebuchte Termine</div>
+                </div>
+
+                <div class="stat-card" id="avgDurationCard" style="display:none;">
                     <div class="stat-card-header">
                         <span class="stat-card-title">Ø Gesprächsdauer</span>
                         <div class="stat-card-icon">
@@ -111,7 +155,7 @@
                     <div class="stat-card-change" id="avgDurationChange">Durchschnitt</div>
                 </div>
 
-                <div class="stat-card" id="callSuccessRateCard" style="display: none;">
+                <div class="stat-card" id="callSuccessRateCard" style="display:none;">
                     <div class="stat-card-header">
                         <span class="stat-card-title">Erfolgsquote</span>
                         <div class="stat-card-icon">
@@ -124,23 +168,78 @@
                     <div class="stat-card-change" id="callSuccessRateChange">Abgeschlossene Calls</div>
                 </div>
 
-                <!-- Support/Tickets Stats -->
-                <div class="stat-card" id="openTicketsCard" style="display: none;">
-                    <div class="stat-card-header">
-                        <span class="stat-card-title">Offene Tickets</span>
-                        <div class="stat-card-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
-                            </svg>
+            </div> -->
+
+            <!-- Minuten-Verbrauch (prominent, full-width) -->
+            <div class="dash-card minutes-hero" id="minutesUsageCard" style="display:none;">
+                <div class="minutes-hero-header">
+                    <div>
+                        <div class="dash-card-label" style="display:flex; align-items:center; gap:10px;">
+                            <button id="minutesPrevMonth" class="month-nav-btn" title="Vormonat">&#8592;</button>
+                            <span id="minutesMonthLabel">Aktueller Monat</span>
+                            <button id="minutesNextMonth" class="month-nav-btn" id="minutesNextMonth" title="Nächster Monat" style="visibility:hidden;">&#8594;</button>
                         </div>
+                        <div id="minutesUsageLabel" class="minutes-hero-value">0 / 120 Min</div>
                     </div>
-                    <div class="stat-card-value" id="openTicketsValue">0</div>
-                    <div class="stat-card-change" id="openTicketsChange">Tickets warten auf Antwort</div>
+                    <div class="minutes-hero-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                    </div>
                 </div>
+                <div class="minutes-progress-track minutes-progress-track--hero">
+                    <div id="minutesProgressBar" class="minutes-progress-fill"></div>
+                </div>
+                <div class="minutes-progress-info">
+                    <span id="minutesUsedText">0 Min genutzt</span>
+                    <span id="minutesIncludedText">120 Min inkl.</span>
+                </div>
+                <div id="minutesOverageWarning" style="display:none;"></div>
             </div>
 
-            <!-- Invoice Widget -->
-            <div class="invoice-widget" id="invoiceWidget" style="display: none;">
+            <!-- Two-Column Row: KI-Assistent + Quick Links -->
+            <div class="dashboard-row" id="agentStatusSection">
+
+                <!-- KI-Assistent Card (compact) -->
+                <div class="dash-card" id="agentStatusCard" style="display:none;">
+                    <div class="dash-card-header">
+                        <span class="dash-card-label">KI-Assistent</span>
+                        <span id="agentStatusBadge" class="status-badge-pill">
+                            <span id="agentStatusDot" class="status-dot"></span>
+                            <span id="agentStatusText">Lädt…</span>
+                        </span>
+                    </div>
+                    <div id="lastCallInfo" class="last-call-info">
+                        <div class="last-call-label">Letzter Anruf</div>
+                        <div id="lastCallTime">-</div>
+                        <div id="lastCallOutcome" style="margin-top:6px;"></div>
+                    </div>
+                </div>
+
+                <!-- Schnellzugriff -->
+                <div class="dash-card" id="quickLinksCard" style="display:none;">
+                    <div class="dash-card-label" style="margin-bottom:14px;">Schnellzugriff</div>
+                    <div class="quick-links">
+                        <a href="pages/gespraeche.html" class="quick-link quick-link--primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                            Alle Anrufe ansehen
+                            <svg class="quick-link-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                        </a>
+                        <a href="pages/support.html" class="quick-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+                            Support kontaktieren
+                            <svg class="quick-link-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                        </a>
+                        <a href="pages/rechnungen.html" class="quick-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            Rechnungen anzeigen
+                            <svg class="quick-link-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Invoice Widget (mit Daten) -->
+            <div class="dash-card invoice-widget" id="invoiceWidget" style="display:none;">
                 <h2>
                     Rechnungen
                     <a href="pages/rechnungen.html" class="view-all-link">
@@ -193,7 +292,8 @@
                 </div>
             </div>
 
-            <div class="invoice-widget" id="invoiceEmptyState" style="display: none;">
+            <!-- Invoice Empty State -->
+            <div class="dash-card invoice-widget" id="invoiceEmptyState" style="display:none;">
                 <h2>Rechnungen</h2>
                 <div class="invoice-empty">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -203,35 +303,41 @@
                 </div>
             </div>
 
-            <!-- User Info -->
-            <div class="status-section" class="mt-30">
-                <div class="status-card">
-                    <div class="user-info">
-                        <div class="user-avatar" id="userAvatar">--</div>
-                        <h3 class="user-name" id="userName">Lädt...</h3>
-                        <p class="user-email" id="userEmail">-</p>
-                        <div class="user-plan">
-                            <strong>AKTUELLER PLAN</strong>
-                            <span id="userPlan">-</span>
+            <!-- Offene Tickets (dezent, ganz unten) -->
+            <div class="dash-card tickets-subtle" id="openTicketsCard" style="display:none;">
+                <div class="tickets-subtle-inner">
+                    <div class="tickets-subtle-info">
+                        <span class="dash-card-label">Support</span>
+                        <div class="tickets-subtle-row">
+                            <span id="openTicketsValue" class="tickets-subtle-count">0</span>
+                            <span id="openTicketsChange" class="tickets-subtle-label">Tickets warten auf Antwort</span>
                         </div>
                     </div>
+                    <a href="pages/support.html" class="tickets-subtle-link">
+                        Support öffnen
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </a>
                 </div>
             </div>
+
+            <!-- Hidden user data elements (IDs used by JS) -->
+            <div aria-hidden="true" style="display:none;">
+                <span id="userEmail">-</span>
+                <span id="userPlan">-</span>
+            </div>
+
         </main>
     </div>
 
     <script>
-        // Toggle sidebar for mobile (window.toggleSidebar für Konsistenz)
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('active');
         };
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const toggle = document.querySelector('.mobile-menu-toggle');
-
             if (window.innerWidth <= 768) {
                 if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
                     sidebar.classList.remove('active');

@@ -11,17 +11,27 @@
 .main-content {
   flex: 1;
   margin-left: var(--sidebar-width);
-  padding: var(--spacing-2xl);
+  padding: 20px 24px;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  transition: margin-left 0.25s;
+}
+
+body.sidebar-collapsed .main-content {
+  margin-left: 56px;
 }
 
 /* Top Bar */
 .top-bar {
-  padding: var(--spacing-lg) var(--spacing-2xl);
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--spacing-2xl);
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 4px 0;
 }
 
 .top-bar-left h1 {

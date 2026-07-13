@@ -34,10 +34,9 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
                 <img src="../assets/img/logo_white_trans.png" alt="ML Vision">
-                <div class="admin-badge-sidebar">Admin</div>
             </div>
 
-            <div class="sidebar-section-title">Verwaltung</div>
+            <div class="sidebar-section-title">Übersicht</div>
             <ul class="sidebar-menu">
                 <li>
                     <a href="dashboard.html" class="active">
@@ -45,6 +44,18 @@
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
                         Dashboard
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Kunden &amp; Business</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="pages/customers.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Kunden
                     </a>
                 </li>
                 <li>
@@ -56,24 +67,44 @@
                     </a>
                 </li>
                 <li>
-                    <a href="pages/customers.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                        Kunden
-                    </a>
-                </li>
-                <li>
                     <a href="pages/tickets.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                            <path d="M20 12v-2h-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v5c0 1.1.9 1.99 2 1.99V18l4-2h1v-1c0-2.21 1.79-4 4-4h7zm2 1h-7c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5.5l2.5 2v-2c1.1 0 2-.9 2-2v-3c0-1.1-.9-2-2-2z"/>
                         </svg>
                         Support-Tickets
                     </a>
                 </li>
+                <li>
+                    <a href="pages/provision.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5zm-1 6v2h2v-2h-2zm0-4v2h2V7h-2z"/>
+                        </svg>
+                        Kundenbereich einr.
+                    </a>
+                </li>
             </ul>
 
-            <div class="sidebar-section-title">Tools</div>
+            <div class="sidebar-section-title">Angebote &amp; Dokumente</div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="angebote/dokument-hub.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Dokument-Hub
+                    </a>
+                </li>
+                <li>
+                    <a href="angebote/kva-form.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3v2zm-3-7V3.5L18.5 9H13z"/>
+                        </svg>
+                        KVA erstellen
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-title">Technik &amp; Automation</div>
             <ul class="sidebar-menu">
                 <li>
                     <a href="pages/leads-bot.html">
@@ -94,7 +125,7 @@
                 <li>
                     <a href="pages/workflows.html">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
                         </svg>
                         Workflow-Monitor
                     </a>
@@ -207,62 +238,72 @@
                 </div>
             </div>
 
-            <!-- Content Grid -->
-            <div class="content-grid">
-                <div class="content-card">
+            <!-- Dashboard Panels -->
+            <div class="dashboard-panels">
+
+                <!-- Systemstatus -->
+                <div class="panel-card">
                     <h2>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
                         </svg>
                         Systemstatus
                     </h2>
-                    <div class="status-item">
-                        <div class="status-indicator warning" id="status-firebase"></div>
-                        <div class="status-text" id="status-firebase-text">
-                            <strong>Firebase Datenbank</strong>
-                            <small>Wird geprüft...</small>
+                    <div class="panel-body">
+                        <div class="status-item">
+                            <div class="status-indicator warning" id="status-firebase"></div>
+                            <div class="status-text" id="status-firebase-text">
+                                <strong>Firebase Datenbank</strong>
+                                <small>Wird geprüft...</small>
+                            </div>
                         </div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-indicator warning" id="status-n8n"></div>
-                        <div class="status-text" id="status-n8n-text">
-                            <strong>n8n Automatisierungen</strong>
-                            <small>Wird geprüft...</small>
+                        <div class="status-item">
+                            <div class="status-indicator warning" id="status-n8n"></div>
+                            <div class="status-text" id="status-n8n-text">
+                                <strong>n8n Automatisierungen</strong>
+                                <small>Wird geprüft...</small>
+                            </div>
                         </div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-indicator success"></div>
-                        <div class="status-text">
-                            <strong>Voice Agent API</strong>
-                            <small>ElevenLabs — Status nicht abrufbar</small>
+                        <div class="status-item">
+                            <div class="status-indicator success"></div>
+                            <div class="status-text">
+                                <strong>Voice Agent API</strong>
+                                <small>ElevenLabs — aktiv</small>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="content-card">
+                <!-- Neuste Tickets -->
+                <div class="panel-card">
                     <h2>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
                         </svg>
                         Neuste Tickets
                     </h2>
-                    <ul class="activity-feed" id="recent-tickets-feed">
-                        <li class="activity-item"><div class="activity-content"><p style="color: rgba(225,232,237,0.5)">Wird geladen...</p></div></li>
-                    </ul>
+                    <div class="panel-body">
+                        <ul class="activity-feed" id="recent-tickets-feed">
+                            <li class="activity-item"><div class="activity-content"><p>Wird geladen...</p></div></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Recent Activity -->
-            <div class="content-card">
-                <h2>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-                    </svg>
-                    Letzte Aktivitäten
-                </h2>
-                <ul class="activity-feed" id="recent-customers-feed">
-                    <li class="activity-item"><div class="activity-content"><p style="color: rgba(225,232,237,0.5)">Wird geladen...</p></div></li>
-                </ul>
+                <!-- Letzte Aktivitäten -->
+                <div class="panel-card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                        Letzte Aktivitäten
+                    </h2>
+                    <div class="panel-body">
+                        <ul class="activity-feed" id="recent-customers-feed">
+                            <li class="activity-item"><div class="activity-content"><p>Wird geladen...</p></div></li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>

@@ -42,14 +42,16 @@
     <script src="assets/js/analytics.js" defer></script>
 
     <!-- Microsoft Clarity — Heatmaps & Session Recordings -->
-    <!-- TODO: YOUR_CLARITY_ID ersetzen → clarity.microsoft.com → Projekt → Setup -->
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
+        })(window, document, "clarity", "script", "xl9l3d2m8q");
     </script>
+
+    <!-- Umami — privacy-freundliche Analytics (self-hosted, analytics.vision-ml.de) -->
+    <script defer src="https://analytics.vision-ml.de/script.js" data-website-id="fa7b2c64-61d7-4a07-b672-57489acf6c41"></script>
 
     <script>
     window.turnstileToken = null;

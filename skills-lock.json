@@ -1,10 +1,20 @@
 {
   "version": 1,
   "skills": {
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "computedHash": "645b891da1edbae76ab79c7b088d4e73397464f8396edaf773c0e01971ce75d6"
+    },
     "sevdesk-agent-cli": {
       "source": "codecell-germany/sevdesk-agent-skill",
       "sourceType": "github",
       "computedHash": "fa8de748e88f78d5d6396366b65173b11883d9c8fc070827f94b95bc5f9f429d"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "computedHash": "6337038fe1fe6bbe1b9f252ab678ee575859190bab6f0f246f4061824eb40875"
     }
   }
 }

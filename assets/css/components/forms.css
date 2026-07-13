@@ -80,9 +80,13 @@
   position: relative;
 }
 
+.password-wrapper input {
+  padding-right: 44px;
+}
+
 .password-toggle {
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -90,7 +94,9 @@
   color: var(--text-secondary);
   cursor: pointer;
   padding: 5px;
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: color var(--transition-base);
 }
 

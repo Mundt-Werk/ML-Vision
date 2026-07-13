@@ -1,195 +1,153 @@
 * {box-sizing: border-box;}
-body {margin: 0; padding: 0; font-family: 'Futura Book', Arial, sans-serif; background: #f5f7fa;}
-.dashboard-container {display: flex; min-height: 100vh;}
-.sidebar {width: 280px; background: linear-gradient(180deg, #051d3a 0%, #0a2847 100%); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1); z-index: 1000;}
-.sidebar-logo {padding: 0 20px 30px 20px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);}
-.sidebar-logo img {height: 60px;}
-.sidebar-menu {list-style: none; padding: 20px 0; margin: 0;}
-.sidebar-menu li {margin: 5px 0;}
-.sidebar-menu a {display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; position: relative;}
-.sidebar-menu a::before {content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #04A9D4; transform: scaleY(0); transition: transform 0.3s;}
-.sidebar-menu a:hover, .sidebar-menu a.active {color: #fff; background: rgba(4, 169, 212, 0.1);}
-.sidebar-menu a.active::before {transform: scaleY(1);}
-.sidebar-menu svg {width: 20px; height: 20px; fill: currentColor;}
-.sidebar-footer {padding: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 20px;}
-.sidebar-footer a {display: block; padding: 10px; color: #ff4757; text-decoration: none; text-align: center; border: 2px solid #ff4757; border-radius: 8px; transition: all 0.3s;}
-.sidebar-footer a:hover {background: #ff4757; color: #fff;}
-.main-content {flex: 1; margin-left: 280px; padding: 30px;}
-.dashboard-header {margin-bottom: 30px;}
-.dashboard-header h1 {font-size: 32px; color: #1a1a1a; margin: 0 0 10px 0;}
-.dashboard-header p {color: #6b7280; margin: 0;}
+body { margin: 0; padding: 0; font-family: 'Futura Book', Arial, sans-serif; background: #0a0f1a; color: #e1e8ed; overflow-x: hidden; }
+.dashboard-container { display: flex; min-height: 100vh; }
 
-/* Plan Card */
-.plan-card {background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%); padding: 30px; border-radius: 12px; color: #fff; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(4, 169, 212, 0.3);}
-.plan-card h2 {margin: 0 0 5px 0; font-size: 16px; opacity: 0.9;}
-.plan-name {font-size: 32px; font-weight: bold; margin: 10px 0 20px 0;}
-.plan-details {display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;}
-.plan-detail {background: rgba(255, 255, 255, 0.15); padding: 15px; border-radius: 8px;}
-.plan-detail strong {display: block; font-size: 11px; opacity: 0.9; margin-bottom: 5px; text-transform: uppercase;}
-.plan-detail span {font-size: 18px; font-weight: bold;}
+/* ─── Sidebar ─── */
+.sidebar { width: 280px; background: linear-gradient(180deg, #1a1f2e 0%, #151922 100%); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; box-shadow: 4px 0 20px rgba(0,0,0,0.5); z-index: 1000; border-right: 1px solid rgba(4,169,212,0.15); }
+.sidebar-logo { padding: 0 20px 28px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.sidebar-logo img { height: 60px; }
+.sidebar-menu { list-style: none; padding: 16px 0; margin: 0; }
+.sidebar-menu li { margin: 2px 0; }
+.sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 11px 20px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 14px; transition: all 0.25s; position: relative; }
+.sidebar-menu a::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #04A9D4; transform: scaleY(0); transition: transform 0.25s; border-radius: 0 2px 2px 0; }
+.sidebar-menu a:hover, .sidebar-menu a.active { color: #fff; background: rgba(4,169,212,0.1); }
+.sidebar-menu a.active::before, .sidebar-menu a:hover::before { transform: scaleY(1); }
+.sidebar-menu svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.07); margin-top: 16px; }
+.sidebar-footer a { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; color: rgba(255,255,255,0.35); text-decoration: none; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 14px; background: rgba(255,255,255,0.03); transition: all 0.25s; }
+.sidebar-footer a:hover { color: #ff4757; border-color: rgba(255,71,87,0.35); background: rgba(255,71,87,0.07); }
 
-/* Filters */
-.filters-bar {background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);}
-.filters-grid {display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: end;}
-.filter-group {display: flex; flex-direction: column;}
-.filter-group label {font-size: 13px; font-weight: bold; color: #6b7280; margin-bottom: 5px;}
-.filter-group input {padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; font-family: inherit;}
-.status-chips {display: flex; gap: 10px; padding-top: 20px;}
-.chip {padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 20px; cursor: pointer; transition: all 0.2s; background: #fff; font-size: 14px; font-weight: 500;}
-.chip:hover {border-color: #04A9D4; color: #04A9D4;}
-.chip.active {background: #04A9D4; color: #fff; border-color: #04A9D4;}
-.filter-btn {padding: 10px 20px; background: #04A9D4; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s;}
-.filter-btn:hover {background: #0390b8;}
+/* ─── Main ─── */
+.main-content { flex: 1; margin-left: 280px; padding: 36px 40px; }
+.dashboard-header { margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.dashboard-header h1 { font-size: 26px; color: #fff; margin: 0 0 8px 0; font-weight: 700; }
+.dashboard-header p { color: rgba(225,232,237,0.45); margin: 0; font-size: 14px; }
 
-/* Invoices Table */
-.invoices-card {background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); overflow: hidden;}
-.invoices-table {width: 100%; border-collapse: collapse;}
-.invoices-table th {padding: 15px 20px; text-align: left; font-size: 12px; color: #6b7280; text-transform: uppercase; background: #f9fafb; font-weight: 600;}
-.invoices-table td {padding: 20px; border-top: 1px solid #e5e7eb; font-size: 14px; color: #1a1a1a;}
-.invoices-table tbody tr {transition: all 0.2s;}
-.invoices-table tbody tr:hover {background: #f9fafb;}
-.invoice-status {padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; display: inline-block;}
-.invoice-status.paid {background: #d1fae5; color: #065f46;}
-.invoice-status.open {background: #fef3c7; color: #92400e;}
-.invoice-status.uncollectible {background: #fee2e2; color: #991b1b;}
-.download-btn {display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #04A9D4; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.3s;}
-.download-btn:hover {background: #0390b8; transform: translateY(-1px);}
-.download-btn svg {width: 16px; height: 16px;}
+/* ─── Plan Card (bleibt Cyan-Gradient) ─── */
+.plan-card { background: linear-gradient(135deg, #04A9D4 0%, #0390b8 100%); padding: 28px; border-radius: 14px; color: #fff; margin-bottom: 24px; box-shadow: 0 6px 24px rgba(4,169,212,0.3); }
+.plan-card h2 { margin: 0 0 4px 0; font-size: 13px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.8px; }
+.plan-name { font-size: 30px; font-weight: 700; margin: 8px 0 20px 0; }
+.plan-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.plan-detail { background: rgba(255,255,255,0.15); padding: 14px; border-radius: 10px; }
+.plan-detail strong { display: block; font-size: 11px; opacity: 0.85; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.6px; }
+.plan-detail span { font-size: 18px; font-weight: 700; }
 
-/* Pagination */
-.pagination {display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px;}
-.pagination button {padding: 8px 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; transition: all 0.2s;}
-.pagination button:hover:not(:disabled) {background: #04A9D4; color: #fff; border-color: #04A9D4;}
-.pagination button:disabled {opacity: 0.5; cursor: not-allowed;}
-.pagination .page-info {color: #6b7280; font-size: 14px;}
+/* ─── Filters ─── */
+.filters-bar { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); padding: 18px 20px; border-radius: 12px; margin-bottom: 20px; }
+.filters-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: end; }
+.filter-group { display: flex; flex-direction: column; }
+.filter-group label { font-size: 11px; font-weight: 700; color: rgba(225,232,237,0.45); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.7px; }
+.filter-group input { padding: 10px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-family: inherit; color: #e1e8ed; font-size: 14px; transition: border-color 0.2s; }
+.filter-group input:focus { outline: none; border-color: rgba(4,169,212,0.5); box-shadow: 0 0 0 3px rgba(4,169,212,0.1); }
+.status-chips { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 16px; }
+.chip { padding: 7px 16px; border: 1.5px solid rgba(255,255,255,0.12); border-radius: 20px; cursor: pointer; transition: all 0.2s; background: transparent; font-size: 13px; font-weight: 500; color: rgba(225,232,237,0.6); }
+.chip:hover { border-color: rgba(4,169,212,0.4); color: #04A9D4; }
+.chip.active { background: #04A9D4; color: #fff; border-color: #04A9D4; }
+.filter-btn { padding: 10px 20px; background: linear-gradient(135deg, #04A9D4, #0390b8); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.25s; }
+.filter-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(4,169,212,0.3); }
 
-/* Empty State */
-.empty-state {text-align: center; padding: 60px 20px; color: #6b7280;}
-.empty-state svg {width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.3;}
-.empty-state h3 {color: #1a1a1a; margin-bottom: 10px;}
-.loading {text-align: center; padding: 40px; color: #6b7280;}
+/* ─── Invoices Table ─── */
+.invoices-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden; overflow-x: auto; }
+.invoices-table { width: 100%; border-collapse: collapse; }
+.invoices-table th { padding: 13px 20px; text-align: left; font-size: 11px; color: rgba(225,232,237,0.45); text-transform: uppercase; background: rgba(4,169,212,0.07); font-weight: 700; letter-spacing: 0.7px; }
+.invoices-table td { padding: 18px 20px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 14px; color: #e1e8ed; }
+.invoices-table tbody tr { transition: background 0.2s; }
+.invoices-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+.invoice-status { padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; display: inline-block; }
+.invoice-status.paid         { background: rgba(16,185,129,0.15); color: #10b981; }
+.invoice-status.open         { background: rgba(245,158,11,0.15);  color: #f59e0b; }
+.invoice-status.uncollectible { background: rgba(239,68,68,0.15);  color: #ef4444; }
+.download-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: linear-gradient(135deg, #04A9D4, #0390b8); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.25s; }
+.download-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(4,169,212,0.3); }
+.download-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.download-btn svg { width: 16px; height: 16px; fill: currentColor; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* Mobile Invoice Cards (hidden on desktop) */
-.mobile-invoices-list {display: none; margin-bottom: 20px;}
+/* ─── Pagination ─── */
+.pagination { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; }
+.pagination button { padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s; color: rgba(225,232,237,0.7); font-size: 13px; }
+.pagination button:hover:not(:disabled) { background: #04A9D4; color: #fff; border-color: #04A9D4; }
+.pagination button:disabled { opacity: 0.35; cursor: not-allowed; }
+.pagination .page-info { color: rgba(225,232,237,0.45); font-size: 13px; }
 
-.mobile-invoice-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.2s;
+/* ─── Empty / Loading States ─── */
+.empty-state { text-align: center; padding: 60px 20px; color: rgba(225,232,237,0.4); }
+.empty-state svg { width: 72px; height: 72px; margin-bottom: 16px; opacity: 0.2; fill: #e1e8ed; }
+.empty-state h3 { color: rgba(225,232,237,0.7); margin-bottom: 8px; }
+.loading { text-align: center; padding: 40px; color: rgba(225,232,237,0.45); }
+
+/* ─── Mobile Invoice Cards ─── */
+.mobile-invoices-list { display: none; margin-bottom: 20px; }
+.mobile-invoice-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; margin-bottom: 12px; transition: border-color 0.2s; }
+.mobile-invoice-card:hover { border-color: rgba(4,169,212,0.2); }
+.mobile-invoice-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 10px; }
+.mobile-invoice-number { flex: 1; }
+.mobile-invoice-number strong { display: block; font-size: 15px; color: #fff; margin-bottom: 3px; }
+.mobile-invoice-date { font-size: 13px; color: rgba(225,232,237,0.5); }
+.mobile-invoice-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.mobile-info-item { display: flex; flex-direction: column; gap: 3px; }
+.mobile-info-label { font-size: 10px; color: rgba(225,232,237,0.4); text-transform: uppercase; font-weight: 700; letter-spacing: 0.6px; }
+.mobile-info-value { font-size: 14px; color: #e1e8ed; font-weight: 600; }
+.mobile-invoice-description { font-size: 14px; color: rgba(225,232,237,0.6); margin-bottom: 14px; }
+.mobile-invoice-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.mobile-invoice-amount { font-size: 18px; font-weight: 700; color: #fff; }
+
+/* ─── Mobile Menu Toggle ─── */
+.mobile-menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 2000; background: #04A9D4; border: none; border-radius: 8px; width: 44px; height: 44px; cursor: pointer; box-shadow: 0 4px 12px rgba(4,169,212,0.4); flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 0; }
+.mobile-menu-toggle span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; }
+
+/* ─── Nächste fällige Rechnung Banner ─── */
+.next-due-banner {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(234,88,12,0.08);
+    border: 1px solid rgba(234,88,12,0.25);
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 16px;
 }
+.next-due-icon { flex-shrink: 0; }
+.next-due-icon svg { width: 22px; height: 22px; fill: #f97316; display: block; }
+.next-due-content { flex: 1; font-size: 14px; color: rgba(225,232,237,0.8); }
+.next-due-content strong { display: block; color: #f97316; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.next-due-action { flex-shrink: 0; padding: 7px 14px; background: #ea580c; color: #fff; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; transition: background 0.2s; white-space: nowrap; }
+.next-due-action:hover { background: #c2410c; }
 
-.mobile-invoice-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+/* ─── Mehrminuten-Hinweis ─── */
+.mehrminuten-info {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: rgba(4,169,212,0.07);
+    border: 1px solid rgba(4,169,212,0.2);
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;
+    font-size: 13px; color: #04A9D4; line-height: 1.6;
 }
+.mehrminuten-info svg { fill: #04A9D4; flex-shrink: 0; margin-top: 1px; }
 
-.mobile-invoice-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 15px;
-    gap: 10px;
+/* ─── Responsive ─── */
+@media (max-width: 1024px) {
+    .main-content { padding: 28px 24px; }
+    .filters-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .invoices-table th, .invoices-table td { padding: 12px 14px; }
 }
-
-.mobile-invoice-number {
-    flex: 1;
-}
-
-.mobile-invoice-number strong {
-    display: block;
-    font-size: 16px;
-    color: #1a1a1a;
-    margin-bottom: 4px;
-}
-
-.mobile-invoice-date {
-    font-size: 13px;
-    color: #6b7280;
-}
-
-.mobile-invoice-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.mobile-info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.mobile-info-label {
-    font-size: 11px;
-    color: #6b7280;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.mobile-info-value {
-    font-size: 14px;
-    color: #1a1a1a;
-    font-weight: 600;
-}
-
-.mobile-invoice-description {
-    font-size: 14px;
-    color: #4b5563;
-    margin-bottom: 15px;
-}
-
-.mobile-invoice-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-.mobile-invoice-amount {
-    font-size: 18px;
-    font-weight: bold;
-    color: #1a1a1a;
-}
-
-/* Mobile Menu Toggle */
-.mobile-menu-toggle {display: none; position: fixed; top: 20px; left: 20px; z-index: 2000; background: #04A9D4; border: none; border-radius: 8px; width: 50px; height: 50px; cursor: pointer; box-shadow: 0 4px 12px rgba(4, 169, 212, 0.4);}
-.mobile-menu-toggle span {display: block; width: 24px; height: 3px; background: #fff; margin: 5px auto; border-radius: 2px;}
 
 @media (max-width: 768px) {
-    .sidebar {transform: translateX(-100%); transition: transform 0.3s;}
-    .sidebar.active {transform: translateX(0);}
-    .main-content {margin-left: 0; padding: 80px 15px 20px 15px;}
-    .mobile-menu-toggle {display: block;}
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+    .sidebar.active { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 72px 16px 24px; }
+    .mobile-menu-toggle { display: flex; }
+    .dashboard-header h1 { font-size: 20px; }
+    .plan-card { padding: 20px; }
+    .plan-name { font-size: 22px; }
+    .plan-details { grid-template-columns: 1fr 1fr; }
+    .filters-grid { grid-template-columns: 1fr; gap: 10px; }
+    .filter-btn { width: 100%; }
+    .status-chips { padding-top: 8px; }
+    .invoices-card { display: none; }
+    .mobile-invoices-list { display: block; }
+    .pagination { flex-wrap: wrap; }
+    .next-due-banner { flex-wrap: wrap; }
+    .next-due-action { width: 100%; text-align: center; }
+    #mobilePagination { display: none !important; }
+    #mobilePagination.show { display: flex !important; }
+}
 
-    /* Header */
-    .dashboard-header h1 {font-size: 24px;}
-    .dashboard-header p {font-size: 14px;}
-
-    /* Plan Card */
-    .plan-card {padding: 20px;}
-    .plan-name {font-size: 24px;}
-    .plan-details {grid-template-columns: 1fr;}
-
-    /* Filters */
-    .filters-grid {grid-template-columns: 1fr; gap: 10px;}
-    .filter-btn {width: 100%;}
-    .status-chips {padding-top: 10px; flex-wrap: wrap;}
-
-    /* Tabelle verstecken auf Mobile */
-    .invoices-card {display: none;}
-
-    /* Mobile Cards anzeigen */
-    .mobile-invoices-list {display: block;}
-
-    /* Pagination */
-    .pagination {flex-wrap: wrap;}
-
-    /* Mobile Pagination anzeigen */
-    #mobilePagination {display: none !important;}
-    #mobilePagination.show {display: flex !important;}
+@media (max-width: 480px) {
+    .plan-details { grid-template-columns: 1fr; }
 }
