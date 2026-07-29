@@ -1,0 +1,3 @@
+[submodule "leads_bot"]
+	path = leads_bot
+	url = https://github.com/Mundt-Werk/ml-vision-leads-bot.git
